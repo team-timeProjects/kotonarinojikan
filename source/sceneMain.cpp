@@ -15,7 +15,8 @@ bool sceneMain::Initialize()
 	//	ŠÂ‹«Ý’è
 	iexLight::SetFog(800, 1000, 0);
 	//	ŠÂ‹«Œõ
-
+	
+	//	‚È‚ñ‚©FX‰Šú‰»
 	DataOwner::GetInst()->Init();
 
 	updateDgt = updateDgt.Cleate(CAMPUS, Campus::Inst(), &Campus::Update);
