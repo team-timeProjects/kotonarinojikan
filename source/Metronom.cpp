@@ -43,18 +43,19 @@
 		clear = false;
 		t = 0.0f;
 		step = 0;
+		plus_speed = PI / 180 * 2;
 
 		//	元のオブジェクト
-		SetObj( 0, 640, 360, 1.0f );
+		SetObj( 0, 640, 360, 1.0f, 1.0f );
 
 		//	他のオブジェクト
-		SetObj( 1, 940, -40, 0.5f );
-		SetObj( 2, 340, 60, 2.0f );
-		SetObj( 3, 540, -340, 1.0f );
+		SetObj( 1, 940, -40, 1.0f, 0.5f );
+		SetObj( 2, 340, 60, 0.2f, 2.0f );
+		SetObj( 3, 540, -340, 0.5f , 1.0f );
 	}
 
 	//	オブジェクト設定
-	void	Metronom::SetObj( int n, int x, int y, float speed )
+	void	Metronom::SetObj( int n, int x, int y, float height, float speed )
 	{
 		obj[n].pos.x		=		x;
 		obj[n].pos.y		=		y;
@@ -65,6 +66,7 @@
 		obj[n].shift.y	=		0;
 		obj[n].start		=		obj[n].pos;
 		obj[n].end		=		obj[n].pos;
+		obj[n].height	=		height;
 	}
 
 //--------------------------------------------------------------------------------------------
@@ -88,6 +90,7 @@
 	//	描画
 	void	Metronom::Render( void )
 	{
+		//	背景描画
 		back->Render();
 
 		int	x, y, w, h, sx, sy, sw, sh;
@@ -104,8 +107,8 @@
 			metronom->Render( x, y, w, h, sx, sy, sw, sh );
 			x = x - 5;
 			y = y -20;
-			p.x = obj[i].pos.x;
-			p.y = obj[i].pos.y + 45;
+			p.x = obj[i].pos.x + obj[i].shift.x / 2;
+			p.y = obj[i].pos.y + 45 + obj[i].shift.y / 2;
 			needle->Render( x, y, w, h, sx, sy, sw, sh, p, obj[i].angle );
 		}
 	}
@@ -138,7 +141,7 @@
 				cul_speed = obj[i].speed;
 
 				//	元のスピードでかちかち
-				obj[i].param += org_speed;
+				obj[i].param += org_speed + plus_speed * obj[i].height; 
 				obj[i].angle = ( PI / 180 * 45 ) * sinf( obj[i].param );
 			}
 			else
@@ -151,7 +154,7 @@
 				Lerp( obj[i].pos, obj[i].start, obj[i].end, t );
 
 				//	かちかち
-				obj[i].param += org_speed * ( obj[i].speed / cul_speed );
+				obj[i].param += ( org_speed + plus_speed * obj[i].height ) * ( obj[i].speed / cul_speed );
 				obj[i].angle = ( PI / 180 * 45 ) * sinf( obj[i].param );
 			}
 		}

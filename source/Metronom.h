@@ -38,13 +38,14 @@ private:
 	bool			clear;			//	クリア
 	float			t;					//	割合
 	int			step;			//	ステップ
+	float			plus_speed;	//	スピード加算値
 
 public:
 	//	初期化・解放
 	Metronom( void );
 	~Metronom( void );
 	void	Initialize( void );
-	void	SetObj( int n, int x, int y, float speed );
+	void	SetObj( int n, int x, int y, float height, float speed );
 
 	//	更新
 	void	Update( void );
