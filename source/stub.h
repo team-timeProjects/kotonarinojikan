@@ -2,76 +2,10 @@
 #define _STUB_H_
 
 #include "../IEX/iextreme.h"
+#include "Campus.h"
 #include "Utility.h"
 #include <map>
 
-// 全体拡縮、全体移動のサポート
-class Campus
-{
-private:
-	Campus() {}
-	Campus(const Campus& r) = delete;
-	Campus& operator=(const Campus& r) = delete;
-public:
-	float x, y;
-	float scale;
-	float tx, ty;
-	float tscale;
-	bool zoomEnd;
-	~Campus() {}
-	static Campus* Inst()
-	{
-		static Campus inst;
-		return &inst;
-	}
-	// ターゲット座標を画面中央に向けて動かし、拡縮する
-	void Zoom(int targetX, int targetY, float scale)
-	{
-		tx = -targetX;
-		ty = -targetY;
-		tscale = scale;
-		zoomEnd = false;
-	}
-	// ズーム処理が終わった　or　終わっている
-	bool IsZoomEnd()
-	{
-		return zoomEnd;
-	}
-	void Update()
-	{
-		if (abs(tx - x) < 2 && abs(ty - y) < 2 && abs(tscale - scale) < 0.01f)
-		{
-			x = tx;
-			y = ty;
-			scale = tscale;
-			zoomEnd = true;
-		}
-		else
-		{
-			// 摩擦係数=0.9f
-			float vx = (tx - x)*(1.0f - 0.9f);
-			float vy = (ty - y)*(1.0f - 0.9f);
-			float vs = (tscale - scale)*(1.0f - 0.9f);
-			// 速度調整
-			vs = abs(vs) > 1.0f ? vs > 0 ? 1.0f : -1.0f : vs;
-			x += vx;
-			y += vy;
-			scale += vs;
-		}
-	}
-	// スケールを座標に適用、キャンパス座標==ターゲット座標なら画面中央に描画される
-	void Render(iex2DObj* image, int x, int y, int w, int h, int sx, int sy, int sw, int sh)
-	{
-		image->Render(x*scale + this->x*scale + 1280 / 2,
-					  y*scale + this->y*scale + 720 / 2,
-					  w*scale,
-					  h*scale,
-					  sx,
-					  sy,
-					  sw,
-					  sh);
-	}
-};
 
 bool Wait()// 疑似処理
 {

@@ -17,7 +17,7 @@ private:
 	};
 	enum RenderDgt
 	{
-		BACK, BIGCLOCK, CLOCK_SELECT,CLOCK_MAIN, STAGE
+		BACK, BIGCLOCK, CLOCK_SELECT,CLOCK_MAIN, STAGE,GAME
 	};
 	DelegateMgr updateDgt, renderDgt;
 	std::deque<bool(sceneMain::*)(void)> mainQueue;

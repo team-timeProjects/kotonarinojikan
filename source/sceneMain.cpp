@@ -3,11 +3,14 @@
 
 #include	"sceneMain.h"
 #include	"DataOwner.h"
+#include	"Stage.h"
 #include	"stub.h"
+#include	"Stage.h"
 
 
 sceneMain::sceneMain(void)
 {
+
 }
 
 bool sceneMain::Initialize()
@@ -26,18 +29,19 @@ bool sceneMain::Initialize()
 	renderDgt.Cleate(CLOCK_SELECT, DataOwner::GetInst()->clock, &ClockHoge::RenderSelect);
 	renderDgt.Cleate(CLOCK_MAIN, DataOwner::GetInst()->clock, &ClockHoge::Render);
 	renderDgt.Cleate(STAGE, DataOwner::GetInst()->stage, &StageHoge::Render);
+	renderDgt.Cleate(GAME, DataOwner::GetInst()->game, &Game::Render);
 
 	mainQueue.push_back(&sceneMain::StageSelect_Intro);
 	step = 0;
 
-	game = new Game;
+	//game = new Game;
 
 	return true;
 }
 
 sceneMain::~sceneMain()
 {
-	delete	game;
+	//delete	game;
 }
 
 void sceneMain::Update()
@@ -134,6 +138,7 @@ bool sceneMain::GameMain_Intro()
 		case 0:
 			if (Campus::Inst()->IsZoomEnd())
 			{
+				//DataOwner::GetInst()->stage->LoadStage(0);
 				Vector3 p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 				Campus::Inst()->Zoom(p.x, p.y, 7.0f);
 				step++;
@@ -166,6 +171,7 @@ bool sceneMain::GameMain()
 
 	renderDgt = STAGE;
 	renderDgt += CLOCK_MAIN;
+	//DataOwner::GetInst()->stage->Update();
 	if (KEY_Get(KEY_ENTER) == 3)// ƒQ[ƒ€ƒNƒŠƒA
 	{
 		mainQueue.push_back(&sceneMain::GameMain_Outro);

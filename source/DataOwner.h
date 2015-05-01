@@ -3,6 +3,7 @@
 
 #include "../IEX/iextreme.h"
 #include "Utility.h"
+#include "Stage.h"
 #include "stub.h"
 
 // 全シーンでデータ共有
