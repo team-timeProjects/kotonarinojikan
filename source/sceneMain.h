@@ -9,8 +9,6 @@ class sceneMain :public Scene
 {
 	//-------- field ---------
 private:
-	Game*	game = nullptr;
-
 	enum UpdateDgt
 	{
 		CAMPUS
@@ -19,11 +17,17 @@ private:
 	{
 		BACK, BIGCLOCK, CLOCK_SELECT,CLOCK_MAIN, STAGE,GAME
 	};
+	enum UpdateStep
+	{
+		ZOOM_IN,ZOOM_OUT
+	};
 	DelegateMgr updateDgt, renderDgt;
 	std::deque<bool(sceneMain::*)(void)> mainQueue;
-	char str[64];
 	int step;
 
+#ifdef _DEBUG
+	char str[64];
+#endif
 	//-------- method ---------
 public:
 	sceneMain();

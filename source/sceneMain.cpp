@@ -18,12 +18,11 @@ bool sceneMain::Initialize()
 	//	環境設定
 	iexLight::SetFog(800, 1000, 0);
 	//	環境光
-	
-	//	なんか色々初期化
 	DataOwner::GetInst()->Init();
 
+	// アップデートメソッド登録
 	updateDgt = updateDgt.Cleate(CAMPUS, Campus::Inst(), &Campus::Update);
-
+	// レンダーメソッド登録
 	renderDgt.Cleate(BACK, DataOwner::GetInst()->back, &BackHoge::Render);
 	renderDgt.Cleate(BIGCLOCK, DataOwner::GetInst()->bigClock, &BigClockHoge::Render);
 	renderDgt.Cleate(CLOCK_SELECT, DataOwner::GetInst()->clock, &ClockHoge::RenderSelect);
@@ -31,8 +30,10 @@ bool sceneMain::Initialize()
 	renderDgt.Cleate(STAGE, DataOwner::GetInst()->stage, &StageHoge::Render);
 	renderDgt.Cleate(GAME, DataOwner::GetInst()->gameMain, &Game::Render);
 
+	// メインキュー設定
 	mainQueue.push_back(&sceneMain::StageSelect_Intro);
-	step = 0;
+	Campus::Inst()->Zoom(970, 218, 2.5f);
+	step = ZOOM_IN;
 
 	return true;
 }
@@ -44,7 +45,7 @@ sceneMain::~sceneMain()
 void sceneMain::Update()
 {
 	updateDgt.RetentionRun();
-	if ((this->*mainQueue.front())())
+	if (!(this->*mainQueue.front())())
 	{
 		mainQueue.pop_front();
 	}
@@ -65,7 +66,7 @@ void sceneMain::Render()
 #endif
 }
 
-//　一番初め（一回だけ）
+//　タイトルからの遷移
 bool sceneMain::StageSelect_Intro()
 {
 	wsprintf(str, "StageSelect_Intro");
@@ -76,19 +77,16 @@ bool sceneMain::StageSelect_Intro()
 
 	if (Campus::Inst()->IsZoomEnd())
 	{
+		// To AppendStage
 		mainQueue.push_back(&sceneMain::AppendStage);
 		POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount());
 		Campus::Inst()->Zoom(p.x, p.y, 7.0f);
-		return true;
-	}
-	else
-	{
-		Campus::Inst()->Zoom(970, 218, 2.5f);
 		return false;
 	}
+	return true;
 }
 
-//　ステージクリア後自動的に次のステージへ
+//　ステージ追加演出
 bool sceneMain::AppendStage()
 {
 	wsprintf(str, "AppendStage");
@@ -96,16 +94,15 @@ bool sceneMain::AppendStage()
 	renderDgt = BACK;
 	renderDgt += BIGCLOCK;
 	renderDgt += CLOCK_SELECT;
+
 	if (Campus::Inst()->IsZoomEnd())
 	{
+		// To StageSelect
 		mainQueue.push_back(&sceneMain::StageSelect);
 		DataOwner::GetInst()->clock->Append();
-		return true;
-	}
-	else
-	{
 		return false;
 	}
+	return true;
 }
 
 //　ステージ選択画面
@@ -116,23 +113,29 @@ bool sceneMain::StageSelect()
 	renderDgt = BACK;
 	renderDgt += BIGCLOCK;
 	renderDgt += CLOCK_SELECT;
+
 	if (KEY_Get(KEY_ENTER) == 3)// ステージ選択
 	{
+		// To GameMain Intro
 		mainQueue.push_back(&sceneMain::GameMain_Intro);
 		POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 		Campus::Inst()->Zoom(p.x, p.y, 25.0f);
-		return true;
+		step = ZOOM_IN;
+		return false;
 	}
-	return false;
+	return true;
 }
 
-//　ステージ入るとこ（ズームするとこ）
+//　ゲームメイン導入演出
 bool sceneMain::GameMain_Intro()
 {
 	wsprintf(str, "GameMain_Intro");
+
 	switch (step)
 	{
-		case 0:
+		case ZOOM_IN:
+			renderDgt = BIGCLOCK;
+			renderDgt += CLOCK_SELECT;
 			if (Campus::Inst()->IsZoomEnd())
 			{
 				// ゲームメイン初期化
@@ -140,82 +143,84 @@ bool sceneMain::GameMain_Intro()
 				//DataOwner::GetInst()->stage->LoadStage(0);
 				POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 				Campus::Inst()->Zoom(p.x, p.y, 7.0f);
-				step++;
+				step=ZOOM_OUT;
 			}
-			renderDgt = BIGCLOCK;
-			renderDgt += CLOCK_SELECT;
-			return false;
 			break;
-		case 1:
+		case ZOOM_OUT:
 			renderDgt = GAME;
 			renderDgt += CLOCK_MAIN;
 			if (Campus::Inst()->IsZoomEnd())
 			{
-				mainQueue.push_back( &sceneMain::GameMain);
-				step = 0;
-				return true;
-			}
-			else
-			{
+				// To GameMain
+				mainQueue.push_back(&sceneMain::GameMain);
+				step = ZOOM_IN;
 				return false;
 			}
 			break;
 	}
 	return true;
+
 }
 
-//　プレイ画面
+//　ゲームメイン画面
 bool sceneMain::GameMain()
 {
 	wsprintf(str, "GameMain");
 
 	renderDgt = GAME;
+
 	// ゲームメイン処理
 	DataOwner::GetInst()->gameMain->Update();
 	if (KEY_Get(KEY_C) == 3)// ゲームクリア
 	{
+		// To GameMain Outro
 		mainQueue.push_back(&sceneMain::GameMain_Outro);
 		POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 		Campus::Inst()->Zoom(p.x, p.y, 25.0f);
-		return true;
+		step = ZOOM_IN;
+		return false;
 	}
-	return false;
+	return true;
+
 }
 
-//　クリアしてプレイ画面からステージ選択画面へ戻るとこ（ズームアウトするとこ）
+//　ゲームメインクリア後の演出
 bool sceneMain::GameMain_Outro()
 {
 	wsprintf(str, "GameMain_Outro");
 
 	switch (step)
 	{
-		case 0:
+		case ZOOM_IN:
 			renderDgt = GAME;
 			renderDgt += CLOCK_MAIN;
+
 			if (Campus::Inst()->IsZoomEnd())
 			{
-				if (DataOwner::GetInst()->clock->GetCount() < 12)
+				if (DataOwner::GetInst()->clock->GetCount() < 12)//時計のステージすべて解放した
 				{
 					POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount());
 					Campus::Inst()->Zoom(p.x, p.y, 7.0f);
 				}
 				else
 				{
-					Campus::Inst()->Zoom(978, 218, 2.5f);
+					Campus::Inst()->Zoom(978, 218, 2.5f);//大時計中央
 				}
 				step++;
 			}
-			return false;
 			break;
-		case 1:
+		case ZOOM_OUT:
 			renderDgt = BACK;
 			renderDgt += BIGCLOCK;
 			renderDgt += CLOCK_SELECT;
+
+			// To Append Stage
 			mainQueue.push_back(&sceneMain::AppendStage);
-			step = 0;
-			return true;
+			step = ZOOM_IN;
+			return false;
 			break;
 	}
 	return true;
+
 }
 

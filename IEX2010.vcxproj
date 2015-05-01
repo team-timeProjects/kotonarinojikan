@@ -103,6 +103,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\BaseObj.cpp" />
+    <ClCompile Include="source\Campus.cpp" />
     <ClCompile Include="source\Candle.cpp" />
     <ClCompile Include="source\ChoicesMgr.cpp" />
     <ClCompile Include="source\Clock.cpp" />

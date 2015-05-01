@@ -48,8 +48,8 @@ public:
 
 		gameMain->Initialize();
 
-		Campus::Inst()->pos.x = 0;
-		Campus::Inst()->pos.y = 0;
+		Campus::Inst()->posx = 0;
+		Campus::Inst()->posy = 0;
 		Campus::Inst()->scale= 1;
 		return true;
 	}
