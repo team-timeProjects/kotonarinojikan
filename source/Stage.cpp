@@ -36,9 +36,9 @@ void StageMNG::LoadStage(const int stageNum)
 	std::stringstream buf;
 	buf << stageNum;
 	//ファイル名共通部分の設定
-	std::string fileName = "DATA/BG/stage"+ buf.str() +".sdt";
+	std::string fileName = "DATA/BG/stage" + buf.str() + ".sdt";
 	TextLoader loader;
-	if( !loader.Load((char*)fileName.c_str()) ){
+	if (!loader.Load((char*)fileName.c_str())){
 		assert(!"ステージファイルが開けません（存在しません）");
 		return;
 	}
@@ -50,7 +50,7 @@ void StageMNG::LoadStage(const int stageNum)
 	int x, y;
 	float scale, speed;
 	//設定
-	for(int i=0; i<objMax; i++){
+	for (int i = 0; i < objMax; i++){
 		x = loader.LoadInt(); y = loader.LoadInt();
 		scale = loader.LoadFloat(); speed = loader.LoadFloat();
 
