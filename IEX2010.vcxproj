@@ -104,6 +104,7 @@
   <ItemGroup>
     <ClCompile Include="source\BaseObj.cpp" />
     <ClCompile Include="source\Candle.cpp" />
+    <ClCompile Include="source\ChoicesMgr.cpp" />
     <ClCompile Include="source\Clock.cpp" />
     <ClCompile Include="source\Control.cpp" />
     <ClCompile Include="source\Game.cpp" />
@@ -135,7 +136,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseObj.h" />
+    <ClInclude Include="source\Campus.h" />
     <ClInclude Include="source\Candle.h" />
+    <ClInclude Include="source\ChoicesMgr.h" />
     <ClInclude Include="source\Clock.h" />
     <ClInclude Include="source\Control.h" />
     <ClInclude Include="source\DataOwner.h" />

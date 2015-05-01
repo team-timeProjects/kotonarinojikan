@@ -115,8 +115,8 @@ public:
 	}
 	void Render()override
 	{
-			Campus::Inst()->Render(image, 855 + 128 - 25 + sinf((count-1) * ((2 * PI) / 12)) * 100,
-								   90 + 128 - 25 - cosf((count-1)*((2 * PI) / 12)) * 100,
+			Campus::Inst()->Render(image,(int)( 855 + 128 - 25 + sinf((count-1) * ((2 * PI) / 12)) * 100),
+								   (int)(90 + 128 - 25 - cosf((count-1)*((2 * PI) / 12)) * 100),
 								   50, 50, 0, 0, 128, 128);
 		
 	}
@@ -125,8 +125,8 @@ public:
 		for (int i = 0; i < count; i++)
 		{
 			// 大時計に沿うように配置
-			Campus::Inst()->Render(image, 855 + 128 - 25 + sinf(i * ((2 * PI) / 12)) * 100,
-								   90 + 128 - 25 - cosf(i*((2 * PI) / 12)) * 100,
+			Campus::Inst()->Render(image, (int)(855 + 128 - 25 + sinf(i * ((2 * PI) / 12)) * 100),
+								   (int)(90 + 128 - 25 - cosf(i*((2 * PI) / 12)) * 100),
 								   50, 50, 0, 0, 128, 128);
 		}
 	}
@@ -138,11 +138,13 @@ public:
 	{
 		return count;
 	}
-	Vector3 GetPos(int id)
+	POINT GetPos(int id)
 	{
 		// 各時計の中心点
-		return Vector3(855 + 128  + sinf(id * ((2 * PI) / 12)) * 100,
-					   90 + 128 - cosf(id*((2 * PI) / 12)) * 100, 0);
+		POINT ret;
+		ret.x = (LONG)(855 + 128 + sinf(id * ((2 * PI) / 12)) * 100);
+		ret.y = (LONG)(90 + 128 - cosf(id*((2 * PI) / 12)) * 100);
+		return ret;
 	}
 };
 

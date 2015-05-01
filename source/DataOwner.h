@@ -16,6 +16,7 @@ public:
 	BigClockHoge*	bigClock;
 	ClockHoge*		clock;
 	StageHoge*		stage;
+	Game*			gameMain;
 
 	//---------- method -----------
 public:
@@ -26,6 +27,7 @@ public:
 		SafeDelete(bigClock);
 		SafeDelete(clock);
 		SafeDelete(stage);
+		SafeDelete(gameMain);
 	}
 
 	static DataOwner* GetInst()
@@ -42,9 +44,12 @@ public:
 		bigClock = new BigClockHoge();
 		clock = new ClockHoge();
 		stage = new StageHoge();
+		gameMain = new Game();
 
-		Campus::Inst()->x = 0;
-		Campus::Inst()->y = 0;
+		gameMain->Initialize();
+
+		Campus::Inst()->pos.x = 0;
+		Campus::Inst()->pos.y = 0;
 		Campus::Inst()->scale= 1;
 		return true;
 	}

@@ -29,19 +29,16 @@ bool sceneMain::Initialize()
 	renderDgt.Cleate(CLOCK_SELECT, DataOwner::GetInst()->clock, &ClockHoge::RenderSelect);
 	renderDgt.Cleate(CLOCK_MAIN, DataOwner::GetInst()->clock, &ClockHoge::Render);
 	renderDgt.Cleate(STAGE, DataOwner::GetInst()->stage, &StageHoge::Render);
-	renderDgt.Cleate(GAME, DataOwner::GetInst()->game, &Game::Render);
+	renderDgt.Cleate(GAME, DataOwner::GetInst()->gameMain, &Game::Render);
 
 	mainQueue.push_back(&sceneMain::StageSelect_Intro);
 	step = 0;
-
-	//game = new Game;
 
 	return true;
 }
 
 sceneMain::~sceneMain()
 {
-	//delete	game;
 }
 
 void sceneMain::Update()
@@ -80,7 +77,7 @@ bool sceneMain::StageSelect_Intro()
 	if (Campus::Inst()->IsZoomEnd())
 	{
 		mainQueue.push_back(&sceneMain::AppendStage);
-		Vector3 p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount());
+		POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount());
 		Campus::Inst()->Zoom(p.x, p.y, 7.0f);
 		return true;
 	}
@@ -122,7 +119,7 @@ bool sceneMain::StageSelect()
 	if (KEY_Get(KEY_ENTER) == 3)// ステージ選択
 	{
 		mainQueue.push_back(&sceneMain::GameMain_Intro);
-		Vector3 p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
+		POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 		Campus::Inst()->Zoom(p.x, p.y, 25.0f);
 		return true;
 	}
@@ -138,8 +135,10 @@ bool sceneMain::GameMain_Intro()
 		case 0:
 			if (Campus::Inst()->IsZoomEnd())
 			{
+				// ゲームメイン初期化
+				DataOwner::GetInst()->gameMain->MainInitialize();
 				//DataOwner::GetInst()->stage->LoadStage(0);
-				Vector3 p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
+				POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 				Campus::Inst()->Zoom(p.x, p.y, 7.0f);
 				step++;
 			}
@@ -148,7 +147,7 @@ bool sceneMain::GameMain_Intro()
 			return false;
 			break;
 		case 1:
-			renderDgt = STAGE;
+			renderDgt = GAME;
 			renderDgt += CLOCK_MAIN;
 			if (Campus::Inst()->IsZoomEnd())
 			{
@@ -162,6 +161,7 @@ bool sceneMain::GameMain_Intro()
 			}
 			break;
 	}
+	return true;
 }
 
 //　プレイ画面
@@ -169,13 +169,13 @@ bool sceneMain::GameMain()
 {
 	wsprintf(str, "GameMain");
 
-	renderDgt = STAGE;
-	renderDgt += CLOCK_MAIN;
-	//DataOwner::GetInst()->stage->Update();
-	if (KEY_Get(KEY_ENTER) == 3)// ゲームクリア
+	renderDgt = GAME;
+	// ゲームメイン処理
+	DataOwner::GetInst()->gameMain->Update();
+	if (KEY_Get(KEY_C) == 3)// ゲームクリア
 	{
 		mainQueue.push_back(&sceneMain::GameMain_Outro);
-		Vector3 p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
+		POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 		Campus::Inst()->Zoom(p.x, p.y, 25.0f);
 		return true;
 	}
@@ -190,13 +190,13 @@ bool sceneMain::GameMain_Outro()
 	switch (step)
 	{
 		case 0:
-			renderDgt = STAGE;
+			renderDgt = GAME;
 			renderDgt += CLOCK_MAIN;
 			if (Campus::Inst()->IsZoomEnd())
 			{
 				if (DataOwner::GetInst()->clock->GetCount() < 12)
 				{
-					Vector3 p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount());
+					POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount());
 					Campus::Inst()->Zoom(p.x, p.y, 7.0f);
 				}
 				else
@@ -216,5 +216,6 @@ bool sceneMain::GameMain_Outro()
 			return true;
 			break;
 	}
+	return true;
 }
 
