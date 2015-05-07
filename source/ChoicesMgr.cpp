@@ -1,5 +1,6 @@
 #include "ChoicesMgr.h"
 #include "../IEX/iextreme.h"
+#include "TimeObject.h"
 #include "Utility.h"
 
 ChoicesMgr::ChoicesMgr()
@@ -9,7 +10,7 @@ ChoicesMgr::ChoicesMgr()
 	
 ChoicesMgr::~ChoicesMgr()
 {
-	for (SuperHoge*& r : choicesList)
+	for (TimeObject*& r : choicesList)
 	{
 		SafeDelete(r);
 	}
@@ -17,9 +18,9 @@ ChoicesMgr::~ChoicesMgr()
 
 void ChoicesMgr::Update()
 {
-	for (SuperHoge*& r : choicesList)
+	for (TimeObject*& r : choicesList)
 	{
-		r;
+		r->Update();
 	}
 	
 }
@@ -27,8 +28,8 @@ void ChoicesMgr::Update()
 void ChoicesMgr::Render()
 {
 
-	for (SuperHoge*& r : choicesList)
+	for (TimeObject*& r : choicesList)
 	{
-		SafeDelete(r);
+		r->Render();
 	}
 }

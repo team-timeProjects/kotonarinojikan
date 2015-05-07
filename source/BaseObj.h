@@ -13,12 +13,12 @@ private:
 
 public:
 	//	初期化・解放
-	BaseObj( void );
-	~BaseObj( void );
+	BaseObj(void) {};
+	virtual ~BaseObj(void) {};
 	
 	//	更新・描画
-	void	Update( void );
-	void	Render( void );
+	virtual void	Update(void) {};
+	virtual void	Render(void) {};
 };
 
 //****************************************************************************************

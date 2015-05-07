@@ -3,13 +3,13 @@
 
 #include <vector>
 
-class SuperHoge;// 時計やろうそくの基底クラス
+class TimeObject;// 時計やろうそくの基底クラス
 
 class ChoicesMgr
 {
 	//------------ field ---------------
 private:
-	std::vector<SuperHoge*> choicesList;
+	std::vector<TimeObject*> choicesList;
 
 	//------------ method ----------------
 public:

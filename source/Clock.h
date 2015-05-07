@@ -2,12 +2,14 @@
 #ifndef		__CLOCK_H__
 #define	__CLOCK_H__
 
+#include "TimeObject.h"
+
 //****************************************************************************************
 //
 //	Clockクラス
 //
 //****************************************************************************************
-class Clock
+class Clock:public TimeObject
 {
 private:
 	struct CLOCK_OBJ	//	とりあえず時計の置き物

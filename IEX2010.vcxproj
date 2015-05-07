@@ -156,6 +156,7 @@
     <ClInclude Include="source\system\System.h" />
     <ClInclude Include="IEX\iextreme.h" />
     <ClInclude Include="source\TextLoader.h" />
+    <ClInclude Include="source\TimeObject.h" />
     <ClInclude Include="source\Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
