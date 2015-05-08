@@ -3,6 +3,7 @@
 
 #include "../IEX/iextreme.h"
 #include "Campus.h"
+#include "Control.h"
 #include "Utility.h"
 #include <map>
 
@@ -101,6 +102,12 @@ public:
 	void Render()override
 	{
 		Campus::Inst()->Render(image, 850, 90, 256, 256, 0, 0, 512, 512);
+		POINT mouse;
+		mouse.x = Mouse::cursor.x;
+		mouse.y = Mouse::cursor.y;
+		mouse = Campus::Inst()->TransCampusPos(mouse);
+		mouse = Campus::Inst()->TransCampusPos(mouse);
+		image->Render(mouse.x, mouse.y, 50, 50, 0, 0, 512, 512);
 	}
 };
 
@@ -115,10 +122,10 @@ public:
 	}
 	void Render()override
 	{
-			Campus::Inst()->Render(image,(int)( 855 + 128 - 25 + sinf((count-1) * ((2 * PI) / 12)) * 100),
-								   (int)(90 + 128 - 25 - cosf((count-1)*((2 * PI) / 12)) * 100),
-								   50, 50, 0, 0, 128, 128);
-		
+		Campus::Inst()->Render(image, (int)(855 + 128 - 25 + sinf((count - 1) * ((2 * PI) / 12)) * 100),
+							   (int)(90 + 128 - 25 - cosf((count - 1)*((2 * PI) / 12)) * 100),
+							   50, 50, 0, 0, 128, 128);
+
 	}
 	void RenderSelect()
 	{

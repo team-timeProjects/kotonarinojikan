@@ -15,6 +15,7 @@ private:
 public:
 	ChoicesMgr();
 	~ChoicesMgr();
+	void Init();
 	void Update();
 	void Render();
 };

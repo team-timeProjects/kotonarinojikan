@@ -16,6 +16,11 @@ ChoicesMgr::~ChoicesMgr()
 	}
 }
 
+void ChoicesMgr::Init()
+{
+
+}
+
 void ChoicesMgr::Update()
 {
 	for (TimeObject*& r : choicesList)

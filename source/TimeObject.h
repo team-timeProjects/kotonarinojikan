@@ -8,10 +8,10 @@ class TimeObject
 public:
 	virtual ~TimeObject() {}
 
-	virtual void Update()=0;
-	virtual void Render()=0;
-	virtual bool CheckWithin(const POINT& p, const int& startX, const int& startY, const int size) { return false; };
-	
+	virtual void Update() = 0;
+	virtual void Render() = 0;
+	virtual bool CheckWithin(const POINT& p) { return false; };
+	virtual POINT& GetPosCC() = 0;
 };
 
 #endif
