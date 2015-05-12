@@ -178,7 +178,11 @@ bool sceneMain::GameMain()
 
 	// ゲームメイン処理
 	DataOwner::GetInst()->gameMain->Update();
-	if (KEY_Get(KEY_C) == 3)// ゲームクリア
+	//if (KEY_Get(KEY_D) == 3)//　ゲームをやめる
+	//{
+	//	mainQueue.push_back(&sceneMain::StageSelect_Intro);
+	//}
+	if (KEY_Get(KEY_C) == 3)//　ゲームクリア
 	{
 		// To GameMain Outro
 		mainQueue.push_back(&sceneMain::GameMain_Outro);
