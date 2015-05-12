@@ -66,6 +66,7 @@ private:
 public:
 	~DelegateMgr()
 	{
+		delegateQueue.clear();
 		for (auto it = delegateList.begin(); it != delegateList.end();)
 		{
 			SafeDelete(it->second);
@@ -75,6 +76,11 @@ public:
 	// ƒLƒ…[‚ğ‰Šú‰»Œã“o˜^
 	DelegateMgr& operator=(int idx)
 	{
+		//for (auto it = delegateQueue.begin(); it != delegateQueue.end();)
+		//{
+		//	SafeDelete(*it);
+		//	it = delegateQueue.erase(it);
+		//}
 		delegateQueue.clear();
 		delegateQueue.push_back(delegateList[idx]);
 		return *this;
@@ -91,6 +97,9 @@ public:
 		while (!delegateQueue.empty())
 		{
 			(*delegateQueue.front())();
+			//auto it = delegateQueue.begin();
+			//SafeDelete(*it);
+			//delegateQueue.erase(it);
 			delegateQueue.pop_front();
 		}
 	}

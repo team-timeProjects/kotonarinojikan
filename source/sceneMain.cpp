@@ -5,7 +5,7 @@
 #include	"DataOwner.h"
 #include	"Stage.h"
 #include	"stub.h"
-#include	"Stage.h"
+#include	"ChoicesMgr.h"
 
 
 sceneMain::sceneMain(void)
@@ -25,10 +25,10 @@ bool sceneMain::Initialize()
 	// レンダーメソッド登録
 	renderDgt.Cleate(BACK, DataOwner::GetInst()->back, &BackHoge::Render);
 	renderDgt.Cleate(BIGCLOCK, DataOwner::GetInst()->bigClock, &BigClockHoge::Render);
-	renderDgt.Cleate(CLOCK_SELECT, DataOwner::GetInst()->clock, &ClockHoge::RenderSelect);
+	renderDgt.Cleate(CLOCK_SELECT, DataOwner::GetInst()->choiceClock, &ChoicesMgr::Render);
 	renderDgt.Cleate(CLOCK_MAIN, DataOwner::GetInst()->clock, &ClockHoge::Render);
-	renderDgt.Cleate(STAGE, DataOwner::GetInst()->stage, &StageHoge::Render);
-	renderDgt.Cleate(GAME, DataOwner::GetInst()->gameMain, &Game::Render);
+	//renderDgt.Cleate(STAGE, DataOwner::GetInst()->stage, &StageHoge::Render);
+	renderDgt.Cleate(GAME, DataOwner::GetInst()->gameMain, &StageMNG::Render);
 
 	// メインキュー設定
 	mainQueue.push_back(&sceneMain::StageSelect_Intro);
@@ -71,6 +71,8 @@ bool sceneMain::StageSelect_Intro()
 {
 	wsprintf(str, "StageSelect_Intro");
 
+	DataOwner::GetInst()->choiceClock->Update();
+
 	renderDgt = BACK;
 	renderDgt += BIGCLOCK;
 	renderDgt += CLOCK_SELECT;
@@ -91,6 +93,8 @@ bool sceneMain::AppendStage()
 {
 	wsprintf(str, "AppendStage");
 
+	DataOwner::GetInst()->choiceClock->Update();
+
 	renderDgt = BACK;
 	renderDgt += BIGCLOCK;
 	renderDgt += CLOCK_SELECT;
@@ -109,6 +113,8 @@ bool sceneMain::AppendStage()
 bool sceneMain::StageSelect()
 {
 	wsprintf(str, "StageSelect");
+
+	DataOwner::GetInst()->choiceClock->Update();
 
 	renderDgt = BACK;
 	renderDgt += BIGCLOCK;
@@ -131,19 +137,20 @@ bool sceneMain::GameMain_Intro()
 {
 	wsprintf(str, "GameMain_Intro");
 
+
 	switch (step)
 	{
 		case ZOOM_IN:
+			DataOwner::GetInst()->choiceClock->Update();
 			renderDgt = BIGCLOCK;
 			renderDgt += CLOCK_SELECT;
 			if (Campus::Inst()->IsZoomEnd())
 			{
-				// ゲームメイン初期化
-				DataOwner::GetInst()->gameMain->MainInitialize();
-				//DataOwner::GetInst()->stage->LoadStage(0);
+				// ステージロード
+				DataOwner::GetInst()->gameMain->LoadStage(DataOwner::GetInst()->clock->GetCount());
 				POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 				Campus::Inst()->Zoom(p.x, p.y, 7.0f);
-				step=ZOOM_OUT;
+				step = ZOOM_OUT;
 			}
 			break;
 		case ZOOM_OUT:
@@ -214,6 +221,7 @@ bool sceneMain::GameMain_Outro()
 			renderDgt += BIGCLOCK;
 			renderDgt += CLOCK_SELECT;
 
+			DataOwner::GetInst()->choiceClock->Update();
 			// To Append Stage
 			mainQueue.push_back(&sceneMain::AppendStage);
 			step = ZOOM_IN;

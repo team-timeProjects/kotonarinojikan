@@ -4,6 +4,7 @@
 #include "../IEX/iextreme.h"
 #include "Utility.h"
 #include "Stage.h"
+#include "ChoicesMgr.h"
 #include "stub.h"
 
 // 全シーンでデータ共有
@@ -16,7 +17,8 @@ public:
 	BigClockHoge*	bigClock;
 	ClockHoge*		clock;
 	StageHoge*		stage;
-	Game*			gameMain;
+	StageMNG*		gameMain;
+	ChoicesMgr*		choiceClock;
 
 	//---------- method -----------
 public:
@@ -28,6 +30,7 @@ public:
 		SafeDelete(clock);
 		SafeDelete(stage);
 		SafeDelete(gameMain);
+		SafeDelete(choiceClock);
 	}
 
 	static DataOwner* GetInst()
@@ -44,9 +47,11 @@ public:
 		bigClock = new BigClockHoge();
 		clock = new ClockHoge();
 		stage = new StageHoge();
-		gameMain = new Game();
+		gameMain = new StageMNG();
+		choiceClock = new ChoicesMgr();
 
-		gameMain->Initialize();
+		choiceClock->Init();
+
 
 		Campus::Inst()->posx = 0;
 		Campus::Inst()->posy = 0;

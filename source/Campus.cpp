@@ -60,3 +60,29 @@ void Campus::Render(iex2DObj* image, int x, int y, int w, int h, int sx, int sy,
 				  sw,
 				  sh);
 }
+
+POINT Campus::TransScreenPos(const POINT& p)const
+{
+	POINT ret;
+	ret.x = (int)(p.x*scale + (this->posx*scale) + iexSystem::ScreenWidth / 2);
+	ret.y = (int)(p.y*scale + (this->posy*scale) + iexSystem::ScreenHeight / 2);
+	return ret;
+}
+
+POINT Campus::TransCampusPos(const POINT& p)const
+{
+	POINT ret;
+	ret.x = (int)((p.x - (iexSystem::ScreenWidth / 2) - (this->posx*scale)) / scale);
+	ret.y = (int)((p.x - (iexSystem::ScreenWidth / 2) - (this->posy*scale)) / scale);
+	return ret;
+}
+
+int Campus::TransWidth(const int w)const
+{
+	return (int)(w*scale);
+}
+
+int Campus::TransHeight(const int h)const
+{
+	return (int)(h*scale);
+}

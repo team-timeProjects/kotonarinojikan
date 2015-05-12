@@ -33,6 +33,12 @@ public:
 	void Update();
 	// スケールを座標に適用、キャンパス座標==ターゲット座標なら画面中央に描画される
 	void Render(iex2DObj* image, int x, int y, int w, int h, int sx, int sy, int sw, int sh);
+	// キャンパスを適用したスクリーン座標に変換
+	POINT TransScreenPos(const POINT& p)const;
+	// スクリーン座標をキャンパス内の座標に変換
+	POINT TransCampusPos(const POINT& p)const;
+	int TransWidth(const int w)const;
+	int TransHeight(const int h)const;
 };
 
 #endif

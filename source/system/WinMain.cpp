@@ -130,7 +130,7 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-//	_CrtSetBreakAlloc();
+//	_CrtSetBreakAlloc(543);
 
 	MSG		msg;
 	HWND	hWnd;
@@ -155,6 +155,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//	‘S‰ð•ú	
 	delete	MainFrame;
 	SYSTEM_Release();
+	IEX_ReleaseAudio();
+	iexParticle::Release();
 	iexSystem::CloseDebugWindow();
 	IEX_ReleaseInput();
 	IEX_Release();
