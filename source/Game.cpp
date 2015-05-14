@@ -50,9 +50,6 @@ CAMERA	m_Camera;
 		m_Metronom = new Metronom();
 		m_Candle = new Candle();
 
-		//	シーン設定
-		m_State = MAIN_STATE_INIT;
-
 		return true;
 	}
 
@@ -67,24 +64,8 @@ CAMERA	m_Camera;
 		m_Camera.scale		=	0;
 		m_Camera.param		=	0.0f;
 
-		TitleInitialize();
 		GameInitialize();
 
-		//	タイトルへ
-		m_State = MAIN_STATE_GAME;
-	}
-
-	//	タイトル初期化
-	void	Game::TitleInitialize( void )
-	{
-		m_Title.obj.pos.x		=	640;
-		m_Title.obj.pos.y		=	360;
-		m_Title.obj.hourAngle	=	PI / 180.0f * 30.0f;
-		m_Title.obj.minuteAngle =	0.0f;
-		m_Title.obj.start		=	m_Title.obj.pos;
-		m_Title.obj.end			=	m_Title.obj.pos;
-		m_Title.step			=	0;
-		m_Title.t				=	0.0f;
 	}
 
 	//	ゲーム初期化
@@ -102,59 +83,7 @@ CAMERA	m_Camera;
 	//	更新
 	void	Game::Update( void )
 	{
-		switch ( m_State )
-		{
-		case MAIN_STATE_INIT:	//	breakせずそのまま下へ
-			MainInitialize();
-
-		case MAIN_STATE_TITLE:	//	タイトル
-			TitleUpdate();
-			break;
-
-		case MAIN_STATE_GAME:	//	ゲーム本編
-			GameUpdate();
-			break;
-		}
-	}
-
-	//	タイトル更新
-	void	Game::TitleUpdate( void )
-	{		
-		//	常に回転
-		m_Title.obj.minuteAngle +=	PI / 180 * 1.0f;
-		m_Title.obj.hourAngle	+= ( PI / 180 ) / 12.0f;
-
-		//	ゲーム本体と同期
-		m_GameClock->GetTitleInfo( m_Title.obj.hourAngle, m_Title.obj.minuteAngle );
-
-		switch ( m_Title.step )
-		{
-		case 0:		//	選択
-			if ( CheckWithin( Mouse::cursor, m_Title.obj.pos.x - 150, m_Title.obj.pos.y - 150, GameInfo::WNDSIZE ) )
-			{
-				if ( Mouse::Click() )
-				{
-					m_Title.step++;
-				}
-			}
-			break;
-
-		case 1:		//	ズームアップ
-			m_Camera.param += PI / 180 * CameraInfo::ZOOM_SPEED;
-			m_Camera.scale = ( int )( CameraInfo::ZOOM_MAX * sinf( m_Camera.param ) );
-
-			//	一定以上近づいたら
-			if ( m_Camera.scale >= CameraInfo::ZOOM_MAX )
-			{
-				m_Camera.param = PI / 2;
-				m_Camera.scale = CameraInfo::ZOOM_MAX;
-				m_State = MAIN_STATE_GAME;
-
-				//	切り替わる前にズレを計算しておく
-				m_GameClock->CalcPos();
-			}
-			break;
-		}
+		GameUpdate();
 	}
 
 	//	ゲーム本編更新
@@ -172,45 +101,7 @@ CAMERA	m_Camera;
 	//	描画
 	void	Game::Render( void )
 	{
-		//	背景描画
-		//m_BG->Render( 0, 0, 1280, 720, 0, 0, 2048, 1024 );
-
-		switch ( m_State )
-		{
-		case MAIN_STATE_INIT:
-			break;
-
-		case MAIN_STATE_TITLE:
-			TitleRender();
-			break;
-
-		case MAIN_STATE_GAME:
-			GameRender();
-			break;
-		}
-	}
-
-	//	タイトル描画
-	void	Game::TitleRender( void )
-	{
-		int	x, y, w, h, sx, sy, sw, sh;
-
-		//	時計描画
-		x = m_Title.obj.pos.x - 150 - m_Camera.scale / 2;
-		y = m_Title.obj.pos.y - 150 - m_Camera.scale / 2;
-		w = h = 300 + m_Camera.scale;
-		sx = sy = 0;
-		sw = sh = 256;
-		m_Clock->Render( x, y, w, h, sx, sy, sw, sh, RS_COPY, 0xFFFF7777 );
-
-		//	分針描画
-		sx = 256;
-		m_Clock->Render( x, y, w, h, sx, sy, sw, sh, m_Title.obj.pos, m_Title.obj.minuteAngle );
-
-		//	時針描画
-		sx = 0;
-		sy = 256;
-		m_Clock->Render( x, y, w, h, sx, sy, sw, sh, m_Title.obj.pos, m_Title.obj.hourAngle );
+		GameRender();
 	}
 
 	//	ゲーム本編描画

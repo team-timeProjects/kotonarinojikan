@@ -134,6 +134,9 @@
     <ClCompile Include="IEX\IEX_Texture.cpp" />
     <ClCompile Include="IEX\IEX_View.cpp" />
     <ClCompile Include="source\TextLoader.cpp" />
+    <ClCompile Include="source\tomAL\tomAL.cpp" />
+    <ClCompile Include="source\tomAL\tomALInmemory.cpp" />
+    <ClCompile Include="source\tomAL\tomALStreaming.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseObj.h" />
@@ -157,6 +160,7 @@
     <ClInclude Include="IEX\iextreme.h" />
     <ClInclude Include="source\TextLoader.h" />
     <ClInclude Include="source\TimeObject.h" />
+    <ClInclude Include="source\tomAL\tomAL.h" />
     <ClInclude Include="source\Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

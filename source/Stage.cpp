@@ -91,7 +91,7 @@ void StageMNG::LoadStage(const int stageNum)
 	std::stringstream buf;
 	buf << stageNum;
 	//ƒtƒ@ƒCƒ‹–¼‹¤’Ê•”•ª‚ÌÝ’è
-	std::string fileName = "DATA/BG/stage"+ buf.str();
+	std::string fileName = "DATA/BG/stage"+ buf.str()+".sdt";
 	TextLoader loader;
 	loader.Load((char*)fileName.c_str());
 

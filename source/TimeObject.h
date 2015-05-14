@@ -1,6 +1,7 @@
 #ifndef _TIMEOBJECT_H_
 #define _TIMEOBJECT_H_
 
+#include "iextreme.h"
 
 // 時計・蝋燭・メトロノームの基底クラス
 class TimeObject

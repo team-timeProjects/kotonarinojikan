@@ -80,21 +80,8 @@
 class Game
 {
 public:
-	enum MAIN_STATE
-	{
-		MAIN_STATE_INIT,			//	初期化
-		MAIN_STATE_TITLE,			//	タイトル
-		MAIN_STATE_STAGESELECT,		//	ステージセレクト
-		MAIN_STATE_GAME,			//	ゲーム本編
-	};
 
 private:
-	struct TITLE_WORK
-	{
-		CLOCK_OBJ	obj;
-		float		t;
-		int			step;
-	};
 
 private:
 	//	オブジェクト
@@ -102,7 +89,6 @@ private:
 	iex2DObj*	m_Clock;	//	時計画像
 	
 	//	パラメータ
-	TITLE_WORK	m_Title;					//	タイトル用パラメータ
 	Clock*				m_GameClock;		//	時計選択時の動作
 	Metronom*		m_Metronom;			//	メトロノーム選択時の動作
 	Candle*			m_Candle;				//	ろうそく選択時の動作
@@ -118,16 +104,13 @@ public:
 	bool	Initialize( void );
 	void	MainInitialize( void );
 	void	GameInitialize( void );
-	void	TitleInitialize( void );
-
+	
 	//　更新
 	void	Update( void );
-	void	TitleUpdate( void );
 	void	GameUpdate( void );
 
 	//		描画
 	void	Render( void );
-	void	TitleRender( void );
 	void	GameRender( void );
 
 	//　MAIN_STATE_GAME動作関数
