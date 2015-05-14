@@ -6,6 +6,7 @@
 #include "Stage.h"
 #include "ChoicesMgr.h"
 #include "stub.h"
+#include "Clock.h"
 
 // 全シーンでデータ共有
 class DataOwner // singleton
@@ -17,7 +18,7 @@ public:
 	BigClockHoge*	bigClock;
 	ClockHoge*		clock;
 	StageHoge*		stage;
-	StageMNG*		gameMain;
+	Clock*		gameMain;
 	ChoicesMgr*		choiceClock;
 
 	//---------- method -----------
@@ -47,7 +48,7 @@ public:
 		bigClock = new BigClockHoge();
 		clock = new ClockHoge();
 		stage = new StageHoge();
-		gameMain = new StageMNG();
+		gameMain = new Clock();
 		choiceClock = new ChoicesMgr();
 
 		choiceClock->Init();

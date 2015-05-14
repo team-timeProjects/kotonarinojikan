@@ -4,6 +4,7 @@
 #include	"Game.h"
 
 #include	"Clock.h"
+#include	"Stage.h"
 
 //****************************************************************************************
 //
@@ -48,6 +49,17 @@
 
 		//	オブジェクト情報初期化
 		InitObj();
+		StageMNG stage;
+		stage.LoadStage(1);
+		int i=0;
+		Object* _obj = stage.GetObj(i);
+
+		while (_obj != nullptr)
+		{
+			SetObj(i, _obj->x, _obj->y, 30.0f, 0.0f, _obj->scale);
+			i++;
+			_obj = stage.GetObj(i);
+		}
 
 		return true;
 	}

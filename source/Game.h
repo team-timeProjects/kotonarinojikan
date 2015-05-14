@@ -39,36 +39,7 @@
 		float		param;
 		int		scale;
 	};
-	struct CLOCK_OBJ	//	とりあえず時計の置き物
-	{
-		POINT		pos;			//	位置
-		POINT		start;			//	元の位置
-		POINT		end;			//	移動後の位置
-		POINT		shift;			//	カメラ用ずれ幅
-		float		minuteAngle;	//	分針の向き
-		float		hourAngle;		//	時針の向き
-		float		speed;			//	速度
-	};
-	struct METRONOM
-	{
-		POINT		pos;			//	位置
-		POINT		start;		//	元の位置
-		POINT		end;			//	移動後の位置
-		POINT		shift;		//	カメラ用ずれ幅
-		float			speed;		//	速度
-		float			height;		//	高さ
-		float			angle;		//	向き
-	};
-	struct CANDLE
-	{
-		POINT		pos;			//	位置
-		POINT		start;		//	元の位置
-		POINT		end;			//	移動後の位置
-		POINT		shift;		//	カメラ用ずれ幅
-		float			speed;		//	速度
-		float			height;		//	高さ
-	};
-
+	
 //----------------------------------------------------------------------------------
 //	extern宣言
 //----------------------------------------------------------------------------------

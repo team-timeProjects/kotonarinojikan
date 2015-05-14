@@ -9,7 +9,7 @@ public:
 	void Setting(int x, int y, float scale, float speed, int another, int childNum);
 	void SetChild(int id, int x, int y);
 	void Update();
-private:
+public:
 	enum class TYPE{
 		BASE, MOVE
 	};
@@ -47,4 +47,10 @@ private:
 	iex2DObj* tex = nullptr;
 	Object* obj = nullptr;
 	int objMax = 0;
+public:
+	Object* GetObj(int idx)
+	{
+		if (idx >= objMax)return nullptr;
+		return &obj[idx];
+	}
 };

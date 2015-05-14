@@ -28,7 +28,7 @@ bool sceneMain::Initialize()
 	renderDgt.Cleate(CLOCK_SELECT, DataOwner::GetInst()->choiceClock, &ChoicesMgr::Render);
 	renderDgt.Cleate(CLOCK_MAIN, DataOwner::GetInst()->clock, &ClockHoge::Render);
 	//renderDgt.Cleate(STAGE, DataOwner::GetInst()->stage, &StageHoge::Render);
-	renderDgt.Cleate(GAME, DataOwner::GetInst()->gameMain, &StageMNG::Render);
+	renderDgt.Cleate(GAME, DataOwner::GetInst()->gameMain, &Clock::Render);
 
 	// メインキュー設定
 	mainQueue.push_back(&sceneMain::StageSelect_Intro);
@@ -147,7 +147,8 @@ bool sceneMain::GameMain_Intro()
 			if (Campus::Inst()->IsZoomEnd())
 			{
 				// ステージロード
-				DataOwner::GetInst()->gameMain->LoadStage(DataOwner::GetInst()->clock->GetCount());
+				DataOwner::GetInst()->gameMain->Initialize();
+				//DataOwner::GetInst()->gameMain->LoadStage(DataOwner::GetInst()->clock->GetCount());
 				POINT p = DataOwner::GetInst()->clock->GetPos(DataOwner::GetInst()->clock->GetCount() - 1);
 				Campus::Inst()->Zoom(p.x, p.y, 7.0f);
 				step = ZOOM_OUT;

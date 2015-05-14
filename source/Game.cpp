@@ -33,8 +33,8 @@ CAMERA	m_Camera;
 	Game::~Game( void )
 	{
 		delete	m_BG;		m_BG		=	NULL;
-		delete	m_Clock;	m_Clock		=	NULL;
-		delete	m_GameClock;	m_GameClock = NULL;
+		//delete	m_Clock;	m_Clock		=	NULL;
+		//delete	m_GameClock;	m_GameClock = NULL;
 	}
 
 	//	‰Šú‰»
@@ -47,8 +47,8 @@ CAMERA	m_Camera;
 		m_Clock = new iex2DObj( "DATA/timer.png" );
 
 		m_GameClock = new Clock();
-		m_Metronom = new Metronom();
-		m_Candle = new Candle();
+		//m_Metronom = new Metronom();
+		//m_Candle = new Candle();
 
 		return true;
 	}
@@ -72,8 +72,8 @@ CAMERA	m_Camera;
 	void	Game::GameInitialize( void )
 	{
 		m_GameClock->Initialize();
-		m_Metronom->Initialize();
-		m_Candle->Initialize();
+		//m_Metronom->Initialize();
+		//m_Candle->Initialize();
 	}
 
 //----------------------------------------------------------------------------

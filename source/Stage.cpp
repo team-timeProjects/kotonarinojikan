@@ -2,6 +2,7 @@
 #include	"TextLoader.h"
 #include	<string>
 #include	<sstream>
+#include	"Utility.h"
 
 namespace{
 	const float SPEED = 0.01f;
@@ -10,10 +11,12 @@ namespace{
 
 Object::~Object()
 {
-	delete[] childX;
+	SafeDeleteArray(childX);
+	SafeDeleteArray(childY);
+	/*delete[] childX;
 	childX = nullptr;
 	delete[] childY;
-	childY = nullptr;
+	childY = nullptr;*/
 }
 
 void Object::Setting(int x, int y, float scale, float speed, int another, int childNum)
@@ -76,16 +79,20 @@ StageMNG::~StageMNG()
 {
 	delete tex;
 	tex = nullptr;
-	delete[] obj;
-	obj = nullptr;
+	if (obj != nullptr)
+	{
+		delete[] obj;
+		obj = nullptr;
+	}
 }
 
 void StageMNG::LoadStage(const int stageNum)
 {
 	//î•ñ‚Ì”jŠü
 	objMax = 0;
-	delete[] obj;
-	obj = nullptr;
+	SafeDeleteArray(obj);
+	/*delete[] obj;
+	obj = nullptr;*/
 
 	//stageNum‚©‚çƒtƒ@ƒCƒ‹–¼‚Ìİ’è
 	std::stringstream buf;

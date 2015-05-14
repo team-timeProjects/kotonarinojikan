@@ -27,8 +27,8 @@ private:
 
 private:
 	//	パラメータ
-	static	const	int		CLOCK_MAX = 4;
-	CLOCK_OBJ	obj[4];		//	時計構造体
+	static	const	int		CLOCK_MAX = 32;
+	CLOCK_OBJ	obj[CLOCK_MAX];		//	時計構造体
 	POINT		length;		//	距離
 	float		org_speed;	//	元のスピード
 	float		cul_speed;	//	現在選択中のそもそものスピード
