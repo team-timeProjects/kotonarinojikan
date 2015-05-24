@@ -2,6 +2,9 @@
 #ifndef __GAME_H__
 #define __GAME_H__
 
+#include "TimeObject.h"
+
+
 //*****************************************************************************************************
 //
 //	Gameクラス
@@ -11,83 +14,89 @@
 //----------------------------------------------------------------------------------
 //	クラス前方宣言
 //----------------------------------------------------------------------------------
-	class		Clock;
-	class		Metronom;
-	class		Candle;
+class		Clock;
+class		Metronom;
+class		Candle;
 
 //----------------------------------------------------------------------------------
 //	定数宣言
 //----------------------------------------------------------------------------------
-	namespace GameInfo
-	{
-		//	画像幅
-		const	int		WNDSIZE = 300;
-	}
-	namespace CameraInfo
-	{
-		const	int		ZOOM_MAX = 850;
-		const	float		ZOOM_SPEED = 2.0f;
-	}
+//namespace GameInfo
+//{
+//	//	画像幅
+//	const	int		WNDSIZE = 300;
+//}
+//namespace CameraInfo
+//{
+//	const	int		ZOOM_MAX = 850;
+//	const	float	ZOOM_SPEED = 2.0f;
+//}
 
 //----------------------------------------------------------------------------------
 //	構造体
 //----------------------------------------------------------------------------------
-	struct CAMERA
-	{
-		POINT	c_pos;
-		POINT	length;
-		float		param;
-		int		scale;
-	};
-	
+//struct CAMERA
+//{
+//	POINT	c_pos;
+//	POINT	length;
+//	float	param;
+//	int		scale;
+//};
+
+
 //----------------------------------------------------------------------------------
 //	extern宣言
 //----------------------------------------------------------------------------------
-	extern	CAMERA	m_Camera;
+//extern	CAMERA	m_Camera;
 
 //----------------------------------------------------------------------------------
 //	Gameクラス
 //----------------------------------------------------------------------------------
-class Game
-{
-public:
+//class Game
+//{
+//	//---------- field -----------
+//private:
+//	int judgeTimer = 0;
+//	int judgeNum = 0;
+//
+//	//----------- method -------------
+//public:
+//	Game();
+//	~Game();
+//	void Init(int stageID);
+//	void Update();
+//	void Render();
+//};
 
-private:
-
-private:
-	//	オブジェクト
-	iex2DObj*	m_BG;		//	背景
-	iex2DObj*	m_Clock;	//	時計画像
-	
-	//	パラメータ
-	Clock*				m_GameClock;		//	時計選択時の動作
-	Metronom*		m_Metronom;			//	メトロノーム選択時の動作
-	Candle*			m_Candle;				//	ろうそく選択時の動作
-	
-	int			m_State;		//	シーン遷移
-
-public:
-	//	初期化・解放
-	Game( void );
-	~Game( void );
-	
-	//　初期化・読み込み
-	bool	Initialize( void );
-	void	MainInitialize( void );
-	void	GameInitialize( void );
-	
-	//　更新
-	void	Update( void );
-	void	GameUpdate( void );
-
-	//		描画
-	void	Render( void );
-	void	GameRender( void );
-
-	//　MAIN_STATE_GAME動作関数
-	bool	CheckWithin( const POINT& p, const int& startX, const int& startY, const int size );	//	範囲内かどうか調べる
-	void	Lerp( POINT& out, const POINT p1, const POINT p2, float t );	//	POINT補間
-};
+//class Game
+//{
+//private:
+//	//	パラメータ
+//	Clock*		m_GameClock;		//	時計選択時の動作
+//	Metronom*	m_Metronom;			//	メトロノーム選択時の動作
+//	Candle*		m_Candle;			//	ろうそく選択時の動作
+//
+//public:
+//	//	初期化・解放
+//	Game(void);
+//	~Game(void);
+//
+//	//　初期化・読み込み
+//	bool	Initialize(void);
+//	void	GameInitialize(void);
+//
+//	//　更新
+//	void	Update(void);
+//	void	GameUpdate(void);
+//
+//	//		描画
+//	void	Render(void);
+//	void	GameRender(void);
+//
+//	//　ゲームメイン動作関数
+//	bool	CheckWithin(const POINT& p, const int& startX, const int& startY, const int size);	//	範囲内かどうか調べる
+//	void	Lerp(POINT& out, const POINT p1, const POINT p2, float t);	//	POINT補間
+//};
 
 //*****************************************************************************************************
 #endif

@@ -19,11 +19,53 @@
     <Filter Include="IEX">
       <UniqueIdentifier>{9e8d67d2-7ac9-43ab-8c7a-53c6805e2932}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Object">
+      <UniqueIdentifier>{d8793e2e-b3cf-4fee-ac7c-ce4246b9d15f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{c0bcf179-515c-4d85-9fb1-b0713b723623}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\tom">
+      <UniqueIdentifier>{180dee44-5ef9-404d-84e9-18b5ec41c394}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Utility">
+      <UniqueIdentifier>{103c7c5e-6a1c-4eee-ad8a-27c0d7758041}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameSys">
+      <UniqueIdentifier>{20bee28b-bb3f-4a15-b67f-d85faf73e7f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Object\Internal">
+      <UniqueIdentifier>{89eee143-eb99-47f5-9a7b-ee60d737be21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Object\TimeObj">
+      <UniqueIdentifier>{5629b6bf-642a-4b25-833e-d71857c7cab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GameSys">
+      <UniqueIdentifier>{45715ef8-7646-40df-9fc9-b0204e6ce3e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Utility">
+      <UniqueIdentifier>{0c9d157b-d385-4118-8150-5661438c50a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\tom">
+      <UniqueIdentifier>{6535d8fa-038e-4e3b-a0b7-78af8f3702aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Scene">
+      <UniqueIdentifier>{064fdafa-97e3-4156-8891-31271888ba14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object">
+      <UniqueIdentifier>{eedaf655-1b9c-4fb9-a0f2-9f4c0ed4d550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\SYSTEM">
+      <UniqueIdentifier>{57cc3e12-f6f1-43b2-8aa0-47b1f7aa2695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object\Internal">
+      <UniqueIdentifier>{808bd633-af9f-4759-93b2-b1d3f7c7f930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object\TimeObj">
+      <UniqueIdentifier>{5bcaedf8-460c-423c-979b-b662b21cc795}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\sceneMain.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\system\Framework.cpp">
       <Filter>ソース ファイル\SYSTEM</Filter>
     </ClCompile>
@@ -81,121 +123,121 @@
     <ClCompile Include="IEX\IEX_View.cpp">
       <Filter>IEX</Filter>
     </ClCompile>
+    <ClCompile Include="source\sceneMain.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="source\sceneTitile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BaseObj.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Candle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Clock.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Control.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Game.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\GameSystem.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Metronom.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Stage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\TextLoader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\ChoicesMgr.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Campus.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="source\tomAL\tomAL.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\tom</Filter>
     </ClCompile>
     <ClCompile Include="source\tomAL\tomALInmemory.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\tom</Filter>
     </ClCompile>
     <ClCompile Include="source\tomAL\tomALStreaming.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\tom</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TextLoader.cpp">
+      <Filter>ソース ファイル\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Game.cpp">
+      <Filter>ソース ファイル\GameSys</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GameSystem.cpp">
+      <Filter>ソース ファイル\GameSys</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Control.cpp">
+      <Filter>ソース ファイル\GameSys</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Campus.cpp">
+      <Filter>ソース ファイル\Object\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseObj.cpp">
+      <Filter>ソース ファイル\Object\TimeObj</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Candle.cpp">
+      <Filter>ソース ファイル\Object\TimeObj</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ChoicesMgr.cpp">
+      <Filter>ソース ファイル\Object\TimeObj</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Clock.cpp">
+      <Filter>ソース ファイル\Object\TimeObj</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Metronom.cpp">
+      <Filter>ソース ファイル\Object\TimeObj</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TimeObject.cpp">
+      <Filter>ソース ファイル\Object\TimeObj</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Stage.cpp">
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\system\Framework.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\system\Scene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\sceneMain.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\system\System.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="IEX\iextreme.h">
       <Filter>IEX</Filter>
     </ClInclude>
-    <ClInclude Include="source\DataOwner.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Utility.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\sceneTitile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\stub.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Delegate.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseObj.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Candle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Clock.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Control.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\Game.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\GameSys</Filter>
     </ClInclude>
     <ClInclude Include="source\GameSystem.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\GameSys</Filter>
     </ClInclude>
-    <ClInclude Include="source\Metronom.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="source\system\Scene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\system\Framework.h">
+      <Filter>ヘッダー ファイル\SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sceneMain.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sceneTitile.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="source\Stage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\TextLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\ChoicesMgr.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Campus.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\TimeObject.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
     <ClInclude Include="source\tomAL\tomAL.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\tom</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utility.h">
+      <Filter>ヘッダー ファイル\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TextLoader.h">
+      <Filter>ヘッダー ファイル\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\system\System.h">
+      <Filter>ヘッダー ファイル\SYSTEM</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Campus.h">
+      <Filter>ヘッダー ファイル\Object\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataOwner.h">
+      <Filter>ヘッダー ファイル\Object\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseObj.h">
+      <Filter>ヘッダー ファイル\Object\TimeObj</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Candle.h">
+      <Filter>ヘッダー ファイル\Object\TimeObj</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ChoicesMgr.h">
+      <Filter>ヘッダー ファイル\Object\TimeObj</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Clock.h">
+      <Filter>ヘッダー ファイル\Object\TimeObj</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Metronom.h">
+      <Filter>ヘッダー ファイル\Object\TimeObj</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TimeObject.h">
+      <Filter>ヘッダー ファイル\Object\TimeObj</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Control.h">
+      <Filter>ヘッダー ファイル\GameSys</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

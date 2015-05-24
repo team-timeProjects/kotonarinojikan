@@ -134,6 +134,7 @@
     <ClCompile Include="IEX\IEX_Texture.cpp" />
     <ClCompile Include="IEX\IEX_View.cpp" />
     <ClCompile Include="source\TextLoader.cpp" />
+    <ClCompile Include="source\TimeObject.cpp" />
     <ClCompile Include="source\tomAL\tomAL.cpp" />
     <ClCompile Include="source\tomAL\tomALInmemory.cpp" />
     <ClCompile Include="source\tomAL\tomALStreaming.cpp" />
@@ -146,13 +147,11 @@
     <ClInclude Include="source\Clock.h" />
     <ClInclude Include="source\Control.h" />
     <ClInclude Include="source\DataOwner.h" />
-    <ClInclude Include="source\Delegate.h" />
     <ClInclude Include="source\Game.h" />
     <ClInclude Include="source\GameSystem.h" />
     <ClInclude Include="source\Metronom.h" />
     <ClInclude Include="source\sceneTitile.h" />
     <ClInclude Include="source\Stage.h" />
-    <ClInclude Include="source\stub.h" />
     <ClInclude Include="source\system\Framework.h" />
     <ClInclude Include="source\system\Scene.h" />
     <ClInclude Include="source\sceneMain.h" />
