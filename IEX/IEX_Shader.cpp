@@ -29,6 +29,7 @@ iexShader::iexShader( char* filename )
 		char	szBuffer[2000];
 		sprintf(szBuffer,"\terrors: %s\n", (char*)pErr->GetBufferPointer() );
 		OutputDebugString(szBuffer);
+
 		return;
 	}
 

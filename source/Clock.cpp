@@ -22,32 +22,50 @@ const float Clock::ANGLE_1HOUR = 2 * PI / HOUR_CYCLE;
 //----------------------------------------------------------------------------
 
 Clock::Clock()
-{
-}
+{}
 
-void Clock::Init(const Vector2& centerPos, int colW, int colH, float scale, float speed, Behavior behavior)
+void Clock::Init(int id, const Vector2& centerPos, int colW, int colH, float scale, float speed, Behavior behavior)
 {
-	TimeObj::Init(centerPos, colW, colH, scale, speed, behavior);
+	TimeObj::Init(id, centerPos, colW, colH, scale, speed, behavior);
 	timeCount = 0;
 	frameCount = 0;
 	hourAngle = 0;
 	minuteAngle = 0;
 }
 
+void Clock::AppendImage(int idx, iex2DObj* image, const ImageParam& param)
+{
+	TimeObj::AppendImage(idx, image, param);
+	dst[idx].w = IMAGE_WIDTH;
+	dst[idx].h = IMAGE_HEIGHT;
+}
+
 void Clock::Update()
 {
-	switch (behavior)
+	switch(state)
 	{
-		case Behavior::STOP:
+		case TimeObj::MOVE:
+			switch(behavior)
+			{
+				case Behavior::SMOOTH:
+					Update_Smooth();
+					break;
+				case Behavior::STEPING:
+					Update_Steping();
+					break;
+				default:
+					break;
+			}
 			break;
-		case Behavior::CHECK:
+		case TimeObj::STOP:
+			timeCount = frameCount = 0;
+			// •ª’PˆÊ‚ÌŠp“x+•b’PˆÊ‚ÌŠp“x
+			minuteAngle = (timeCount % MPH * ANGLE_1MINUTE) + (frameCount*(ANGLE_1MINUTE / (FPS / abs(speed))));
+			// ŽžŠÔ’PˆÊ+•ª’PˆÊ+•b’PˆÊ
+			hourAngle = (timeCount / MPH * ANGLE_1HOUR) + (timeCount %MPH * (ANGLE_1HOUR / MPH)) + (frameCount*(ANGLE_1HOUR / MPH / (FPS / abs(speed))));
+			break;
+		case TimeObj::CHECK:
 			Update_Check();
-			break;
-		case Behavior::SMOOTH:
-			Update_Smooth();
-			break;
-		case Behavior::STEPING:
-			Update_Steping();
 			break;
 		default:
 			break;
@@ -59,49 +77,55 @@ void Clock::Render()
 	POINT p;
 	p.x = pos.x;
 	p.y = pos.y;
-	imageList[BACK]->Render(pos.x - paramList[BACK].dw*scale / 2 + paramList[BACK].offsetx*scale,
-							pos.y - paramList[BACK].dh*scale / 2 + paramList[BACK].offsety*scale,
-							paramList[BACK].dw*scale, paramList[BACK].dh*scale,
-							paramList[BACK].sx, paramList[BACK].sy, paramList[BACK].sw, paramList[BACK].sh);
-	imageList[HOUR]->Render(pos.x - paramList[HOUR].dw*scale / 2 + paramList[HOUR].offsetx*scale,
-							pos.y - paramList[HOUR].dh*scale / 2 + paramList[HOUR].offsety*scale,
-							paramList[HOUR].dw*scale, paramList[HOUR].dh*scale,
-							paramList[HOUR].sx, paramList[HOUR].sy, paramList[HOUR].sw, paramList[HOUR].sh,
-							p, hourAngle);
-	imageList[MINUTE]->Render(pos.x - paramList[MINUTE].dw*scale / 2 + paramList[MINUTE].offsetx*scale,
-							  pos.y - paramList[MINUTE].dh*scale / 2 + paramList[MINUTE].offsety*scale,
-							  paramList[MINUTE].dw*scale, paramList[MINUTE].dh*scale,
-							  paramList[MINUTE].sx, paramList[MINUTE].sy, paramList[MINUTE].sw, paramList[MINUTE].sh,
-							  p, minuteAngle);
+
+	Campus::GetInst()->Add(imageList[BACK], pos.x - dst[BACK].w*scale / 2 + dst[BACK].x*scale,
+						   pos.y - dst[BACK].h*scale / 2 + dst[BACK].y*scale,
+						   dst[BACK].w*scale, dst[BACK].h*scale,
+						   src[BACK].x, src[BACK].y, src[BACK].w, src[BACK].h);
+
+	Campus::GetInst()->Add(imageList[HOUR], pos.x - dst[HOUR].w*scale / 2 + dst[HOUR].x*scale,
+						   pos.y - dst[HOUR].h*scale / 2 + dst[HOUR].y*scale,
+						   dst[HOUR].w*scale, dst[HOUR].h*scale,
+						   src[HOUR].x, src[HOUR].y, src[HOUR].w, src[HOUR].h,
+						   p, hourAngle);
+	Campus::GetInst()->Add(imageList[MINUTE], pos.x - dst[MINUTE].w*scale / 2 + dst[MINUTE].x*scale,
+						   pos.y - dst[MINUTE].h*scale / 2 + dst[MINUTE].y*scale,
+						   dst[MINUTE].w*scale, dst[MINUTE].h*scale,
+						   src[MINUTE].x, src[MINUTE].y, src[MINUTE].w, src[MINUTE].h,
+						   p, minuteAngle);
 }
 
-inline void Clock::Update_Time()
+inline void Clock::Update_Time(float speed)
 {
 	//ŽžŠÔŒo‰ß‚ÌƒxƒNƒgƒ‹‚É‰ž‚¶‚Ä‹t“]
-	int v = speed > 0 ? 1 : -1;
+	int v = this->speed > 0 ? speed : -speed;
 
 	frameCount += v;
 	// ³‘¤
-	if (frameCount >= FPS / abs(speed))
+	if(frameCount >= FPS / abs(this->speed))
 	{
-		frameCount -= FPS / abs(speed);
+		frameCount -= FPS / abs(this->speed);
 		timeCount += v;
-		if (timeCount >= MPH*HOUR_CYCLE)
-			timeCount -= MPH*HOUR_CYCLE;
+		if(timeCount >= MPH*HOUR_CYCLE)
+			timeCount -= timeCount / (MPH*HOUR_CYCLE)*(MPH*HOUR_CYCLE);
 	}
 	// ‹t‘¤
-	else if (frameCount < 0)
+	else if(frameCount < 0)
 	{
-		frameCount += FPS / abs(speed);
+		frameCount += FPS / abs(this->speed);
 		timeCount += v;
-		if (timeCount < 0)
-			timeCount += MPH*HOUR_CYCLE;
+		if(timeCount < 0)
+			timeCount += timeCount / (MPH*HOUR_CYCLE)*(MPH*HOUR_CYCLE);
 	}
 }
 
 inline void Clock::Update_Check()
 {
-
+	Update_Time(50);
+	// •ª’PˆÊ‚ÌŠp“x+•b’PˆÊ‚ÌŠp“x
+	minuteAngle = (timeCount % MPH * ANGLE_1MINUTE) + (frameCount*(ANGLE_1MINUTE / (FPS / abs(speed))));
+	// ŽžŠÔ’PˆÊ+•ª’PˆÊ+•b’PˆÊ
+	hourAngle = (timeCount / MPH * ANGLE_1HOUR) + (timeCount %MPH * (ANGLE_1HOUR / MPH)) + (frameCount*(ANGLE_1HOUR / MPH / (FPS / abs(speed))));
 }
 
 inline void Clock::Update_Smooth()

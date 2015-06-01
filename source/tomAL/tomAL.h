@@ -10,7 +10,6 @@
 #include <math.h>
 #include <memory>
 #include <windows.h>
-#include "iextreme.h"
 
 class tomALBase;
 
@@ -33,13 +32,6 @@ namespace SOUND_EFFECT
 		DELAY,
 	};
 }
-
-typedef struct Lisner
-{
-	Vector3 pos;//ˆÊ’u
-	Vector3 vel;//Ž‹ü
-	Vector3 ori;//Žp¨
-}Lisner;
 
 typedef struct DISTORTION
 {
@@ -92,34 +84,19 @@ protected:
 	{
 		delayParam->isPlay = true;
 	}
-
-	static Lisner lisner;
-
-	bool is3D = false;
-
-	Vector3 pos;
 public:
 	tomALBase(){};
-	virtual ~tomALBase();
+	virtual ~tomALBase()
+	{
+		alDeleteSources( 1, &source );
+		alDeleteBuffers( 1, &buffer );
+	}
 
 	virtual bool Load( char* filename ) = 0;
 
 	void setEffect( int type, void* param );
 
-	void setPos( Vector3& pos )
-	{
-		this->pos = pos;
-	}
-
-	void setVolume( float vol )
-	{
-		this->vol = vol;
-	}
-
 	virtual void Update();
-
-	static void setLisner( Vector3& pos, Vector3& vel, Vector3& ori );
-	static void setLisner( Lisner& lisner );
 };
 
 class tomALInmemory : public tomALBase
@@ -135,7 +112,7 @@ public:
 	tomALInmemory(){};
 	~tomALInmemory();
 
-	void Set( char* filename, bool _3D = false );
+	void Set( char* filename );
 
 	void Play();
 	void Pause();
@@ -187,8 +164,6 @@ public:
 	bool IsPlay( );
 
 	void setMode( int m, int param = 60 );
-
-	static bool isEndThread;
 };
 
 class tomALManager
@@ -208,19 +183,9 @@ public:
 
 	void Init( int inmemorySound = 32, int streamingSound = 5 );
 
-	static void setLisner( Vector3& pos, Vector3& vel, Vector3& ori )
-	{
-		tomALBase::setLisner( pos, vel, ori );
-	}
-
-	static void setLisner( Lisner& lisner )
-	{
-		tomALBase::setLisner( lisner );
-	}
-
 	void CreateStreamingPlayer( int No );
 
-	void SetInmemory( int No, char* filename, bool _3D = false );
+	void SetInmemory( int No, char* filename );
 	void SetStreaming( int No, char* filename, int mode = STREAMING_MODE::NORMAL, int param = 60 );
 
 	void PlayInmemory( int No );
@@ -228,14 +193,6 @@ public:
 	void StopInmemory( int No );
 	bool IsPlayInmemory( int No );
 	void SetEffectInmemory( int No, int type, void* param );
-	void SetPos( int No, Vector3& pos )
-	{
-		inmemory[No]->setPos( pos );
-	}
-	void setVolumeInmemory( int No, float vol )
-	{
-		inmemory[No]->setVolume( vol );
-	}
 
 	void PlayStreaming( int No );
 	void PauseStreaming( int No );
@@ -243,10 +200,6 @@ public:
 	bool IsPlayStreaming( int No );
 	void SetModeStreaming( int No, int m, int param = 60 );
 	void SetEffectStreaming( int No, int type, void* param );
-	void setVolumeStreaming( int No, float vol )
-	{
-		streaming[No]->setVolume( vol );
-	}
 
 	void Update();
 };

@@ -13,14 +13,9 @@ unsigned int WINAPI Thread( void* lpdwParam )
 
 	while( 1 )
 	{
-		if( tomALStreaming::isEndThread == false )
-		{
-			_endthread( );
-			return 0;
-		}
 		if( streaming == nullptr )
 		{
-			_endthread();
+			ExitThread( TRUE );
 			return 0;
 		}
 		streaming->Stream();
@@ -32,10 +27,6 @@ unsigned int WINAPI Thread( void* lpdwParam )
 bool tomALStreaming::LoadWav( char* data )
 {
 	FILE* fp = fopen( dataName, "rb" );
-	if( fp == NULL )
-	{
-		return false;
-	}
 
 	fseek( fp, dataStartPoint + readDataSize, SEEK_SET );
 
@@ -166,8 +157,6 @@ void tomALStreaming::Set( char* filename, int mode, int param )
 		assert( "対応してないフォーマットです！" );
 	}
 
-	inMemoryDataSize = 44100;
-
 	playData.rate = rate;
 
 	while( 1 )
@@ -238,6 +227,7 @@ void tomALStreaming::Set( char* filename, int mode, int param )
 
 tomALStreaming::~tomALStreaming()
 {
+	CloseHandle( hStrThread );
 	if( data != nullptr )
 	{
 		delete[] data;
@@ -294,7 +284,6 @@ void tomALStreaming::Stream()
 				Distortion( data, inMemoryDataSize );
 			}
 
-
 			alGenBuffers( 1, &buffer );
 			alBufferData( buffer, playData.format, data, inMemoryDataSize, playData.rate );
 
@@ -326,7 +315,7 @@ void tomALStreaming::setMode( int m, int param )
 
 void tomALStreaming::Update()
 {
-	//tomALBase::Update();
+	tomALBase::Update();
 	switch( mode )
 	{
 	case STREAMING_MODE::NORMAL:
@@ -343,7 +332,7 @@ void tomALStreaming::Update()
 	case STREAMING_MODE::FADE_OUT:
 		alSourcef( source, AL_GAIN, workVol );
 		workVol -= fadePalam;
-		if( 0 >= workVol )
+		if( 0 <= workVol )
 		{
 			mode = STREAMING_MODE::NORMAL;
 			alSourceStop( source );
@@ -351,5 +340,3 @@ void tomALStreaming::Update()
 		break;
 	}
 }
-
-bool tomALStreaming::isEndThread = true;

@@ -1,15 +1,23 @@
 #ifndef _SCENEMAIN_H_
 #define _SCENEMAIN_H_
 
-#include <deque>
 #include	"Game.h"
 class StageMNG;
+class FlagMgr;
 
 class sceneMain :public Scene
 {
 	//-------- field ---------
 private:
+	enum State
+	{
+		BEGIN,MAIN,PAUSE,CHECK,END
+	}state;
 	StageMNG* stage;
+	FlagMgr* flag;
+
+	int stageID;// プロット提供用
+	iex2DObj* back;// プロット提供用
 
 	//-------- method ---------
 public:

@@ -16,6 +16,9 @@
 #define		DIRECTINPUT_VERSION	0x0800 
 #include	<dinput.h>
 
+#include "../EDX/EDXLIB.h"
+
+
 #if _DEBUG
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -75,9 +78,9 @@ class iexShader;
 class iexSystem {
 private:
 	static LPDIRECT3D9				lpD3D;
-	static D3DPRESENT_PARAMETERS	d3dpp;
 
 public:
+	static D3DPRESENT_PARAMETERS	d3dpp;
 	//------------------------------------------------------
 	//	グローバルパラメータ
 	//------------------------------------------------------
@@ -133,6 +136,7 @@ extern	Matrix	matProjection;	//	投影変換行列
 //*****************************************************************************************************************************
 
 #define	PI	((FLOAT)  3.141592654f)
+#define _360	((FLOAT)  6.283185308f)
 
 //*****************************************************************************
 //		３Ｄベクトル
@@ -592,12 +596,16 @@ public:
 	//------------------------------------------------------
 	void	Render( void );
 	void	Render( iexShader* shader, char* tech );
-	void	Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags=RS_COPY, COLOR color=0xFFFFFFFF, float z=.0f );
+	void	Render(s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = .0f);
 	void	Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, iexShader* shader, char* tech, COLOR color=0xFFFFFFFF, float z=.0f );
 	
 	//	回転対応
 	void	Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
 		float angle, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = 0.0f);
+
+	//	回転・拡大対応
+	void	Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
+		float angle, float scale, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = 0.0f);
 
 };
 

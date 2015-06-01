@@ -151,6 +151,7 @@ void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 Src
 	iexPolygon::Render2D( v, 2, this, dwFlags );
 }
 
+
 void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, iexShader* shader, char* tech, COLOR color, float z )
 {
 	TLVERTEX	v[4];
@@ -172,8 +173,8 @@ void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 Src
 }
 
 //	‰ñ“]‘Î‰ž
-void	iex2DObj::Render( s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
-			float angle, u32 dwFlags, COLOR color, float z )
+void	iex2DObj::Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
+	float angle, u32 dwFlags, COLOR color, float z)
 {
 	TLVERTEX	v2[4];
 	v2[0].sx = v2[2].sx = (float)x;
@@ -203,7 +204,50 @@ void	iex2DObj::Render( s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 s
 	v[0].sz = v[1].sz = v[2].sz = v[3].sz = z;
 	v[0].rhw = v[1].rhw = v[2].rhw = v[3].rhw = 1.0f;
 
-	iexPolygon::Render2D( v, 2, this, dwFlags );
+	iexPolygon::Render2D(v, 2, this, dwFlags);
+}
+
+void	iex2DObj::Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
+	float angle, float scale, u32 dwFlags, COLOR color, float z )
+{
+	TLVERTEX	v[4];
+	v[0].sx = v[2].sx = (float)(w  * -0.5) * scale;
+	v[1].sx = v[3].sx = (float)(w  * 0.5f) *scale;
+	v[0].sy = v[1].sy = (float)(h * -0.5) * scale;
+	v[2].sy = v[3].sy = (float)(h * 0.5f)  * scale;
+
+
+	for (DWORD i = 0; i < 4; i++){
+		const float xbuff = v[i].sx;
+		const float ybuff = v[i].sy;
+		v[i].sx = xbuff * cos(-angle) + ybuff * sin(-angle);
+		v[i].sy = -xbuff * sin(-angle) + ybuff * cos(-angle);
+	}
+
+	float buffx = (float)(x + ((w + 1.0f) * 0.5f));
+	float buffy = (float)(y + ((h + 1.0f) * 0.5f));
+	v[0].sx += buffx - 0.5f;
+	v[2].sx += buffx - 0.5f;
+	v[1].sx += buffx - 0.5f;
+	v[3].sx += buffx - 0.5f;
+	v[0].sy += buffy - 0.5f;
+	v[1].sy += buffy - 0.5f;
+	v[2].sy += buffy - 0.5f;
+	v[3].sy += buffy - 0.5f;
+
+
+
+	v[0].tu = v[2].tu = (float)(sx + 0.5f) / (float)this->width;
+	v[1].tu = v[3].tu = (float)(sx + sw) / (float)this->width;
+	v[0].tv = v[1].tv = (float)(sy + 0.5f) / (float)this->height;
+	v[2].tv = v[3].tv = (float)(sy + sh) / (float)this->height;
+
+
+	v[0].color = v[1].color = v[2].color = v[3].color = color;
+	v[0].sz = v[1].sz = v[2].sz = v[3].sz = z;
+	v[0].rhw = v[1].rhw = v[2].rhw = v[3].rhw = 1.0f;
+
+	iexPolygon::Render2D(v, 2, this, dwFlags);
 }
 
 //**************************************************************************************************

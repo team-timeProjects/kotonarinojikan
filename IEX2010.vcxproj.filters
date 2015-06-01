@@ -64,6 +64,15 @@
     <Filter Include="ヘッダー ファイル\Object\TimeObj">
       <UniqueIdentifier>{5bcaedf8-460c-423c-979b-b662b21cc795}</UniqueIdentifier>
     </Filter>
+    <Filter Include="E">
+      <UniqueIdentifier>{7b5eb00b-b283-4792-a44f-0c51067d888c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Object\Interface">
+      <UniqueIdentifier>{67c227fa-b6e6-462c-9362-5dfab14dab39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object\Interface">
+      <UniqueIdentifier>{9d1566f3-f2a4-465c-b6fe-f5e11e85acdc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\system\Framework.cpp">
@@ -174,6 +183,12 @@
     <ClCompile Include="source\Stage.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="EDX\EDX_Input.cpp">
+      <Filter>E</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Number.cpp">
+      <Filter>ソース ファイル\Object\Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -238,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="source\Control.h">
       <Filter>ヘッダー ファイル\GameSys</Filter>
+    </ClInclude>
+    <ClInclude Include="EDX\EDXLIB.h">
+      <Filter>E</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 
 #ifndef __CANDLE_H__
 #define	__CANDLE_H__
-
+#include "../IEX/iextreme.h"
 #include "TimeObject.h"
 #include "Campus.h"
 //****************************************************************************************

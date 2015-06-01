@@ -1,88 +1,135 @@
+#include "../IEX/iextreme.h"
 #include "Campus.h"
-
-Campus::Campus() :NEARLY_POS(2), NEARLY_SCALE(0.01f)
-{
-	posx = 0;
-	posy = 0;
-	scale = 0.0f;
-	target = {0, 0};
-	tscale = 0.0f;
-	friction = 0.0f;
-	zoomEnd = true;
+POINT GetPoint(int x, int y){
+	POINT p;
+	p.x = x;
+	p.y = y;
+	return p;
+}
+POINT MulPoint(POINT p, float mul){
+	p.x *= mul;
+	p.y *= mul;
+	return p;
+}
+POINT AddPoint(POINT p1, POINT p2){
+	POINT out;
+	out.x = p1.x + p2.x;
+	out.y = p1.y + p2.y;
+	return out;
 }
 
-void Campus::Zoom(int targetX, int targetY, float scale, float friction)
+POINT SubPoint(POINT p1, POINT p2)
 {
-	target.x = -targetX;
-	target.y = -targetY;
-	tscale = scale;
-	this->friction = friction;
-	zoomEnd = false;
+	POINT out;
+	out.x = p1.x - p2.x;
+	out.y = p1.y - p2.y;
+	return out;
 }
 
-bool Campus::IsZoomEnd()
-{
-	return zoomEnd;
+void Campus::Init(){
+	RECT WindowSize;
+	iexSystem::GetScreenRect(ScreenMode, WindowSize);
+	cpos.x -= WindowSize.right*0.5f;
+	cpos.y -= WindowSize.bottom*0.5f;
+	pastcpos = nextcpos = cpos;
+	time = 0.0f;
+	Zoom = 1.0f;
+	MoveSpeed = 0.02f;
 }
 
-void Campus::Update()
-{
-	if (abs(target.x - posx) < NEARLY_POS &&
-		abs(target.y - posy) < NEARLY_POS &&
-		abs(tscale - scale) < NEARLY_SCALE)
-	{
-		posx = (float)target.x;
-		posy = (float)target.y;
-		scale = tscale;
-		zoomEnd = true;
+void Campus::Update(){
+
+	time += MoveSpeed;
+	if (time <= 1.0f){
+		float rate = time * time * (3.0f - 2.0f * time);
+
+		cpos.x = (long)(pastcpos.x * (1.0f - rate) + nextcpos.x * rate);
+		cpos.y = (long)(pastcpos.y * (1.0f - rate) + nextcpos.y * rate);
+
 	}
-	else
-	{
-		float vx = (target.x - posx)*(1.0f - friction);
-		float vy = (target.y - posy)*(1.0f - friction);
-		float vs = (tscale - scale)*(1.0f - friction);
-		// ‘¬“x’²®
-		vs = abs(vs) > 1.0f ? (vs > 0 ? 1.0f : -1.0f) : vs;
-		posx += vx;
-		posy += vy;
-		scale += vs;
+}
+
+void Campus::Draw(){
+	for (auto it : rolist){
+		int x = it.x - cpos.x;
+		int y = it.y - cpos.y;
+		float w = it.w;
+		float h = it.h;
+		if (Zoom != 1.0f){
+			RECT WindowSize;
+			iexSystem::GetScreenRect(ScreenMode, WindowSize);
+			x = (x - WindowSize.right*0.5f)*Zoom;
+			y = (y - WindowSize.bottom*0.5f)*Zoom;
+			x += WindowSize.right*0.5f;
+			y += WindowSize.bottom*0.5f;
+			w *= Zoom;
+			h *= Zoom;
+		}
+
+		it.obj->Render(x, y, w, h,
+			it.sx, it.sy, it.sw, it.sh,
+			it.p, it.angle, it.scale, (unsigned long)it.dwFlags, (DWORD)it.color, (float)it.z);
 	}
+
+	rolist.clear();
 }
 
-void Campus::Render(iex2DObj* image, int x, int y, int w, int h, int sx, int sy, int sw, int sh)
-{
-	image->Render((int)(x*scale + (this->posx*scale) + iexSystem::ScreenWidth / 2),
-				  (int)(y*scale + (this->posy*scale) + iexSystem::ScreenHeight / 2),
-				  (int)(w*scale),
-				  (int)(h*scale),
-				  sx,
-				  sy,
-				  sw,
-				  sh);
+void Campus::Add(iex2DObj* obj,s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
+	float angle, float scale, u32 dwFlags , COLOR color, float z){
+	RenderObject ro;
+	ro.obj = obj;
+	ro.x = x;
+	ro.y = y;
+	ro.w = w;
+	ro.h = h;
+	ro.sx = sx;
+	ro.sy = sy;
+	ro.sw = sw;
+	ro.sh = sh;
+	ro.p = p;
+	ro.angle = angle;
+	ro.scale = scale;
+	ro.dwFlags = dwFlags;
+	ro.color = color;
+	ro.z = z;
+
+	rolist.push_back(ro);
 }
 
-POINT Campus::TransScreenPos(const POINT& p)const
+void Campus::SetPos(POINT pos){
+	RECT WindowSize;
+	iexSystem::GetScreenRect(ScreenMode, WindowSize);
+	pos.x -= WindowSize.right*0.5f;
+	pos.y -= WindowSize.bottom*0.5f;
+	pastcpos = nextcpos = cpos = pos;
+	time = 1.0f;
+}
+void Campus::TimeReset()
 {
-	POINT ret;
-	ret.x = (int)(p.x*scale + (this->posx*scale) + iexSystem::ScreenWidth / 2);
-	ret.y = (int)(p.y*scale + (this->posy*scale) + iexSystem::ScreenHeight / 2);
-	return ret;
+	time = 0.0f;
+}
+void Campus::SetNextPos(POINT next){
+	RECT WindowSize;
+	iexSystem::GetScreenRect(ScreenMode, WindowSize);
+	next.x -= WindowSize.right*0.5f;
+	next.y -= WindowSize.bottom*0.5f;
+	pastcpos = cpos;
+	nextcpos = next;
+	//time = 0.0f;
 }
 
-POINT Campus::TransCampusPos(const POINT& p)const
-{
-	POINT ret;
-	ret.x = (int)((p.x - (iexSystem::ScreenWidth / 2) - (this->posx*scale)) / scale);
-	ret.y = (int)((p.x - (iexSystem::ScreenWidth / 2) - (this->posy*scale)) / scale);
-	return ret;
+void Campus::SetMoveSpeed(float Speed){
+	if (Speed < 0.0f || Speed > 1.0f)return;
+	MoveSpeed = Speed;
 }
 
-int Campus::TransWidth(const int w)const
-{
-	return (int)(w*scale);
+void Campus::SetZoom(float Zoom){
+	this->Zoom = Zoom;
 }
 
-int Campus::TransHeight(const int h)const
-{
-	return (int)(h*scale);
+bool Campus::IsMoveEnd(){
+	if (time >= 1.0f){
+		return true;
+	}
+	return false;
 }

@@ -188,10 +188,8 @@ bool tomALInmemory::Load( char* filename )
 	}
 }
 
-void tomALInmemory::Set( char* filename, bool _3D )
+void tomALInmemory::Set( char* filename )
 {
-	is3D = _3D;
-
 	Load( filename );
 
 	alGenBuffers( 1, &buffer );

@@ -102,6 +102,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EDX\EDX_Input.cpp" />
     <ClCompile Include="source\BaseObj.cpp" />
     <ClCompile Include="source\Campus.cpp" />
     <ClCompile Include="source\Candle.cpp" />
@@ -111,6 +112,7 @@
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\GameSystem.cpp" />
     <ClCompile Include="source\Metronom.cpp" />
+    <ClCompile Include="source\Number.cpp" />
     <ClCompile Include="source\sceneMain.cpp" />
     <ClCompile Include="source\sceneTitile.cpp" />
     <ClCompile Include="source\Stage.cpp" />
@@ -140,6 +142,7 @@
     <ClCompile Include="source\tomAL\tomALStreaming.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EDX\EDXLIB.h" />
     <ClInclude Include="source\BaseObj.h" />
     <ClInclude Include="source\Campus.h" />
     <ClInclude Include="source\Candle.h" />
