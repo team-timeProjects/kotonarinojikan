@@ -33,7 +33,7 @@
 	}
 
 	//	‰Šú‰»
-	bool		Clock::Initialize( void )
+	bool	Clock::Initialize( void )
 	{
 		//	Œv‰æ‘œ
 		m_Clock			=		new iex2DObj( "DATA/timer.png" );
