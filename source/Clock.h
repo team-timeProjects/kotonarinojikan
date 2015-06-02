@@ -1,7 +1,7 @@
 
 #ifndef	__CLOCK_H__
 #define	__CLOCK_H__
-
+#include "../IEX/iextreme.h"
 #include "TimeObject.h"
 #include "Campus.h"
 
@@ -68,7 +68,6 @@ class Clock :public TimeObj
 public:
 	enum Behavior
 	{
-		STOP=-2, CHECK,
 		SMOOTH=0, STEPING
 	};
 	enum Image
@@ -76,8 +75,10 @@ public:
 		BACK, HOUR, MINUTE
 	};
 private:
+	const static int IMAGE_WIDTH = 300;
+	const static int IMAGE_HEIGHT = 300;
 	static const int FPS = 60;			// frame per second
-	static const int MPH = 60;			// minute per hour
+	static const int MPH = 24;			// minute per hour
 	static const int HOUR_CYCLE = 12;	// ˆêü‚ÌŠÔ”
 	static const float ANGLE_1MINUTE;	// ˆê•ª‚ÌŠp“x
 	static const float ANGLE_1HOUR;		// ˆêŠÔ‚ÌŠp“x
@@ -89,11 +90,12 @@ private:
 	//---------- method -------------
 public:
 	Clock();
-	void Init(const Vector2& centerPos, int colW, int colH, float scale, float speed, Behavior behavior);
+	void Init(int id,const Vector2& centerPos, int colW, int colH, float scale, float speed, Behavior behavior);
+	void AppendImage(int idx, iex2DObj* image, const ImageParam& param)override;
 	void Update()override;
 	void Render()override;
 private:
-	void Update_Time();
+	void Update_Time(float speed=1.0f);
 	void Update_Check();
 	void Update_Smooth();
 	void Update_Steping();

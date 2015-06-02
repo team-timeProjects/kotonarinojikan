@@ -5,6 +5,7 @@
 #include "../IEX/iextreme.h"
 #include <map>
 #include <list>
+#include <vector>
 
 // 時計・蝋燭・メトロノームの基底クラス
 //class TimeObject
@@ -95,25 +96,32 @@
 // 画像の描画パラメータ
 struct ImageParam
 {
-	int offsetx, offsety;// 描画座標(左上)からのオフセット
-	int dw, dh;
-	int sx, sy;
-	int sw, sh;
+	int x, y;
+	int w, h;
 	ImageParam()
 	{
-		offsetx = offsety = dw = dh = 0;
-		sx = sy = sw = sh = 0;
+		x = y = w = h = 0;
 	}
-	ImageParam(int offsetx, int offsety, int dw, int dh, int sx, int sy, int sw, int sh) :
-		offsetx(offsetx), offsety(offsety), dw(dw), dh(dh), sx(sx), sy(sy), sw(sw), sh(sh)
+	ImageParam(int x, int y, int w, int h):x(x), y(y), w(w), h(h) {}
+};
+
+class Number
+{
+	//---------- field -----------
+private:
+	enum
 	{
-	}
-	ImageParam(int sx, int sy, int sw, int sh) :sx(sx), sy(sy), sw(sw), sh(sh)
-	{
-		offsetx = offsety = 0;
-		dw = sw;
-		dh = sh;
-	}
+		MINUS_10 = 0, MINUS_9, MINUS_8, MINUS_7, MINUS_6, MINUS_5, MINUS_4, MINUS_3, MINUS_2, MINUS_1, NUM_0,
+		PLUS_1, PLUS_2, PLUS_3, PLUS_4, PLUS_5, PLUS_6, PLUS_7, PLUS_8, PLUS_9, PLUS_10
+	};
+	iex2DObj*				 image;		//自己管理
+	std::map<int, ImageParam> param;
+
+	//---------- method ------------
+public:
+	~Number();
+	void Init();
+	void Render(int num, int x, int y, float scale, bool campus = true);
 };
 
 // TimeObjの画像管理
@@ -123,11 +131,11 @@ class ImageFactory
 public:
 	enum ImageID
 	{
-		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE
+		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE, FRAG_BLACK,FRAG_GOLD
 	};
 private:
 	std::map<int, iex2DObj*> imageList;				// 画像データ
-	std::map<int, ImageParam> paramList;			// 描画パラメータ
+	std::map<int, ImageParam> paramList;			// 画像ソースパラメータ
 
 	//-------- method ----------
 public:
@@ -140,11 +148,19 @@ public:
 class TimeObj
 {
 	//---------- field -------------
+public:
+	enum State
+	{
+		MOVE, STOP, CHECK
+	}state = MOVE;
+	bool IsShuffled = false;
 protected:
+	int id = 0;
 	std::map<int, iex2DObj*> imageList;				// 画像データ(外部管理)
-	std::map<int, ImageParam> paramList;			// 画像描画パラメータ
+	std::map<int, ImageParam> dst;					// 画像描画パラメータ
+	std::map<int, ImageParam> src;					// 画像ソースパラメータ
 	Vector2 pos;									// 中心のワールド座標
-	int w = 0, h = 0;								// 当たり判定用幅高さ
+	int colw = 0, colh = 0;							// 当たり判定用幅高さ
 	float scale = 0.0f;								// 描画サイズ
 	float orginSpeed = 0.0f;						// 時間経過絶対スピード
 	float speed = 0.0f;								// 時間経過相対スピード
@@ -154,18 +170,21 @@ protected:
 public:
 	TimeObj();
 	virtual ~TimeObj();
-	void AppendImage(int idx, iex2DObj* image, const ImageParam& param);
-	const Vector2& GetPos();
+	virtual void AppendImage(int idx, iex2DObj* image, const ImageParam& source);
+	int GetID()const;
+	const Vector2& GetPos()const;
 	virtual void SetPos(const Vector2& pos);
+	void SetOrginSpeed(float speed);
 	float GetOrginSpeed();
 	// 基準となるスピードをもとに相対スピードを決定
 	void SetRelativeSpeed(float orginSpeed);
 	// ワールド座標との当たり判定(矩形)
 	bool IsCollision(const POINT& p);
 	//					描画の中心座標、当たり判定の幅高さ、拡大率、　　　元のスピード、　　挙動ID
-	void Init(const Vector2& centerPos, int colW, int colH, float scale, float orginSpeed, int behavior);
+	void Init(int id, const Vector2& centerPos, int colW, int colH, float scale, float orginSpeed, int behavior);
 	virtual void Update() = 0;
 	virtual void Render() = 0;
+	void SetState(TimeObj::State s);
 };
 
 // ギミック基底クラス
@@ -203,6 +222,69 @@ public:
 	void Render()override;
 	void AppendNode(const Vector2& node);
 	void SetLoop(bool IsRingLoop);
+};
+
+class FlagGmk :public Gimmick
+{
+	//--------- field --------------
+public:
+	enum TYPE
+	{
+		BLACK, GOLD
+	};
+private:
+	iex2DObj*	back;		// 外部管理
+	ImageParam  backParam;
+	Number*		number;		// 外部管理
+	Vector2		pos;
+	TYPE		type;
+	int			num;
+	bool		checked;
+
+	//----------- method ------------
+public:
+	FlagGmk(TimeObj* timeObj);
+	~FlagGmk();
+	void Init(iex2DObj* back, ImageParam backParam, Number* number);
+	void Update()override;
+	void Render()override;
+	void SetNum(int num);
+	int GetNum();
+	void SetPos(const Vector2& pos);
+	bool IsChecked();
+	void SetChecked(bool checked);
+	TYPE GetType();
+	void SetType(TYPE type);
+	void SetBack(iex2DObj* back, ImageParam backParam);
+};
+
+class FlagMgr
+{
+	//----------- field ---------------
+private:
+	iex2DObj* listBack;
+	iex2DObj* blockBack;
+	std::map<TimeObj*, FlagGmk*> flagList;
+	std::map<int, int> speedList;		// <スピード,個数>
+	TimeObj* nowObj;
+
+	//------------ method --------------
+public:
+	FlagMgr();
+	~FlagMgr();
+	void Init();
+	void Update();
+	void Render();
+	void SetSpeedList(const std::map<int, int>& list);
+	void AppendFlag(TimeObj* obj, bool next = true);
+	bool StartCheck();// チェックフェーズ開始
+	bool CheckNext();// 移動開始、なければfalse
+	void CheckFlag();
+	bool IsFinishEffect();// 演出終了
+	POINT GetNowObjPos();
+private:
+	inline int NextSpeed(int nowSpeed);
+	inline int BeforeSpeed(int nowSpeed);
 };
 
 //class TimeObjMgr

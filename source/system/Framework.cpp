@@ -4,6 +4,7 @@
 
 #include	"sceneMain.h"
 #include <time.h>
+#include	"../Control.h"
 
 
 //*****************************************************************************************************************************
@@ -71,6 +72,8 @@ bool Framework::Update()
 
 	//	XVˆ—
 	KEY_SetInfo();
+	EDX_Input::GetState();
+	Mouse::Update();
 	if( scene != NULL ) scene->Update();
 
 	return true;

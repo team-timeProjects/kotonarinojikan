@@ -1,44 +1,77 @@
 #ifndef _CAMPUS_H_
 #define _CAMPUS_H_
 
-#include "../IEX/iextreme.h"
-#include "Utility.h"
+#include <list>
 
+extern DWORD	ScreenMode;
+POINT GetPoint(int x, int y);
+POINT MulPoint(POINT p, float mul);
+POINT AddPoint(POINT p1, POINT p2);
+POINT SubPoint(POINT p1, POINT p2);
 
-// 全体拡縮、全体移動のサポート
+struct RenderObject{
+	iex2DObj* obj;
+	s32 x;
+	s32 y;
+	s32 w;
+	s32 h;
+	s32 sx;
+	s32 sy;
+	s32 sw;
+	s32 sh;
+	POINT p = GetPoint(0, 0);
+	float angle = 0.0f;
+	float scale = 1.0f;
+	u32 dwFlags = RS_COPY;
+	COLOR color = 0xFFFFFFFF;
+	float z = 0.0f;
+};
+
 class Campus
 {
 private:
-	Campus();
-	Campus(const Campus& r) = delete;
-	Campus& operator=(const Campus& r) = delete;
+	//画面の中心
+	POINT cpos;
+	POINT nextcpos;
+	POINT pastcpos;
+	float MoveSpeed;
+	float time;
+	float Zoom;
+
+	Campus() :cpos(GetPoint(0, 0)), nextcpos(GetPoint(0, 0)), pastcpos(GetPoint(0, 0)), MoveSpeed(1.0f), time(0.0f) {}
+	Campus(Campus&) {}
+	Campus& operator = (const Campus&) {}
+
+	std::list<RenderObject> rolist;
 public:
-	const int NEARLY_POS;
-	const float NEARLY_SCALE;
-	float posx,posy;
-	float scale;
-	POINT target;
-	float tscale;
-	float friction;
-	bool zoomEnd;
-	static Campus* Inst()
-	{
-		static Campus inst;
-		return &inst;
-	}
-	// ターゲット座標を画面中央に向けて動かし、拡縮する
-	void Zoom(int targetX, int targetY, float scale,float friction=0.9f);
-	// ズーム処理が終わった　or　終わっている
-	bool IsZoomEnd();
+	void Init();
 	void Update();
-	// スケールを座標に適用、キャンパス座標==ターゲット座標なら画面中央に描画される
-	void Render(iex2DObj* image, int x, int y, int w, int h, int sx, int sy, int sw, int sh);
-	// キャンパスを適用したスクリーン座標に変換
-	POINT TransScreenPos(const POINT& p)const;
-	// スクリーン座標をキャンパス内の座標に変換
-	POINT TransCampusPos(const POINT& p)const;
-	int TransWidth(const int w)const;
-	int TransHeight(const int h)const;
+	void Draw();
+
+	void Add(iex2DObj* obj, s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p = GetPoint(0, 0),
+			 float angle = 0, float scale = 1, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = 0.0f);
+
+	void SetPos(POINT pos);
+	void SetNextPos(POINT nextpos);
+	void SetMoveSpeed(float Speed);
+	bool IsMoveEnd();
+
+	void SetZoom(float Zoom);
+	void TimeReset();
+
+	POINT GetPos(){
+	POINT out;
+	RECT WindowSize;
+	iexSystem::GetScreenRect(ScreenMode, WindowSize);
+	out.x = cpos.x;// +WindowSize.right;
+	out.y = cpos.y;// +WindowSize.bottom;
+	return out;
+	}
+
+	static Campus* GetInst(){
+		static Campus c;
+		return &c;
+	}
 };
 
 #endif

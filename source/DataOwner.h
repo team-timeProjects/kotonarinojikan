@@ -14,6 +14,7 @@ class DataOwner // singleton
 public:
 	iexView*		view;
 	ImageFactory*   imageFactory;
+	Number*			number;
 
 	//---------- method -----------
 public:
@@ -21,6 +22,7 @@ public:
 	{
 		SafeDelete(view);
 		SafeDelete(imageFactory);
+		SafeDelete(number);
 	}
 
 	static DataOwner* GetInst()
@@ -33,9 +35,11 @@ public:
 	bool Init()
 	{
 		view = new iexView();
-		imageFactory = new ImageFactory;
+		imageFactory = new ImageFactory();
+		number = new Number();
 
 		imageFactory->Init();
+		number->Init();
 		return true;
 	}
 
@@ -44,6 +48,7 @@ private:
 	{
 		view = nullptr;
 		imageFactory = nullptr;
+		number = nullptr;
 	}
 
 	DataOwner(const DataOwner& r) = delete;

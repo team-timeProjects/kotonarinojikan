@@ -49,14 +49,28 @@ private:
 	};
 	std::list<TimeObj*> objList;
 	std::list<Gimmick*> gimmickList;
+	std::vector<TimeObj*> shuffleList;
+	std::map<int, int> speedList;
+	int nowID=0;
 
 public:
 	StageMNG();
 	~StageMNG();
-	void LoadStage(const int stageNum);
+	bool LoadStage(const int stageNum);
 	void Update();
 	void Render();
+	POINT GetPos(int objID)const;
+	int GetNowObj()const;
+	// 当たったidを返す、-1で無し
+	int IsCollision(const POINT& p)const;
+	void Activate(int objID);
+	void SpeedShuffle();
+	TimeObj* GetObj(int objID);
+	std::map<int, int> GetSpeedList();
+
 private:
+	inline TimeObj* SearchObj(int ID)const;
+	inline TimeObj* MakeObj(int ID, const Vector2& pos, float scale, float speed, int behavior);
 	int objMax = 0;
 	enum TYPE{
 		//時計、ろうそく、メトロノーム
