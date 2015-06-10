@@ -9,12 +9,16 @@
 #include	"Campus.h"
 #include	"TimeObject.h"
 
+int sceneMain::timelimit = 0;
+#define	SIZE 130
 sceneMain::sceneMain(void)
 {
 	stage = nullptr;
 	flag = nullptr;
 	back = nullptr;
+	rCheckClock = nullptr;
 	state = BEGIN;
+
 }
 
 bool sceneMain::Initialize()
@@ -24,7 +28,7 @@ bool sceneMain::Initialize()
 	//	ŠÂ‹«Œõ
 	DataOwner::GetInst()->Init();
 
-	back = new iex2DObj("DATA/‰¼”wŒi.png");
+	back = new iex2DObj("DATA/ƒQ[ƒ€‰æ–Ê/”wŒi‚P.png");
 	stage = new StageMNG;
 	stageID = 1;
 	stage->LoadStage(stageID);
@@ -32,6 +36,18 @@ bool sceneMain::Initialize()
 	flag->Init();
 	flag->SetSpeedList(stage->GetSpeedList());
 	state = MAIN;
+
+	//‹­§”»’èŽžŒv‰Šú‰»
+	judgeNum = stage->GetJudgeNum();		//@‰ñ“]i”»’èj‚·‚é‰ñ”
+	judgeTimer = stage->GetJudgeTimer();	//@ˆêŽü‚Ì‰ñ“]•b
+	rCheckClock = new iex2DObj("DATA\\timer.png");
+	check_obj.LongAngle = 0.0f;
+	check_obj.ShortAngle = ((12 - judgeNum) * 30 * PI) / 180;
+	check_obj.pos.x = 1200;
+	check_obj.pos.y = 580;
+
+	timelimit = judgeNum*judgeTimer * 60;
+	
 	return true;
 }
 
@@ -40,6 +56,7 @@ sceneMain::~sceneMain()
 	SafeDelete(stage);
 	SafeDelete(flag);
 	SafeDelete(back);
+	SafeDelete(rCheckClock);
 }
 
 void sceneMain::Update()
@@ -103,6 +120,22 @@ void sceneMain::Update()
 		case sceneMain::MAIN:
 			stage->Update();
 			flag->Update();
+
+			//‹­§”»’è
+			
+			//check_obj.LongAngle = flag->GetMissCount() * 10 * 60 * (2 * PI*judgeNum * 60) / (timelimit * 60);
+			
+			check_obj.LongAngle += (2 * PI*judgeNum * 60) / (timelimit * 60);
+			check_obj.ShortAngle = ((12 - judgeNum) * 30 * PI) / 180 + check_obj.LongAngle / 12;
+			if (check_obj.LongAngle > PI * 2)
+			{
+				check_obj.LongAngle = 0.0f;
+				judgeNum--;
+				goto CLOCK_CHECK;
+			}
+			timelimit--;
+			if (timelimit == 0) state = sceneMain::END;
+
 			Campus::GetInst()->SetNextPos(stage->GetPos(stage->GetNowObj()));
 			if(Campus::GetInst()->IsMoveEnd())
 			{
@@ -131,6 +164,11 @@ void sceneMain::Update()
 			stage->Update();
 			flag->Update();
 			Campus::GetInst()->Update();
+
+			if (judgeNum <= 0) judgeNum = 0;
+
+			if (timelimit == 0) state = sceneMain::END;
+
 			break;
 		case sceneMain::END:
 			stage->Update();
@@ -141,6 +179,7 @@ void sceneMain::Update()
 	}
 	if(KEY_Get(KEY_LEFT) == 3)
 	{
+	CLOCK_CHECK:;
 		if(flag->StartCheck())
 		{
 			Campus::GetInst()->SetNextPos(flag->GetNowObjPos());
@@ -162,9 +201,24 @@ void sceneMain::Render()
 	stage->Render();
 	flag->Render();
 
+	int	minute = timelimit / (60 * 60);
+	int	second = (timelimit - (60 * 60 * minute)) / 60;
+	if (timelimit <= 0)	timelimit = 0;
+	
+	//‹­§”»’èŽžŒv
+	//	ŽžŒv•`‰æ
+	rCheckClock->Render(check_obj.pos.x - SIZE/2, check_obj.pos.y, SIZE, SIZE, 0, 0, 256, 256);
+	//@’Zj•`‰æ										  	
+	rCheckClock->Render(check_obj.pos.x - SIZE/2, check_obj.pos.y, SIZE, SIZE, 0, 256, 256, 256, check_obj.pos, check_obj.ShortAngle, (float)1.0f);
+	//	•ªj•`‰æ										   	
+	rCheckClock->Render(check_obj.pos.x - SIZE/2, check_obj.pos.y, SIZE, SIZE, 256, 0, 256, 256, check_obj.pos, (float)check_obj.LongAngle, (float)1.0f);
+
+	//sprintf_s(str, "Žc‚èŽžŠÔ%d•ª%d•b", minute, second);
+
 #ifdef _DEBUG
 	char	str[64];
-	wsprintf(str, "Stage: %d\n", stageID);
+	wsprintf(str, "Žc‚èŽžŠÔ%d•ª%d•b", minute, second);
+	//wsprintf(str, "Stage: %d\n", stageID);
 	IEX_DrawText(str, 10, 30, 200, 20, 0xFF7070FF);
 #endif
 

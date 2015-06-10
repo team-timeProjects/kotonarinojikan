@@ -154,6 +154,7 @@ public:
 		MOVE, STOP, CHECK
 	}state = MOVE;
 	bool IsShuffled = false;
+
 protected:
 	int id = 0;
 	std::map<int, iex2DObj*> imageList;				// 画像データ(外部管理)
@@ -165,6 +166,7 @@ protected:
 	float orginSpeed = 0.0f;						// 時間経過絶対スピード
 	float speed = 0.0f;								// 時間経過相対スピード
 	int behavior = 0;								// 挙動アルゴリズム
+	
 
 	//------------- method ----------------
 public:
@@ -264,9 +266,11 @@ class FlagMgr
 private:
 	iex2DObj* listBack;
 	iex2DObj* blockBack;
+	iex2DObj* goldBat;
 	std::map<TimeObj*, FlagGmk*> flagList;
 	std::map<int, int> speedList;		// <スピード,個数>
 	TimeObj* nowObj;
+	int		MissCount;
 
 	//------------ method --------------
 public:
@@ -282,6 +286,8 @@ public:
 	void CheckFlag();
 	bool IsFinishEffect();// 演出終了
 	POINT GetNowObjPos();
+	int		GetMissCount(){ return MissCount; }
+	void	SetMissCount(int mc){ MissCount = mc; }
 private:
 	inline int NextSpeed(int nowSpeed);
 	inline int BeforeSpeed(int nowSpeed);

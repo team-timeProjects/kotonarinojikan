@@ -272,6 +272,8 @@ FlagMgr::FlagMgr()
 {
 	listBack = nullptr;
 	blockBack = nullptr;
+	goldBat = nullptr;
+	MissCount = 0;
 }
 
 FlagMgr::~FlagMgr()
@@ -284,8 +286,9 @@ FlagMgr::~FlagMgr()
 
 void FlagMgr::Init()
 {
-	listBack = new iex2DObj("DATA/ゲーム画面/game migiran.png");
-	blockBack = new iex2DObj("DATA/ゲーム画面/time speed.png");
+	listBack = new iex2DObj("DATA/ゲーム画面/UI枠.png");
+	blockBack = new iex2DObj("DATA/ゲーム画面/スピードボード.png");
+	goldBat = new iex2DObj("DATA/ゲーム画面/コウモリ残数.png");
 }
 
 void FlagMgr::Update()
@@ -299,15 +302,17 @@ void FlagMgr::Render()
 	for(std::pair<TimeObj* const, FlagGmk*>& r : flagList)
 		r.second->Render();
 	Campus::GetInst()->Draw();
-	listBack->Render(1130, 0, 256, 720, 0, 0, 256, 720);
-	int offsety = 50;
+	listBack->Render(1102, 0, 180, 720, 50, 108, 154, 722);
+	goldBat->Render(1152, 530, 80, 50, 0, 0, 64, 64);
+	int offsety = 85;
 	for(std::pair<const int, int>& r : speedList)
 	{
-		blockBack->Render(1144, offsety, 165, 165, 0, 0, 256, 256);
-		DataOwner::GetInst()->number->Render(r.first, 1144 + 60, offsety + 30, 0.4f, false);
-		DataOwner::GetInst()->number->Render(r.second, 1144 + 40, offsety + 70, 0.7f, false);
-		offsety += 95;
+		blockBack->Render(1152, offsety, 116, 72, 0, 0, 100, 80);
+		DataOwner::GetInst()->number->Render(r.first, 1152 + 60, offsety + 30, 0.3f, false);
+		DataOwner::GetInst()->number->Render(r.second, 1152 + 50, offsety + 50, 0.5f, false);
+		offsety += 72;
 	}
+
 }
 
 void FlagMgr::SetSpeedList(const std::map<int, int>& list)
@@ -386,6 +391,10 @@ void FlagMgr::CheckFlag()
 								  DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_GOLD));
 		flagList[nowObj]->SetType(FlagGmk::GOLD);
 		nowObj->SetState(TimeObj::State::STOP);
+	}
+	else
+	{
+		MissCount++;
 	}
 	nowObj->SetState(TimeObj::State::MOVE);
 	flagList[nowObj]->SetChecked(true);

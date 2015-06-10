@@ -61,6 +61,8 @@ public:
 	void Render();
 	POINT GetPos(int objID)const;
 	int GetNowObj()const;
+	int GetJudgeNum()const;
+	int GetJudgeTimer()const;
 	// 当たったidを返す、-1で無し
 	int IsCollision(const POINT& p)const;
 	void Activate(int objID);
@@ -78,6 +80,15 @@ private:
 	};
 	TYPE stageType = TYPE::CLOCK;	//ステージタイプ
 
+	//　強制判定時計
+	struct CheckClock
+	{
+		const float CLOCK_SPEED = PI / 180.0f;
+		POINT		pos;			//　位置
+		float		Angle;			//	針の向き
+		float		speed;
+	};
+	iex2DObj*	rCheckClock;
 	int judgeTimer = 0; //強制判定までの時間（秒)
 	int judgeNum = 0;	//強制判定回数
 };

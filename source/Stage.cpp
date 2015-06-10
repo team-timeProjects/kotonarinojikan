@@ -113,6 +113,7 @@ bool StageMNG::LoadStage(const int stageNum)
 	speedList.clear();
 	//ステージタイプ 強制判定回数 1周速度(frame) 個数
 	stageType = (TYPE)loader.LoadInt();
+
 	judgeNum = loader.LoadInt();
 	judgeTimer = loader.LoadInt();
 
@@ -138,6 +139,7 @@ bool StageMNG::LoadStage(const int stageNum)
 		else
 			speedList[speed]++;
 
+		//　各ステージの各オブジェクトパラメータ設定
 		TimeObj* obj = MakeObj(i, pos, scale, speed, behavior);
 		if(obj != nullptr)
 		{
@@ -206,6 +208,16 @@ POINT StageMNG::GetPos(int objID)const
 int StageMNG::GetNowObj()const
 {
 	return nowID;
+}
+
+int StageMNG::GetJudgeNum()const
+{
+	return judgeNum;
+}
+
+int StageMNG::GetJudgeTimer()const
+{
+	return judgeTimer;
 }
 
 int StageMNG::IsCollision(const POINT& p)const
