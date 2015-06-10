@@ -75,8 +75,8 @@ void Clock::Update()
 void Clock::Render()
 {
 	POINT p;
-	p.x = pos.x;
-	p.y = pos.y;
+	p.x = 0;
+	p.y = 12 * scale;
 
 	Campus::GetInst()->Add(imageList[BACK], pos.x - dst[BACK].w*scale / 2 + dst[BACK].x*scale,
 						   pos.y - dst[BACK].h*scale / 2 + dst[BACK].y*scale,

@@ -3,6 +3,7 @@
 #include	"sceneMain.h"
 #include	"Control.h"
 #include	"../sceneTitle.h"
+#include	"../DataOwner.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -38,7 +39,8 @@ BOOL	InitApp(HWND hWnd)
 	MainFrame = new Framework();
 	//	‰ŠúƒV[ƒ““o˜^
 	MainFrame->ChangeScene(new sceneTitle());
-
+	DataOwner::GetInst()->Init();
+	DataOwner::GetInst()->stageNo = 1;
 	return TRUE;
 }
 

@@ -105,6 +105,7 @@ private:
 	std::list<FlagGmk*> releaseFlag;
 	std::map<int, int> speedList;		// <スピード,個数>
 	std::list<FlagGmk*>::iterator nowFlag;
+	
 
 	//------------ method --------------
 public:
@@ -120,6 +121,7 @@ public:
 	void CheckFlag();
 	bool IsFinishEffect();// 演出終了
 	POINT GetNowObjPos();
+	bool IsClear();
 private:
 	inline int NextSpeed(int nowSpeed);
 	inline int BeforeSpeed(int nowSpeed);

@@ -1,5 +1,6 @@
 #include	"iextreme.h"
 #include	"system/system.h"
+#include	"system/Framework.h"
 
 #include	"sceneMain.h"
 #include	"DataOwner.h"
@@ -10,6 +11,7 @@
 #include	"TimeObject.h"
 #include	"Gimmick.h"
 #include	"Pumpkin.h"
+#include	"sceneTitle.h"
 
 using namespace EDX;
 
@@ -28,7 +30,7 @@ bool sceneMain::Initialize()
 	//	ŠÂ‹«Œõ
 	//DataOwner::GetInst()->Init();
 
-	back = new iex2DObj("DATA/‰¼”wŒi.png");
+	back = new iex2DObj("DATA/ƒQ[ƒ€‰æ–Ê/”wŒi‚P.png");
 	stage = new StageMNG;
 	stageID =DataOwner::GetInst()->stageNo;
 	stage->LoadStage(stageID);
@@ -135,14 +137,22 @@ void sceneMain::Update()
 			if(Campus::GetInst()->IsMoveEnd())
 			{
 				flag->CheckFlag();
-				if(flag->IsFinishEffect())
+				if(flag->IsFinishEffect())// ƒtƒ‰ƒbƒO‚Ì‰‰o‚ªI‚í‚Á‚½‚©
 				{
-					if(flag->CheckNext())
+					if(flag->CheckNext())// ’²‚×‚é‚×‚«ƒtƒ‰ƒbƒO‚ªc‚Á‚Ä‚¢‚é‚©
 						Campus::GetInst()->SetNextPos(flag->GetNowObjPos());
 					else
 					{
-						Campus::GetInst()->SetNextPos(stage->GetPos(stage->GetNowObj()));
-						state = MAIN;
+						if(flag->IsClear())// ƒNƒŠƒA‚µ‚Ä‚¢‚é‚©
+						{
+							MainFrame->ChangeScene(new sceneTitle);
+							return;
+						}
+						else
+						{
+							Campus::GetInst()->SetNextPos(stage->GetPos(stage->GetNowObj()));
+							state = MAIN;
+						}
 					}
 					Campus::GetInst()->TimeReset();
 				}
@@ -176,7 +186,8 @@ void sceneMain::Render()
 	DataOwner::GetInst()->view->Activate();
 	DataOwner::GetInst()->view->Clear(0x00000080);
 
-	Campus::GetInst()->Add(back, -10000, -10000, 20000, 20000, 0, 0, 756, 512);
+	back->Render(0, 0, 1280, 720, 0, 0, 3208, 2480);
+//	Campus::GetInst()->Add(back, 0, 0, 1280, 720, 0, 0, 3508, 2480);
 
 	stage->Render();
 	flag->Render();

@@ -11,11 +11,11 @@ ImageFactory::~ImageFactory()
 
 void ImageFactory::Init()
 {
-	imageList[CLOCK_BACK] = new iex2DObj("DATA/アナログ時計.png");
+	imageList[CLOCK_BACK] = new iex2DObj("DATA/物関連/時計.png");
 	paramList[CLOCK_BACK] = ImageParam(0, 0, 512, 512);
-	imageList[CLOCK_HOUR] = new iex2DObj("DATA/アナログ時計(短い針）.png");
+	imageList[CLOCK_HOUR] = new iex2DObj("DATA/物関連/時計(針）.png");
 	paramList[CLOCK_HOUR] = ImageParam(0, 0, 512, 512);
-	imageList[CLOCK_MINUTE] = new iex2DObj("DATA/アナログ時計(長い針）.png");
+	imageList[CLOCK_MINUTE] = new iex2DObj("DATA/物関連/時計(針）.png");
 	paramList[CLOCK_MINUTE] = ImageParam(0, 0, 512, 512);
 	imageList[FRAG_BLACK] = new iex2DObj("DATA/ゲーム画面/-10～10のコウモリたち/koumori.png");
 	paramList[FRAG_BLACK] = ImageParam(0, 0, 256, 128);

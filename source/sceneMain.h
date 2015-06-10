@@ -15,9 +15,9 @@ private:
 	}state;
 	StageMNG* stage;
 	FlagMgr* flag;
+	iex2DObj* back;
 
 	int stageID;// プロット提供用
-	iex2DObj* back;// プロット提供用
 
 	//-------- method ---------
 public:

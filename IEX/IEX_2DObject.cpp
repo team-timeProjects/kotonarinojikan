@@ -216,12 +216,17 @@ void	iex2DObj::Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh
 	v[0].sy = v[1].sy = (float)(h * -0.5) * scale;
 	v[2].sy = v[3].sy = (float)(h * 0.5f)  * scale;
 
+	TLVERTEX v2[4];
+	for(int i = 0; i < 4; i++)
+		v2[i] = v[i];
 
 	for (DWORD i = 0; i < 4; i++){
 		const float xbuff = v[i].sx;
 		const float ybuff = v[i].sy;
-		v[i].sx = xbuff * cos(-angle) + ybuff * sin(-angle);
-		v[i].sy = -xbuff * sin(-angle) + ybuff * cos(-angle);
+		v[i].sx = cosf(angle) * (v2[i].sx - p.x) - sinf(angle) * (v2[i].sy - p.y) + p.x;
+		v[i].sy = sinf(angle) * (v2[i].sx - p.x) + cosf(angle) * (v2[i].sy - p.y) + p.y;
+		//v[i].sx = xbuff * cos(-angle) + ybuff * sin(-angle);
+		//v[i].sy = -xbuff * sin(-angle) + ybuff * cos(-angle);
 	}
 
 	float buffx = (float)(x + ((w + 1.0f) * 0.5f));

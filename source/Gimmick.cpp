@@ -265,8 +265,8 @@ void FlagMgr::Init()
 {
 	ReleaseImage();
 	ReleaseList();
-	listBack = new iex2DObj("DATA/ƒQ[ƒ€‰æ–Ê/game migiran.png");
-	blockBack = new iex2DObj("DATA/ƒQ[ƒ€‰æ–Ê/time speed.png");
+	listBack = new iex2DObj("DATA/ƒQ[ƒ€‰æ–Ê/UI˜g.png");
+	blockBack = new iex2DObj("DATA/ƒQ[ƒ€‰æ–Ê/ƒXƒs[ƒhƒ{[ƒh.png");
 
 	state = State::MAIN;
 }
@@ -309,7 +309,7 @@ void FlagMgr::Render()
 	for(auto& r : blackFlag)
 		r->Render();
 	Campus::GetInst()->Draw();
-	listBack->Render(1130, 0, 256, 720, 0, 0, 256, 720);
+	listBack->Render(1130, 0, 512, 1024, 0, 0, 512, 1024);
 	int offsety = 50;
 	for(std::pair<const int, int>& r : speedList)
 	{
@@ -485,4 +485,14 @@ inline void FlagMgr::ReleaseList()
 	speedList.clear();
 
 	nowFlag = blackFlag.end();
+}
+
+bool FlagMgr::IsClear()
+{
+	for(auto& r : speedList)
+	{
+		if(r.second > 0)
+			return false;
+	}
+	return true;
 }
