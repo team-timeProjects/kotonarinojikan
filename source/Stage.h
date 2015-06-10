@@ -1,6 +1,9 @@
 #pragma once
 
 #include "TimeObject.h"
+#include "Gimmick.h"
+#include <list>
+#include <vector>
 
 class iex2DObj;
 

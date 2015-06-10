@@ -4,8 +4,6 @@
 //#include "Game.h"
 #include "../IEX/iextreme.h"
 #include <map>
-#include <list>
-#include <vector>
 
 // 時計・蝋燭・メトロノームの基底クラス
 //class TimeObject
@@ -111,17 +109,21 @@ class Number
 private:
 	enum
 	{
-		MINUS_10 = 0, MINUS_9, MINUS_8, MINUS_7, MINUS_6, MINUS_5, MINUS_4, MINUS_3, MINUS_2, MINUS_1, NUM_0,
-		PLUS_1, PLUS_2, PLUS_3, PLUS_4, PLUS_5, PLUS_6, PLUS_7, PLUS_8, PLUS_9, PLUS_10
+		MINUS=-1
 	};
-	iex2DObj*				 image;		//自己管理
-	std::map<int, ImageParam> param;
+	iex2DObj*	image;		//自己管理
+	const int	WIDTH;
+	const int	HEIGHT;
 
 	//---------- method ------------
 public:
+	Number();
 	~Number();
 	void Init();
-	void Render(int num, int x, int y, float scale, bool campus = true);
+	void RenderCC(int num, int x, int y, float scale,float alpha=1.0f, bool campus = true);
+private:
+	void Render(int n, int x, int y, float scale, float alpha,bool campus);
+	inline int idxCalc(int base, int exponent);
 };
 
 // TimeObjの画像管理
@@ -185,106 +187,6 @@ public:
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	void SetState(TimeObj::State s);
-};
-
-// ギミック基底クラス
-class Gimmick
-{
-	//--------- field ----------
-protected:
-	TimeObj* obj = nullptr;					// ギミックを適用するオブジェクト(外部管理)
-
-	//--------- method -----------
-public:
-	Gimmick();
-	Gimmick(TimeObj* obj);
-	virtual ~Gimmick();
-	virtual void Update() = 0;
-	virtual void Render() = 0;
-};
-
-// 平行移動ギミック
-class MoveGmk :public Gimmick
-{
-	//----------- field ------------
-private:
-	std::list<Vector2> node;				// 移動ポイント
-	std::list<Vector2>::iterator nowNode;	// 移動中のノード
-	bool ringLoop = false;					// リングループ：折り返しループ
-	bool searchOrder = true;				// イテレータの方向(折り返しループ用)
-	const float SPEED;						// 移動スピード
-
-	//----------- method -----------
-public:
-	MoveGmk();
-	MoveGmk(TimeObj* obj);
-	void Update()override;
-	void Render()override;
-	void AppendNode(const Vector2& node);
-	void SetLoop(bool IsRingLoop);
-};
-
-class FlagGmk :public Gimmick
-{
-	//--------- field --------------
-public:
-	enum TYPE
-	{
-		BLACK, GOLD
-	};
-private:
-	iex2DObj*	back;		// 外部管理
-	ImageParam  backParam;
-	Number*		number;		// 外部管理
-	Vector2		pos;
-	TYPE		type;
-	int			num;
-	bool		checked;
-
-	//----------- method ------------
-public:
-	FlagGmk(TimeObj* timeObj);
-	~FlagGmk();
-	void Init(iex2DObj* back, ImageParam backParam, Number* number);
-	void Update()override;
-	void Render()override;
-	void SetNum(int num);
-	int GetNum();
-	void SetPos(const Vector2& pos);
-	bool IsChecked();
-	void SetChecked(bool checked);
-	TYPE GetType();
-	void SetType(TYPE type);
-	void SetBack(iex2DObj* back, ImageParam backParam);
-};
-
-class FlagMgr
-{
-	//----------- field ---------------
-private:
-	iex2DObj* listBack;
-	iex2DObj* blockBack;
-	std::map<TimeObj*, FlagGmk*> flagList;
-	std::map<int, int> speedList;		// <スピード,個数>
-	TimeObj* nowObj;
-
-	//------------ method --------------
-public:
-	FlagMgr();
-	~FlagMgr();
-	void Init();
-	void Update();
-	void Render();
-	void SetSpeedList(const std::map<int, int>& list);
-	void AppendFlag(TimeObj* obj, bool next = true);
-	bool StartCheck();// チェックフェーズ開始
-	bool CheckNext();// 移動開始、なければfalse
-	void CheckFlag();
-	bool IsFinishEffect();// 演出終了
-	POINT GetNowObjPos();
-private:
-	inline int NextSpeed(int nowSpeed);
-	inline int BeforeSpeed(int nowSpeed);
 };
 
 //class TimeObjMgr

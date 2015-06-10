@@ -72,7 +72,7 @@ bool Framework::Update()
 
 	//	XVˆ—
 	KEY_SetInfo();
-	EDX_Input::GetState();
+	EDX::EDX_Input::GetState();
 	Mouse::Update();
 	if( scene != NULL ) scene->Update();
 

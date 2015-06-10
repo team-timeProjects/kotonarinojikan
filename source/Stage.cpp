@@ -5,6 +5,7 @@
 #include	"Clock.h"
 #include	"DataOwner.h"
 #include	"TimeObject.h"
+#include	"Gimmick.h"
 
 namespace
 {

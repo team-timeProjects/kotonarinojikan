@@ -123,9 +123,9 @@ inline void Clock::Update_Check()
 {
 	Update_Time(50);
 	// •ª’PˆÊ‚ÌŠp“x+•b’PˆÊ‚ÌŠp“x
-	minuteAngle = (timeCount % MPH * ANGLE_1MINUTE) + (frameCount*(ANGLE_1MINUTE / (FPS / abs(speed))));
+	minuteAngle = (timeCount % MPH * ANGLE_1MINUTE) + (frameCount*(ANGLE_1MINUTE / (FPS / speed)));
 	// ŽžŠÔ’PˆÊ+•ª’PˆÊ+•b’PˆÊ
-	hourAngle = (timeCount / MPH * ANGLE_1HOUR) + (timeCount %MPH * (ANGLE_1HOUR / MPH)) + (frameCount*(ANGLE_1HOUR / MPH / (FPS / abs(speed))));
+	hourAngle = (timeCount / MPH * ANGLE_1HOUR) + (timeCount %MPH * (ANGLE_1HOUR / MPH)) + (frameCount*(ANGLE_1HOUR / MPH / (FPS / speed)));
 }
 
 inline void Clock::Update_Smooth()

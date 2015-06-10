@@ -2,6 +2,7 @@
 #include	"Framework.h"
 #include	"sceneMain.h"
 #include	"Control.h"
+#include	"../sceneTitle.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -36,7 +37,7 @@ BOOL	InitApp(HWND hWnd)
 	//	メインフレームワーク生成
 	MainFrame = new Framework();
 	//	初期シーン登録
-	MainFrame->ChangeScene(new sceneMain());
+	MainFrame->ChangeScene(new sceneTitle());
 
 	return TRUE;
 }

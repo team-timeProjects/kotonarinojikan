@@ -8,6 +8,10 @@
 #include	"Control.h"
 #include	"Campus.h"
 #include	"TimeObject.h"
+#include	"Gimmick.h"
+#include	"Pumpkin.h"
+
+using namespace EDX;
 
 sceneMain::sceneMain(void)
 {
@@ -22,16 +26,19 @@ bool sceneMain::Initialize()
 	//	ŠÂ‹«Ý’è
 	iexLight::SetFog(800, 1000, 0);
 	//	ŠÂ‹«Œõ
-	DataOwner::GetInst()->Init();
+	//DataOwner::GetInst()->Init();
 
 	back = new iex2DObj("DATA/‰¼”wŒi.png");
 	stage = new StageMNG;
-	stageID = 1;
+	stageID =DataOwner::GetInst()->stageNo;
 	stage->LoadStage(stageID);
 	flag = new FlagMgr;
 	flag->Init();
 	flag->SetSpeedList(stage->GetSpeedList());
 	state = MAIN;
+	Pumpkin::GetInst()->Init();
+	Pumpkin::GetInst()->SetOpen(true);
+	Pumpkin::GetInst()->SetMaxY(1000);
 	return true;
 }
 
@@ -40,25 +47,13 @@ sceneMain::~sceneMain()
 	SafeDelete(stage);
 	SafeDelete(flag);
 	SafeDelete(back);
+	Pumpkin::GetInst()->Release();
 }
 
 void sceneMain::Update()
 {
-	if(KEY_Get(KEY_A) == 3)
-	{
-		stageID--;
-		if(!stage->LoadStage(stageID))
-			stageID++;
-	}
-	if(KEY_Get(KEY_B) == 3)
-	{
-		stageID++;
-		if(!stage->LoadStage(stageID))
-			stageID--;
-	}
-
-
-	if(MouseGet(EDX_CLICK_L))
+	Pumpkin::GetInst()->Update();
+	if(MouseGet(EDX_CLICK_L) == 1)
 	{
 		int objID = -1;
 		POINT p;
@@ -101,6 +96,30 @@ void sceneMain::Update()
 			flag->Update();
 			break;
 		case sceneMain::MAIN:
+			if(KEY_Get(KEY_A) == 3)
+			{
+				stageID--;
+				if(stage->LoadStage(stageID))
+				{
+					flag->Init();
+					flag->SetSpeedList(stage->GetSpeedList());
+				}
+				else
+					stageID++;
+			}
+			if(KEY_Get(KEY_B) == 3)
+			{
+				stageID++;
+				if(stage->LoadStage(stageID))
+				{
+					flag->Init();
+					flag->SetSpeedList(stage->GetSpeedList());
+				}
+				else
+					stageID--;
+			}
+
+
 			stage->Update();
 			flag->Update();
 			Campus::GetInst()->SetNextPos(stage->GetPos(stage->GetNowObj()));
@@ -161,6 +180,8 @@ void sceneMain::Render()
 
 	stage->Render();
 	flag->Render();
+
+	Pumpkin::GetInst()->Render();
 
 #ifdef _DEBUG
 	char	str[64];

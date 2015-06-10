@@ -12,6 +12,7 @@ class DataOwner // singleton
 {
 	//---------- field ------------
 public:
+	int				stageNo=0;
 	iexView*		view;
 	ImageFactory*   imageFactory;
 	Number*			number;
@@ -34,6 +35,11 @@ public:
 
 	bool Init()
 	{
+		SafeDelete(view);
+		SafeDelete(imageFactory);
+		SafeDelete(number);
+
+		stageNo = 0;
 		view = new iexView();
 		imageFactory = new ImageFactory();
 		number = new Number();

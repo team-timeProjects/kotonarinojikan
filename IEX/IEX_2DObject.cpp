@@ -131,7 +131,7 @@ void iex2DObj::Render( iexShader* shader, char* tech )
 	iexPolygon::Render2D( v, 2, this, shader, tech );
 }
 
-void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags, COLOR color, float z )
+void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags, IEXCOLOR color, float z )
 {
 	TLVERTEX	v[4];
 	v[0].sx = v[2].sx = (float)DstX;
@@ -152,7 +152,7 @@ void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 Src
 }
 
 
-void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, iexShader* shader, char* tech, COLOR color, float z )
+void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, iexShader* shader, char* tech, IEXCOLOR color, float z )
 {
 	TLVERTEX	v[4];
 	v[0].sx = v[2].sx = (float)DstX;
@@ -174,7 +174,7 @@ void iex2DObj::Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 Src
 
 //	‰ñ“]‘Î‰ž
 void	iex2DObj::Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
-	float angle, u32 dwFlags, COLOR color, float z)
+	float angle, u32 dwFlags, IEXCOLOR color, float z)
 {
 	TLVERTEX	v2[4];
 	v2[0].sx = v2[2].sx = (float)x;
@@ -208,7 +208,7 @@ void	iex2DObj::Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh
 }
 
 void	iex2DObj::Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
-	float angle, float scale, u32 dwFlags, COLOR color, float z )
+	float angle, float scale, u32 dwFlags, IEXCOLOR color, float z )
 {
 	TLVERTEX	v[4];
 	v[0].sx = v[2].sx = (float)(w  * -0.5) * scale;

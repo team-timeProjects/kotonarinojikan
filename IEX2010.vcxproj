@@ -102,8 +102,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EDX\EDX_2DObj.cpp" />
+    <ClCompile Include="EDX\EDX_Artifact.cpp" />
     <ClCompile Include="EDX\EDX_Input.cpp" />
+    <ClCompile Include="EDX\EDX_math.cpp" />
+    <ClCompile Include="EDX\EDX_RenderMgr.cpp" />
+    <ClCompile Include="EDX\EDX_TextureMgr.cpp" />
     <ClCompile Include="source\BaseObj.cpp" />
+    <ClCompile Include="source\Bat.cpp" />
     <ClCompile Include="source\Campus.cpp" />
     <ClCompile Include="source\Candle.cpp" />
     <ClCompile Include="source\ChoicesMgr.cpp" />
@@ -111,9 +117,12 @@
     <ClCompile Include="source\Control.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\GameSystem.cpp" />
+    <ClCompile Include="source\Gimmick.cpp" />
     <ClCompile Include="source\Metronom.cpp" />
     <ClCompile Include="source\Number.cpp" />
+    <ClCompile Include="source\Pumpkin.cpp" />
     <ClCompile Include="source\sceneMain.cpp" />
+    <ClCompile Include="source\sceneSelect.cpp" />
     <ClCompile Include="source\sceneTitile.cpp" />
     <ClCompile Include="source\Stage.cpp" />
     <ClCompile Include="source\system\Framework.cpp" />
@@ -152,7 +161,10 @@
     <ClInclude Include="source\DataOwner.h" />
     <ClInclude Include="source\Game.h" />
     <ClInclude Include="source\GameSystem.h" />
+    <ClInclude Include="source\Gimmick.h" />
     <ClInclude Include="source\Metronom.h" />
+    <ClInclude Include="source\Pumpkin.h" />
+    <ClInclude Include="source\sceneSelect.h" />
     <ClInclude Include="source\sceneTitile.h" />
     <ClInclude Include="source\Stage.h" />
     <ClInclude Include="source\system\Framework.h" />
