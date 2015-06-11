@@ -273,11 +273,36 @@ void FlagMgr::Init()
 
 void FlagMgr::Update()
 {
+	Vector2 p;
 	switch(state)
 	{
 		case FlagMgr::MAIN:
 			break;
+		case FlagMgr::MOVE_NEXT:
+			p = (*nowFlag)->GetObj()->GetPos();
+			Campus::GetInst()->SetNextPos(GetPoint(p.x, p.y));
+			if(Campus::GetInst()->IsMoveEnd())
+			{
+				p = (*nowFlag)->GetObj()->GetPos();
+				Campus::GetInst()->SetPos(GetPoint(p.x, p.y));
+				state = State::CHECK;
+			}
+			break;
 		case FlagMgr::CHECK:
+			p = (*nowFlag)->GetObj()->GetPos();
+			Campus::GetInst()->SetPos(GetPoint(p.x, p.y));
+			CheckFlag();
+			if(CheckNext())
+			{
+				p = (*nowFlag)->GetObj()->GetPos();
+				Campus::GetInst()->SetNextPos(GetPoint(p.x, p.y));
+				Campus::GetInst()->TimeReset();
+				state = State::MOVE_NEXT;
+			}
+			else
+			{
+				state = State::MAIN;
+			}
 			break;
 		default:
 			break;
@@ -355,15 +380,25 @@ void FlagMgr::AppendFlag(TimeObj* obj, bool next)
 	blackFlag.push_back(flg);
 }
 
-bool FlagMgr::StartCheck()
+void FlagMgr::StartCheck()
 {
+	state = State::MOVE_NEXT;
+	// チェック対象の演出をスタート
 	for(auto& r : blackFlag)
 	{
 		r->GetObj()->SetState(TimeObj::State::CHECK);
 		r->SetChecked(false);
 	}
+	// リストの先頭を確保
 	nowFlag = blackFlag.begin();
-	return nowFlag != blackFlag.end();
+	if(nowFlag == blackFlag.end())
+	{
+		state = State::MAIN;
+		return;
+	}
+	Vector2 p = (*nowFlag)->GetObj()->GetPos();
+	Campus::GetInst()->SetNextPos(GetPoint(p.x, p.y));
+	Campus::GetInst()->TimeReset();
 }
 
 bool FlagMgr::CheckNext()
@@ -399,7 +434,7 @@ void FlagMgr::CheckFlag()
 				{
 					it++;
 					continue;
-				}	
+				}
 				if((*it)->GetNum() == (*nowFlag)->GetNum())
 				{
 					(*it)->GetObj()->SetState(TimeObj::MOVE);
@@ -432,6 +467,21 @@ POINT FlagMgr::GetNowObjPos()
 	ret.x = (*nowFlag)->GetObj()->GetPos().x;
 	ret.y = (*nowFlag)->GetObj()->GetPos().y;
 	return ret;
+}
+
+bool FlagMgr::IsCheckEnd()
+{
+	return state == MAIN;
+}
+
+bool FlagMgr::IsClear()
+{
+	for(auto& r : speedList)
+	{
+		if(r.second > 0)
+			return false;
+	}
+	return true;
 }
 
 inline int FlagMgr::NextSpeed(int nowSpeed)
@@ -485,14 +535,4 @@ inline void FlagMgr::ReleaseList()
 	speedList.clear();
 
 	nowFlag = blackFlag.end();
-}
-
-bool FlagMgr::IsClear()
-{
-	for(auto& r : speedList)
-	{
-		if(r.second > 0)
-			return false;
-	}
-	return true;
 }

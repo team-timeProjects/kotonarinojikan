@@ -29,10 +29,9 @@ bool sceneMain::Initialize()
 	iexLight::SetFog(800, 1000, 0);
 	//	環境光
 	//DataOwner::GetInst()->Init();
-
 	back = new iex2DObj("DATA/ゲーム画面/背景１.png");
 	stage = new StageMNG;
-	stageID =DataOwner::GetInst()->stageNo;
+	stageID = DataOwner::GetInst()->stageNo;
 	stage->LoadStage(stageID);
 	flag = new FlagMgr;
 	flag->Init();
@@ -134,27 +133,18 @@ void sceneMain::Update()
 		case sceneMain::PAUSE:
 			break;
 		case sceneMain::CHECK:
-			if(Campus::GetInst()->IsMoveEnd())
+			if(flag->IsCheckEnd())
 			{
-				flag->CheckFlag();
-				if(flag->IsFinishEffect())// フラッグの演出が終わったか
+				if(flag->IsClear())
 				{
-					if(flag->CheckNext())// 調べるべきフラッグが残っているか
-						Campus::GetInst()->SetNextPos(flag->GetNowObjPos());
-					else
-					{
-						if(flag->IsClear())// クリアしているか
-						{
-							MainFrame->ChangeScene(new sceneTitle);
-							return;
-						}
-						else
-						{
-							Campus::GetInst()->SetNextPos(stage->GetPos(stage->GetNowObj()));
-							state = MAIN;
-						}
-					}
+					MainFrame->ChangeScene(new sceneTitle);
+					return;
+				}
+				else
+				{
+					Campus::GetInst()->SetNextPos(stage->GetPos(stage->GetNowObj()));
 					Campus::GetInst()->TimeReset();
+					state = MAIN;
 				}
 			}
 			stage->Update();
@@ -170,12 +160,8 @@ void sceneMain::Update()
 	}
 	if(KEY_Get(KEY_LEFT) == 3)
 	{
-		if(flag->StartCheck())
-		{
-			Campus::GetInst()->SetNextPos(flag->GetNowObjPos());
-			Campus::GetInst()->TimeReset();
-			state = CHECK;
-		}
+		flag->StartCheck();
+		state = CHECK;
 	}
 
 }
@@ -187,7 +173,7 @@ void sceneMain::Render()
 	DataOwner::GetInst()->view->Clear(0x00000080);
 
 	back->Render(0, 0, 1280, 720, 0, 0, 3208, 2480);
-//	Campus::GetInst()->Add(back, 0, 0, 1280, 720, 0, 0, 3508, 2480);
+	//	Campus::GetInst()->Add(back, 0, 0, 1280, 720, 0, 0, 3508, 2480);
 
 	stage->Render();
 	flag->Render();

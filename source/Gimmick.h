@@ -96,7 +96,7 @@ class FlagMgr
 private:
 	enum State
 	{
-		MAIN,CHECK
+		MAIN,MOVE_NEXT,CHECK,
 	}state;
 	iex2DObj* listBack;
 	iex2DObj* blockBack;
@@ -105,7 +105,6 @@ private:
 	std::list<FlagGmk*> releaseFlag;
 	std::map<int, int> speedList;		// <スピード,個数>
 	std::list<FlagGmk*>::iterator nowFlag;
-	
 
 	//------------ method --------------
 public:
@@ -116,11 +115,12 @@ public:
 	void Render();
 	void SetSpeedList(const std::map<int, int>& list);
 	void AppendFlag(TimeObj* obj, bool next = true);
-	bool StartCheck();// チェックフェーズ開始
+	void StartCheck();// チェックフェーズ開始
 	bool CheckNext();// 移動開始、なければfalse
 	void CheckFlag();
 	bool IsFinishEffect();// 演出終了
 	POINT GetNowObjPos();
+	bool IsCheckEnd();
 	bool IsClear();
 private:
 	inline int NextSpeed(int nowSpeed);
