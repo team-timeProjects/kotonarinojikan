@@ -16,7 +16,8 @@ public:
 	void SetChild(int id, int x, int y);
 	void Update();
 private:
-	enum class TYPE{
+	enum class TYPE
+	{
 		BASE, MOVE
 	};
 	float x = 0, y = 0;				//オブジェクトの中心座標
@@ -32,10 +33,14 @@ private:
 	bool canShuffle = false;	//シャッフルフラグ
 
 public:
-	void SetLoop(int flg){
-		if(flg == 0){
+	void SetLoop(int flg)
+	{
+		if(flg == 0)
+		{
 			isLoop = false;
-		}else{
+		}
+		else
+		{
 			isLoop = true;
 		}
 	}
@@ -48,13 +53,16 @@ class StageMNG
 private:
 	enum GimmickID
 	{
-		NONE,MOVE
+		NONE, MOVE
 	};
 	std::list<TimeObj*> objList;
 	std::list<Gimmick*> gimmickList;
 	std::vector<TimeObj*> shuffleList;
 	std::map<int, int> speedList;
-	int nowID=0;
+	int goldenFlagNum = 0;
+	int DefaultGoldFlagSum;
+	int HaveGoldFlag;
+	int nowID = 0;
 
 public:
 	StageMNG();
@@ -70,12 +78,17 @@ public:
 	void SpeedShuffle();
 	TimeObj* GetObj(int objID);
 	std::map<int, int> GetSpeedList();
+	int GetjudgeTimer();
+	int GetJudgeNum();
+	int GetHaveGoldFlag() { return HaveGoldFlag; }
+
 
 private:
 	inline TimeObj* SearchObj(int ID)const;
 	inline TimeObj* MakeObj(int ID, const Vector2& pos, float scale, float speed, int behavior);
 	int objMax = 0;
-	enum TYPE{
+	enum TYPE
+	{
 		//時計、ろうそく、メトロノーム
 		CLOCK, CANDOL, METRO
 	};

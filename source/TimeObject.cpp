@@ -33,7 +33,7 @@ ImageParam ImageFactory::GetParam(ImageID id)
 	return paramList[id];
 }
 
-
+int TimeObj::SuccessChain = 0;
 TimeObj::TimeObj()
 {}
 
@@ -98,5 +98,6 @@ void TimeObj::Init(int id, const Vector2& centerPos, int colW, int colH, float s
 
 void TimeObj::SetState(TimeObj::State s)
 {
+	if (s == SUCCESS)SuccessCnt = SUCCESS_EFFECT_TIME;
 	state = s;
 }

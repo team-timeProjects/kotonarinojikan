@@ -102,6 +102,8 @@ bool StageMNG::LoadStage(const int stageNum)
 	std::string fileName = "DATA/BG/stage" + buf.str() + ".sdt";
 	TextLoader loader;
 	if(!loader.Load((char*)fileName.c_str()))return false;
+	loader.LoadInt();	//ƒo[ƒWƒ‡ƒ“”‚Ì‹ó“Ç‚Ý
+
 	//î•ñ‚Ì”jŠü
 	objMax = 0;
 	for(TimeObj*& r : objList)
@@ -116,6 +118,7 @@ bool StageMNG::LoadStage(const int stageNum)
 	stageType = (TYPE)loader.LoadInt();
 	judgeNum = loader.LoadInt();
 	judgeTimer = loader.LoadInt();
+	goldenFlagNum = loader.LoadInt();
 
 	//ŒÂ”
 	objMax = loader.LoadInt();
@@ -167,13 +170,21 @@ bool StageMNG::LoadStage(const int stageNum)
 		r->SetRelativeSpeed(startSpeed);
 	}
 	nowID = 0;
+	DefaultGoldFlagSum = HaveGoldFlag = goldenFlagNum;
 	return true;
 }
 
 void StageMNG::Update()
 {
+	HaveGoldFlag = DefaultGoldFlagSum;
 	for(TimeObj*& r : objList)
+	{
 		r->Update();
+		if(r->GetGold_Effect())
+		{
+			HaveGoldFlag--;
+		}
+	}
 	for(Gimmick*& r : gimmickList)
 		r->Update();
 }
@@ -258,6 +269,16 @@ TimeObj* StageMNG::GetObj(int objID)
 std::map<int, int> StageMNG::GetSpeedList()
 {
 	return speedList;
+}
+
+int StageMNG::GetjudgeTimer()
+{
+	return judgeTimer;
+}
+
+int StageMNG::GetJudgeNum()
+{
+	return judgeNum;
 }
 
 inline TimeObj* StageMNG::SearchObj(int ID)const

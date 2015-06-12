@@ -40,6 +40,7 @@ bool sceneSelect::Initialize(){
 	save_SelectStage = SelectStage = 0;
 	Pumpkin::GetInst()->Init();
 	Pumpkin::GetInst()->Reset(false);
+	Pumpkin::GetInst()->SetMaxY();
 	TransitionBat::GetInst()->Init();
 	TransitionBat::GetInst()->SetNextStep(TransitionBat::TBAT_STATE::UP);
 	TransitionBat::GetInst()->TimeReset();

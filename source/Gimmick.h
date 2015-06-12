@@ -48,7 +48,7 @@ class FlagGmk :public Gimmick
 public:
 	enum TYPE
 	{
-		BLACK, GOLD
+		FREE,BLACK, GOLD
 	};
 	enum State
 	{
@@ -96,15 +96,18 @@ class FlagMgr
 private:
 	enum State
 	{
-		MAIN,MOVE_NEXT,CHECK,
+		MAIN,MOVE_NEXT,CHECK,EFFECT
 	}state;
 	iex2DObj* listBack;
 	iex2DObj* blockBack;
+	iex2DObj* goldBack;
 	std::list<FlagGmk*> blackFlag;
 	std::list<FlagGmk*> goldFlag;
 	std::list<FlagGmk*> releaseFlag;
 	std::map<int, int> speedList;		// <スピード,個数>
 	std::list<FlagGmk*>::iterator nowFlag;
+	int haveGold;
+	int effectTimer;
 
 	//------------ method --------------
 public:
@@ -115,6 +118,7 @@ public:
 	void Render();
 	void SetSpeedList(const std::map<int, int>& list);
 	void AppendFlag(TimeObj* obj, bool next = true);
+	void AppendGoldFlag(TimeObj* obj);
 	void StartCheck();// チェックフェーズ開始
 	bool CheckNext();// 移動開始、なければfalse
 	void CheckFlag();
@@ -122,6 +126,7 @@ public:
 	POINT GetNowObjPos();
 	bool IsCheckEnd();
 	bool IsClear();
+	void SetHaveGoldFlag(int num);
 private:
 	inline int NextSpeed(int nowSpeed);
 	inline int BeforeSpeed(int nowSpeed);

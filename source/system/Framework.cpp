@@ -2,7 +2,7 @@
 #include	"system.h"
 #include	"Framework.h"
 
-#include	"sceneMain.h"
+#include	"../sceneMain.h"
 #include <time.h>
 #include	"../Control.h"
 

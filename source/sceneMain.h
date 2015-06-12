@@ -2,10 +2,97 @@
 #define _SCENEMAIN_H_
 
 #include	"Game.h"
+#include	"../IEX/iextreme.h"
 #include	"../EDX/EDXLIB.h"
+#include	"Utility.h"
 
 class StageMNG;
 class FlagMgr;
+
+class JudgeClock
+{
+private:
+	iex2DObj* image;
+	POINT	pos;			//@ˆÊ’u
+	float	ShortAngle;		//@’ZjŠp“x
+	float	LongAngle;		//	’·jŠp“x
+	int		timer;
+	int		judgeCycle;
+	int		judgeCount;
+	bool	clockUp;
+	bool	checkPalse;
+public:
+	JudgeClock()
+	{
+		image = nullptr;
+		pos.x = 0;
+		pos.y = 0;
+		ShortAngle = 0;
+		LongAngle = 0;
+		timer = 0;
+		judgeCycle = 0;
+		judgeCount = 0;
+		clockUp = false;
+		checkPalse = false;
+	}
+	~JudgeClock()
+	{
+		SafeDelete(image);
+	}
+	void Init(int judgeCount, int judgeCycle)
+	{
+		image = new iex2DObj("DATA/timer.png");
+		pos.x = 1220;
+		pos.y = 650;
+		this->judgeCount = judgeCount;
+		this->judgeCycle = judgeCycle * 60;
+		timer = this->judgeCount*this->judgeCycle;
+		clockUp = false;
+		checkPalse = false;
+	}
+
+	void Update()
+	{
+		timer -= clockUp ? 6 : 1;
+		checkPalse = timer%judgeCycle == 0 || (clockUp&&timer%judgeCycle > judgeCycle - 6);
+		clockUp = false;
+
+		LongAngle = (timer%judgeCycle)*(2 * PI / judgeCycle);
+		ShortAngle = (timer / judgeCycle)*(2 * PI / 12) + (timer%judgeCycle)*(2 * PI / (12 * judgeCycle));
+	}
+
+	void Render()
+	{
+		const int size = 110;
+		POINT p;
+		p.x = pos.x;
+		p.y = pos.y;
+		image->Render(pos.x - size / 2, pos.y - size / 2, size, size, 0, 0, 256, 256);
+		image->Render(pos.x - size / 2, pos.y - size / 2, size, size, 0, 256, 256, 256, p, ShortAngle);
+		image->Render(pos.x - size / 2, pos.y - size / 2, size, size, 256, 0, 256, 256, p, LongAngle);
+
+	}
+	bool IsCollision(const POINT& p)
+	{
+		return (p.x >= pos.x - 110 / 2) && (p.x <= pos.x + 110 / 2) &&
+			(p.y >= pos.y - 110 / 2) && (p.y <= pos.y + 110 / 2);
+	}
+
+	void TimerClockUp()
+	{
+		clockUp = true;
+	}
+
+	bool CheckPalse()
+	{
+		return checkPalse;
+	}
+
+	int GetTime()
+	{
+		return timer;
+	}
+};
 
 class sceneMain :public Scene
 {
@@ -13,10 +100,11 @@ class sceneMain :public Scene
 private:
 	enum State
 	{
-		BEGIN,MAIN,PAUSE,CHECK,END
+		BEGIN, MAIN, PAUSE, CHECK, END
 	}state;
 	StageMNG* stage;
 	FlagMgr* flag;
+	JudgeClock* judgeClock;
 	EDX::EDX_2DObj* back;
 	EDX::EDX_2DObj* back2;
 	float back2angle;

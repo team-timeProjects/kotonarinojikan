@@ -1,6 +1,6 @@
 #include	"iextreme.h"
 #include	"Framework.h"
-#include	"sceneMain.h"
+#include	"../sceneMain.h"
 #include	"Control.h"
 #include	"../sceneTitle.h"
 #include	"../DataOwner.h"
@@ -40,7 +40,7 @@ BOOL	InitApp(HWND hWnd)
 	//	‰ŠúƒV[ƒ““o˜^
 	DataOwner::GetInst()->Init();
 	DataOwner::GetInst()->stageNo = 1;
-	MainFrame->ChangeScene(new sceneMain());
+	MainFrame->ChangeScene(new sceneTitle());
 	return TRUE;
 }
 

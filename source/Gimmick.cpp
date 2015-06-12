@@ -251,8 +251,10 @@ FlagMgr::FlagMgr()
 {
 	listBack = nullptr;
 	blockBack = nullptr;
+	goldBack = nullptr;
 	state = State::MAIN;
 	nowFlag = blackFlag.end();
+	haveGold = 0;
 }
 
 FlagMgr::~FlagMgr()
@@ -267,6 +269,7 @@ void FlagMgr::Init()
 	ReleaseList();
 	listBack = new iex2DObj("DATA/ゲーム画面/UI枠.png");
 	blockBack = new iex2DObj("DATA/ゲーム画面/スピードボード.png");
+	goldBack = new iex2DObj("DATA/ゲーム画面/コウモリ残数.png");
 
 	state = State::MAIN;
 }
@@ -292,17 +295,25 @@ void FlagMgr::Update()
 			p = (*nowFlag)->GetObj()->GetPos();
 			Campus::GetInst()->SetPos(GetPoint(p.x, p.y));
 			CheckFlag();
-			if(CheckNext())
+			effectTimer = 20;
+			state = State::EFFECT;
+			break;
+		case FlagMgr::EFFECT:
+			if(IsFinishEffect())
 			{
-				p = (*nowFlag)->GetObj()->GetPos();
-				Campus::GetInst()->SetNextPos(GetPoint(p.x, p.y));
-				Campus::GetInst()->TimeReset();
-				state = State::MOVE_NEXT;
+				if(CheckNext())
+				{
+					p = (*nowFlag)->GetObj()->GetPos();
+					Campus::GetInst()->SetNextPos(GetPoint(p.x, p.y));
+					Campus::GetInst()->TimeReset();
+					state = State::MOVE_NEXT;
+				}
+				else
+				{
+					state = State::MAIN;
+				}
 			}
-			else
-			{
-				state = State::MAIN;
-			}
+
 			break;
 		default:
 			break;
@@ -335,14 +346,16 @@ void FlagMgr::Render()
 		r->Render();
 	Campus::GetInst()->Draw();
 	listBack->Render(1130, 0, 512, 1024, 0, 0, 512, 1024);
-	int offsety = 50;
+	int offsety = 86;
 	for(std::pair<const int, int>& r : speedList)
 	{
-		blockBack->Render(1144, offsety, 165, 165, 0, 0, 256, 256);
-		DataOwner::GetInst()->number->RenderCC(r.first, 1144 + 60, offsety + 30, 0.2f, 1.0f, false);
-		DataOwner::GetInst()->number->RenderCC(r.second, 1144 + 40, offsety + 70, 0.3f, 1.0f, false);
-		offsety += 95;
+		blockBack->Render(1175, offsety, 100, 72, 0, 0, 100, 80);
+		DataOwner::GetInst()->number->RenderCC(r.first, 1175 + 52, offsety + 20, 0.15f, 1.0f, false);
+		DataOwner::GetInst()->number->RenderCC(r.second, 1175 + 40, offsety + 50, 0.2f, 1.0f, false);
+		offsety += 72;
 	}
+	goldBack->Render(1160, 530, 64, 64, 0, 0, 64, 64);
+	DataOwner::GetInst()->number->RenderCC(haveGold, 1250, 560, 0.3f, 1.0f, false);
 }
 
 void FlagMgr::SetSpeedList(const std::map<int, int>& list)
@@ -352,6 +365,7 @@ void FlagMgr::SetSpeedList(const std::map<int, int>& list)
 
 void FlagMgr::AppendFlag(TimeObj* obj, bool next)
 {
+	if(obj->state == TimeObj::SUCCESS)return;
 	int speed = 0;
 	for(auto it = blackFlag.begin(); it != blackFlag.end();)
 	{
@@ -378,6 +392,45 @@ void FlagMgr::AppendFlag(TimeObj* obj, bool next)
 	flg->SetNum(speed);
 	flg->SetType(FlagGmk::BLACK);
 	blackFlag.push_back(flg);
+}
+
+void FlagMgr::AppendGoldFlag(TimeObj* obj)
+{
+	if(obj->state != TimeObj::SUCCESS || obj->GetSuccessCnt() > 0)return;
+	if(obj->GetGold_Effect())
+	{
+		obj->SetGold_Effect(false);
+		//解除
+		for(auto it = goldFlag.begin(); it != goldFlag.end(); it++)
+		{
+			if((*it)->GetObj() == obj)
+			{
+				(*it)->SetState(FlagGmk::State::FADE_OUT);
+				releaseFlag.push_back(*it);
+				it = goldFlag.erase(it);
+				break;
+			}
+		}
+		obj->SetState(TimeObj::SUCCESS);
+	}
+	else
+	{
+		//金フラ装備
+		if(haveGold < 1)return;
+		obj->SetGold_Effect(true);
+
+		FlagGmk* flg = new FlagGmk(obj);
+		flg->Init(DataOwner::GetInst()->imageFactory->GetImage(ImageFactory::FRAG_GOLD),
+				  DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_GOLD),
+				  DataOwner::GetInst()->number);
+
+		int speed = obj->GetOrginSpeed();
+
+		flg->SetNum(speed);
+		flg->SetType(FlagGmk::GOLD);
+		goldFlag.push_back(flg);
+
+	}
 }
 
 void FlagMgr::StartCheck()
@@ -420,32 +473,41 @@ void FlagMgr::CheckFlag()
 	if(abs((*nowFlag)->GetObj()->GetOrginSpeed() - (*nowFlag)->GetNum()) < 0.1f)
 	{
 		speedList[(*nowFlag)->GetNum()]--;
-		(*nowFlag)->SetBack(DataOwner::GetInst()->imageFactory->GetImage(ImageFactory::FRAG_GOLD),
-							DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_GOLD));
-		(*nowFlag)->SetType(FlagGmk::TYPE::GOLD);
-		(*nowFlag)->SetState(FlagGmk::State::STAY);
-		(*nowFlag)->GetObj()->SetState(TimeObj::State::STOP);
-		goldFlag.push_back(*nowFlag);
-		if(speedList[(*nowFlag)->GetNum()] <= 0)// 使い切ったフラグを解放
-		{
-			for(auto it = blackFlag.begin(); it != blackFlag.end();)
-			{
-				if((*it) == (*nowFlag))
-				{
-					it++;
-					continue;
-				}
-				if((*it)->GetNum() == (*nowFlag)->GetNum())
-				{
-					(*it)->GetObj()->SetState(TimeObj::MOVE);
-					(*it)->SetState(FlagGmk::State::FADE_OUT);
-					releaseFlag.push_back(*it);
-					it = blackFlag.erase(it);
-				}
-				else
-					it++;
-			}
-		}
+		(*nowFlag)->SetType(FlagGmk::TYPE::FREE);
+
+		(*nowFlag)->GetObj()->SetGold_Effect(false);
+		TimeObj::AddChain();
+		(*nowFlag)->GetObj()->SetMine_SChain(TimeObj::GetChain());
+		(*nowFlag)->GetObj()->SetState(TimeObj::State::SUCCESS);
+		(*nowFlag)->SetState(FlagGmk::State::FADE_OUT);
+		releaseFlag.push_back(*nowFlag);
+
+		//(*nowFlag)->SetBack(DataOwner::GetInst()->imageFactory->GetImage(ImageFactory::FRAG_GOLD),
+		//					DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_GOLD));
+		//(*nowFlag)->SetType(FlagGmk::TYPE::GOLD);
+		//(*nowFlag)->SetState(FlagGmk::State::STAY);
+		//(*nowFlag)->GetObj()->SetState(TimeObj::State::STOP);
+		//goldFlag.push_back(*nowFlag);
+		//if(speedList[(*nowFlag)->GetNum()] <= 0)// 使い切ったフラグを解放
+		//{
+		//	for(auto it = blackFlag.begin(); it != blackFlag.end();)
+		//	{
+		//		if((*it) == (*nowFlag))
+		//		{
+		//			it++;
+		//			continue;
+		//		}
+		//		if((*it)->GetNum() == (*nowFlag)->GetNum())
+		//		{
+		//			(*it)->GetObj()->SetState(TimeObj::MOVE);
+		//			(*it)->SetState(FlagGmk::State::FADE_OUT);
+		//			releaseFlag.push_back(*it);
+		//			it = blackFlag.erase(it);
+		//		}
+		//		else
+		//			it++;
+		//	}
+		//}
 		nowFlag = blackFlag.erase(nowFlag);
 	}
 	else
@@ -458,7 +520,7 @@ void FlagMgr::CheckFlag()
 
 bool FlagMgr::IsFinishEffect()
 {
-	return true;
+	return effectTimer-- <= 0;
 }
 
 POINT FlagMgr::GetNowObjPos()
@@ -483,6 +545,12 @@ bool FlagMgr::IsClear()
 	}
 	return true;
 }
+
+void FlagMgr::SetHaveGoldFlag(int num)
+{
+	haveGold = num;
+}
+
 
 inline int FlagMgr::NextSpeed(int nowSpeed)
 {
@@ -518,6 +586,7 @@ inline void FlagMgr::ReleaseImage()
 {
 	SafeDelete(listBack);
 	SafeDelete(blockBack);
+	SafeDelete(goldBack);
 }
 
 inline void FlagMgr::ReleaseList()

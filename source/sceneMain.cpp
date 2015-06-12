@@ -24,6 +24,7 @@ sceneMain::sceneMain(void)
 	back2angle = 0.0f;
 	angleSpeed = 0.0f;
 	state = BEGIN;
+	judgeClock = nullptr;
 }
 
 bool sceneMain::Initialize()
@@ -42,6 +43,8 @@ bool sceneMain::Initialize()
 	flag = new FlagMgr;
 	flag->Init();
 	flag->SetSpeedList(stage->GetSpeedList());
+	judgeClock = new JudgeClock;
+	judgeClock->Init(stage->GetJudgeNum(), stage->GetjudgeTimer());
 	state = MAIN;
 	Pumpkin::GetInst()->Init();
 	Pumpkin::GetInst()->SetOpen(true);
@@ -54,6 +57,8 @@ sceneMain::~sceneMain()
 	SafeDelete(stage);
 	SafeDelete(flag);
 	SafeDelete(back);
+	SafeDelete(back2);
+	SafeDelete(judgeClock);
 	Pumpkin::GetInst()->Release();
 }
 
@@ -61,32 +66,38 @@ void sceneMain::Update()
 {
 	back2angle += angleSpeed;
 	back2->SetAngle(back2angle);
-	
+
 	Pumpkin::GetInst()->Update();
-	if(MouseGet(EDX_CLICK_L) == 1)
+	if(MouseGet(EDX_CLICK_L) == 1 && state == MAIN)
 	{
 		int objID = -1;
 		POINT p;
-		switch(state)
+		p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
+		if((objID = stage->IsCollision(p)) != -1)
 		{
-			case sceneMain::BEGIN:
-				break;
-			case sceneMain::MAIN:
-				p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
-				if((objID = stage->IsCollision(p)) != -1)
-				{
-					stage->Activate(objID);
-					Campus::GetInst()->TimeReset();
-				}
-				break;
-			case sceneMain::PAUSE:
-				break;
-			case sceneMain::CHECK:
-				break;
-			case sceneMain::END:
-				break;
-			default:
-				break;
+			stage->Activate(objID);
+			Campus::GetInst()->TimeReset();
+		}
+	}
+	if(MouseGet(EDX_CLICK_L) && state == MAIN)
+	{
+		POINT p;
+		p = Mouse::cursor;
+		if(judgeClock->IsCollision(p))
+		{
+			judgeClock->TimerClockUp();
+		}
+	}
+	//‹àƒtƒ‰ƒbƒO
+	if (state == MAIN &&MouseGet(EDX_CLICK_R)==1)
+	{
+		int objID = -1;
+		TimeObj::ResetChain();
+		TimeObj::AddChain();
+		POINT p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
+		if ((objID = stage->IsCollision(p)) != -1)
+		{
+			flag->AppendGoldFlag(stage->GetObj(objID));
 		}
 	}
 	if(state == MAIN && (KEY_Get(KEY_UP) == 3 || KEY_Get(KEY_DOWN) == 3))
@@ -106,38 +117,48 @@ void sceneMain::Update()
 			flag->Update();
 			break;
 		case sceneMain::MAIN:
-			if(KEY_Get(KEY_A) == 3)
-			{
-				stageID--;
-				if(stage->LoadStage(stageID))
-				{
-					flag->Init();
-					flag->SetSpeedList(stage->GetSpeedList());
-				}
-				else
-					stageID++;
-			}
-			if(KEY_Get(KEY_B) == 3)
-			{
-				stageID++;
-				if(stage->LoadStage(stageID))
-				{
-					flag->Init();
-					flag->SetSpeedList(stage->GetSpeedList());
-				}
-				else
-					stageID--;
-			}
+			//if(KEY_Get(KEY_A) == 3)
+			//{
+			//	stageID--;
+			//	if(stage->LoadStage(stageID))
+			//	{
+			//		flag->Init();
+			//		flag->SetSpeedList(stage->GetSpeedList());
+			//	}
+			//	else
+			//		stageID++;
+			//}
+			//if(KEY_Get(KEY_B) == 3)
+			//{
+			//	stageID++;
+			//	if(stage->LoadStage(stageID))
+			//	{
+			//		flag->Init();
+			//		flag->SetSpeedList(stage->GetSpeedList());
+			//	}
+			//	else
+			//		stageID--;
+			//}
 
 
 			stage->Update();
 			flag->Update();
+			judgeClock->Update();
 			Campus::GetInst()->SetNextPos(stage->GetPos(stage->GetNowObj()));
 			if(Campus::GetInst()->IsMoveEnd())
 			{
 				Campus::GetInst()->SetPos(stage->GetPos(stage->GetNowObj()));
 			}
 			Campus::GetInst()->Update();
+			if(judgeClock->CheckPalse())
+			{
+				flag->StartCheck();
+				state = CHECK;
+			}
+			else if(judgeClock->GetTime() <= 0)
+			{
+				state = END;
+			}
 			break;
 		case sceneMain::PAUSE:
 			break;
@@ -146,8 +167,7 @@ void sceneMain::Update()
 			{
 				if(flag->IsClear())
 				{
-					MainFrame->ChangeScene(new sceneTitle);
-					return;
+					state = END;
 				}
 				else
 				{
@@ -163,16 +183,19 @@ void sceneMain::Update()
 		case sceneMain::END:
 			stage->Update();
 			flag->Update();
+			MainFrame->ChangeScene(new sceneTitle);
+			return;
 			break;
 		default:
 			break;
 	}
-	if(KEY_Get(KEY_LEFT) == 3)
-	{
-		flag->StartCheck();
-		state = CHECK;
-	}
-
+	//if(KEY_Get(KEY_LEFT) == 3)
+	//{
+	//	flag->StartCheck();
+	//	TimeObj::ResetChain();
+	//	state = CHECK;
+	//}
+	flag->SetHaveGoldFlag(stage->GetHaveGoldFlag());
 }
 
 void sceneMain::Render()
@@ -182,18 +205,20 @@ void sceneMain::Render()
 	DataOwner::GetInst()->view->Clear(0x00000080);
 
 	back->Draw(0, 0);
-	back2->Draw(1280/2-720/2, 720/2-720/2);
+	back2->Draw(1280 / 2 - 720 / 2, 720 / 2 - 720 / 2);
 	//	Campus::GetInst()->Add(back, 0, 0, 1280, 720, 0, 0, 3508, 2480);
 
 	stage->Render();
 	flag->Render();
-
+	judgeClock->Render();
 	Pumpkin::GetInst()->Render();
 
 #ifdef _DEBUG
 	char	str[64];
 	wsprintf(str, "Stage: %d\n", stageID);
 	IEX_DrawText(str, 10, 30, 200, 20, 0xFF7070FF);
+	wsprintf(str, "timelimit = %d", judgeClock->GetTime() / 60);
+	IEX_DrawText(str, 10, 70, 200, 20, 0xFF7070FF);
 #endif
 
 }

@@ -44,6 +44,15 @@ void Clock::Update()
 {
 	switch(state)
 	{
+	case TimeObj::SUCCESS:
+		SuccessCnt--;
+		if (SuccessCnt < 0)SuccessCnt = 0;
+		if (!Gold_Effect){
+			Update_Time();
+			minuteAngle = 0;
+			hourAngle = 0;
+			break;
+		}
 		case TimeObj::MOVE:
 			switch(behavior)
 			{
@@ -93,6 +102,17 @@ void Clock::Render()
 						   dst[MINUTE].w*scale, dst[MINUTE].h*scale,
 						   src[MINUTE].x, src[MINUTE].y, src[MINUTE].w, src[MINUTE].h,
 						   p, minuteAngle);
+	//™Â¬Œ÷‰‰o—pŽžŒv
+	if (state == State::SUCCESS&&SuccessCnt > 0){
+		DWORD S_Alpha = ARGB((int)((float)SuccessCnt / (float)SUCCESS_EFFECT_TIME*127.0f) , 255, 255, 255);
+		float AddScale = (float)Mine_SChain / (float)CHAIN_EFFECT_MAX*CHAIN_MAX_SCALE;
+		AddScale *= 1.0f - (float)SuccessCnt / (float)SUCCESS_EFFECT_TIME;
+		Campus::GetInst()->Add(imageList[BACK],
+			pos.x - dst[BACK].w*(AddScale + scale) / 2 + dst[BACK].x*(AddScale + scale),
+			pos.y - dst[BACK].h*(AddScale + scale) / 2 + dst[BACK].y*(AddScale + scale),
+			dst[BACK].w*(AddScale + scale), dst[BACK].h*(AddScale + scale),
+			src[BACK].x, src[BACK].y, src[BACK].w, src[BACK].h, GetPoint(0, 0), 0, 1, RS_COPY, (DWORD)S_Alpha, 0.0f);
+	}
 }
 
 inline void Clock::Update_Time(float speed)
