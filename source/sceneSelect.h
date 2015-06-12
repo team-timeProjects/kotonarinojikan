@@ -42,7 +42,7 @@ private:
 	static const int STAGEPIC_MAX = 30;
 	static const int WAIT_TIME = 60;
 
-	static const int OPEN_STAGE = 3;
+	static const int OPEN_STAGE = 30;
 
 	static const int BAT_X_SPACE = 350;
 	static const int BAT_PIC_WH = 512;
@@ -58,10 +58,15 @@ private:
 	EDX::EDX_2DObj* Back2;
 	Bat bat[STAGEPIC_MAX];
 
+	static const int SKIP_BAT_Y = 580;
+	static const int SKIP_BAT_X0 = 640;
+	static const int SKIP_BAT_X1 = 340;
+	EDX::EDX_2DObj* Skip_bat[2];
+
 	int Next_Alpha = 0;
 	EDX::EDX_2DObj* Next_Title;
 	EDX::EDX_2DObj* Next_Game;
-
+	Scene* NextScene;
 	bool NextTitle;
 
 	enum{

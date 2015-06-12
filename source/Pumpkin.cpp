@@ -66,3 +66,19 @@ bool Pumpkin::IsMoveEnd(){
 void Pumpkin::SetOpen(bool IsOpen){
 	this->IsOpen = IsOpen;
 }
+
+void Pumpkin::Reset(bool IsOpen){
+	this->IsOpen = IsOpen;
+	if (IsOpen){
+		PosY = MAX_MOVE_Y;
+		PowY = 0;
+		MoveY = 0;
+		IsMoveEndflg = true;
+	}
+	else{
+		PosY = 0;
+		PowY = 0;
+		MoveY = 0;
+		IsMoveEndflg = true;
+	}
+}

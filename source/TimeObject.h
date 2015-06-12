@@ -167,6 +167,7 @@ protected:
 	float orginSpeed = 0.0f;						// 時間経過絶対スピード
 	float speed = 0.0f;								// 時間経過相対スピード
 	int behavior = 0;								// 挙動アルゴリズム
+	bool haveFlag = false;							// フラッグ所持状態
 
 	//------------- method ----------------
 public:

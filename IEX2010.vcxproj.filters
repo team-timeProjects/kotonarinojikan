@@ -216,6 +216,9 @@
     <ClCompile Include="source\Bat.cpp">
       <Filter>ヘッダー ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="source\TransitionBat.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -234,9 +237,6 @@
       <Filter>ヘッダー ファイル\SYSTEM</Filter>
     </ClInclude>
     <ClInclude Include="source\sceneMain.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="source\sceneTitile.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="source\Stage.h">
@@ -291,6 +291,12 @@
       <Filter>E</Filter>
     </ClInclude>
     <ClInclude Include="source\sceneSelect.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TransitionBat.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sceneTitle.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,18 +12,18 @@ class sceneTitle :public Scene
 	//----------- field -----------
 private:
 	//	画像
-	iex2DObj*		m_Back;
+	EDX::EDX_2DObj*		m_Back1;
+	EDX::EDX_2DObj*		m_Back2;
+	EDX::EDX_2DObj*		m_Star;
+
 	iex2DObj*		m_Logo;
 	iex2DObj*		m_Start;
 	iex2DObj*		m_End;
-	iex2DObj*		m_Bat;
 
 	//	画像パラメータ
-	ImageParam	backparam;
 	ImageParam	logoparam;
 	ImageParam	startparam;
 	ImageParam	endparam;
-	ImageParam	batparam;
 	float				startAngle;
 	float				endAngle;
 
@@ -34,12 +34,14 @@ private:
 		MODE_SELECT,
 		MODE_MOVE_BAT,
 		MODE_SCENE_CHANGE,
+		MODE_EXIT,
 	};
 
 	//----------- method ----------
 public:
 	//	初期化・解放
-	sceneTitle( void );
+	static bool IsReturnTitle;
+	sceneTitle(void) ;
 	~sceneTitle( void );
 	bool	Initialize( void )override;
 

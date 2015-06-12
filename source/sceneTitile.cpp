@@ -1,37 +1,42 @@
 #include	"../IEX/iextreme.h"
 #include	"system/System.h"
 #include	"system/Framework.h"
+#include	"../EDX/EDXLIB.h"
 #include	"DataOwner.h"
 #include	"Campus.h"
 #include	"sceneMain.h"
 #include	"sceneSelect.h"
 
 #include	"sceneTitle.h"
+#include	"TransitionBat.h"
 
 //******************************************************************************
 //
 //	sceneTitleクラス
 //
 //******************************************************************************
-
+bool sceneTitle::IsReturnTitle = false;
 //----------------------------------------------------------------------
 //	初期化・解放
 //----------------------------------------------------------------------
 
 	//	コンストラクタ
-	sceneTitle::sceneTitle( void ) : m_Back( NULL ), m_Logo( NULL ), m_Start( NULL ), m_End( NULL )
+	sceneTitle::sceneTitle(void) : m_Back1(NULL), m_Back2(NULL), m_Star(NULL), m_Logo(NULL), m_Start(NULL), m_End(NULL)
 	{
-		
+
 	}
 
 	//	デストラクタ
 	sceneTitle::~sceneTitle( void )
 	{
-		SafeDelete(m_Back);
+		if (mode == MODE_EXIT)TransitionBat::GetInst()->Release();
+		SafeDelete(m_Back1);
+		SafeDelete(m_Back2);
+		SafeDelete(m_Star);
 		SafeDelete(m_Logo);
 		SafeDelete(m_Start);
 		SafeDelete(m_End);
-		SafeDelete(m_Bat);
+
 	}
 
 	//	初期化
@@ -44,8 +49,10 @@
 		DataOwner::GetInst()->Init();
 
 		//	画像初期化
-		m_Back = new iex2DObj( "DATA/タイトル画面/title backround.png" );
-		backparam = { 640, 360, 1280, 720 };
+		m_Back1 = new EDX::EDX_2DObj("DATA/タイトル画面/Title3.png");
+		m_Back2 = new EDX::EDX_2DObj("DATA/タイトル画面/Title1.png");
+		m_Star = new EDX::EDX_2DObj("DATA/タイトル画面/Title2.png");
+
 		m_Logo = new iex2DObj( "DATA/タイトル画面/title logo.png" );
 		logoparam = { 670, 300, 500, 500 };
 		m_Start = new iex2DObj( "DATA/タイトル画面/gaem start.png" );
@@ -54,9 +61,13 @@
 		m_End = new iex2DObj( "DATA/タイトル画面/game exit.png" );
 		endparam = { 900, 550, 250, 150 };
 		endAngle = 0.0f;
-		m_Bat = new iex2DObj( "DATA/移行演出/koumori taigun.png" );
-		batparam = { 2400, 1500, 2200, 2200 };
-
+		TransitionBat::GetInst()->Init();
+		if (IsReturnTitle){
+			TransitionBat::GetInst()->SetStep(TransitionBat::TBAT_STATE::CENTER);
+			TransitionBat::GetInst()->SetNextStep(TransitionBat::TBAT_STATE::UP);
+			TransitionBat::GetInst()->TimeReset();
+			IsReturnTitle = false;
+		}
 		//	変数
 		mode = MODE_SELECT;
 
@@ -71,6 +82,7 @@
 	//	更新
 	void sceneTitle::Update( void )
 	{
+		TransitionBat::GetInst()->Update();
 		switch ( mode )
 		{
 		case MODE_SELECT:				ModeSelect();			break;
@@ -89,13 +101,19 @@
 		//	画像描画
 		if (mode != MODE_SCENE_CHANGE)
 		{
-			RenderObject( m_Back, backparam, 0, 0, 1280, 720, 0.0f );
+			m_Back1->Draw(0, 0);
+			m_Back2->Draw(0, 0);
+			static float a = 0;
+			a -= EDX_PI_F / 360;
+			m_Star->SetAngle(a);
+			m_Star->Draw(-640, -640);
 			RenderObject( m_Logo, logoparam, 0, 0, 512, 512, 0.0f );
 			RenderObject( m_Start, startparam, 0, 0, 300, 170, PI / 180 * 30 * sinf( startAngle ) );
 			RenderObject( m_End, endparam, 0, 0, 300, 170, PI / 180 * 30 * sinf( endAngle ) );
 		}
 		
-		RenderObject( m_Bat, batparam, 0, 0, 4096, 4096, 0.0f );
+		TransitionBat::GetInst()->Render();
+		//RenderObject( m_Bat, batparam, 0, 0, 4096, 4096, 0.0f );
 	}
 
 	//	オブジェクト描画
@@ -123,8 +141,12 @@
 		if ( OnCursorCheck( p, startparam ) )
 		{
 			//	クリック
-			if (EDX::MouseGet(EDX::EDX_CLICK_L))
+			if (EDX::MouseGet(EDX::EDX_CLICK_L)){
+				TransitionBat::GetInst()->SetStep(TransitionBat::TBAT_STATE::DOWN);
+				TransitionBat::GetInst()->TimeReset();
+				TransitionBat::GetInst()->SetNextStep(TransitionBat::TBAT_STATE::CENTER);
 				mode = MODE_MOVE_BAT;
+			}
 
 			startAngle += 0.05f;
 			startparam.w = 300;
@@ -140,8 +162,10 @@
 		if ( OnCursorCheck( p, endparam ) )
 		{
 			//	クリック
-			if (EDX::MouseGet(EDX::EDX_CLICK_L))
-				exit( 0 );
+			if (EDX::MouseGet(EDX::EDX_CLICK_L)){
+				mode = MODE_EXIT;
+				exit(0);
+			}
 
 			endAngle += 0.05f;
 			endparam.w = 300;
@@ -156,35 +180,18 @@
 	}
 
 	//	コウモリが((((⊂（´∀｀ｏ)⊃))))飛ぶｿﾞｫ！
-	void	sceneTitle::ModeMoveMenu( void )
+	void	sceneTitle::ModeMoveMenu(void)
 	{
 		startAngle = 0.0f;
-
-		if ( batparam.x >= 700 )
-		{
-			batparam.x -= 10;
-			batparam.y -= 5;
-		}
-		else
-		{
+		if (TransitionBat::GetInst()->IsMoveEnd()){
 			mode = MODE_SCENE_CHANGE;
 		}
-
 	}
 
 	//	メニューへ移動
 	void	sceneTitle::ModeChangeScene( void )
 	{
-		if ( batparam.x >= -1000 )
-		{
-			batparam.x -= 10;
-			batparam.y -= 5;
-		}
-		else
-		{
-			MainFrame->ChangeScene(new sceneSelect());
-			return;
-		}
+		MainFrame->ChangeScene(new sceneSelect());
 	}
 
 	//	カーソルが乗ってるかチェック

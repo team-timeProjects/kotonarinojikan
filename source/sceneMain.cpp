@@ -20,6 +20,9 @@ sceneMain::sceneMain(void)
 	stage = nullptr;
 	flag = nullptr;
 	back = nullptr;
+	back2 = nullptr;
+	back2angle = 0.0f;
+	angleSpeed = 0.0f;
 	state = BEGIN;
 }
 
@@ -29,7 +32,10 @@ bool sceneMain::Initialize()
 	iexLight::SetFog(800, 1000, 0);
 	//	ŠÂ‹«Œõ
 	//DataOwner::GetInst()->Init();
-	back = new iex2DObj("DATA/ƒQ[ƒ€‰æ–Ê/”wŒi‚P.png");
+	back = new EDX::EDX_2DObj("DATA/ƒQ[ƒ€‰æ–Ê/”wŒi‚P.png");
+	back2 = new EDX::EDX_2DObj("DATA/ƒQ[ƒ€‰æ–Ê/”wŒi2.png");
+	back2angle = 0.0f;
+	angleSpeed = 0.01f;
 	stage = new StageMNG;
 	stageID = DataOwner::GetInst()->stageNo;
 	stage->LoadStage(stageID);
@@ -53,6 +59,9 @@ sceneMain::~sceneMain()
 
 void sceneMain::Update()
 {
+	back2angle += angleSpeed;
+	back2->SetAngle(back2angle);
+	
 	Pumpkin::GetInst()->Update();
 	if(MouseGet(EDX_CLICK_L) == 1)
 	{
@@ -172,7 +181,8 @@ void sceneMain::Render()
 	DataOwner::GetInst()->view->Activate();
 	DataOwner::GetInst()->view->Clear(0x00000080);
 
-	back->Render(0, 0, 1280, 720, 0, 0, 3208, 2480);
+	back->Draw(0, 0);
+	back2->Draw(1280/2-720/2, 720/2-720/2);
 	//	Campus::GetInst()->Add(back, 0, 0, 1280, 720, 0, 0, 3508, 2480);
 
 	stage->Render();

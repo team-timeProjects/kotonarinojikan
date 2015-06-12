@@ -28,10 +28,12 @@ public:
 	void Update();
 	void Render();
 
+	void Reset(bool IsOpen);
+
 	void SetMaxY(int Y = 200){ MAX_MOVE_Y = Y; }
 
 	bool IsMoveEnd();
-	void Pumpkin::SetOpen(bool IsOpen);
+	void SetOpen(bool IsOpen);
 
 	__forceinline static Pumpkin* GetInst(){
 		static Pumpkin c;

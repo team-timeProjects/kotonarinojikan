@@ -2,6 +2,8 @@
 #define _SCENEMAIN_H_
 
 #include	"Game.h"
+#include	"../EDX/EDXLIB.h"
+
 class StageMNG;
 class FlagMgr;
 
@@ -15,7 +17,10 @@ private:
 	}state;
 	StageMNG* stage;
 	FlagMgr* flag;
-	iex2DObj* back;
+	EDX::EDX_2DObj* back;
+	EDX::EDX_2DObj* back2;
+	float back2angle;
+	float angleSpeed;
 
 	int stageID;// プロット提供用
 
