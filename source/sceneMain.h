@@ -8,8 +8,6 @@
 
 class StageMNG;
 class FlagMgr;
-<<<<<<< HEAD
-=======
 
 class JudgeClock
 {
@@ -95,7 +93,6 @@ public:
 		return timer;
 	}
 };
->>>>>>> remotes/origin/horita
 
 class sceneMain :public Scene
 {
@@ -103,30 +100,6 @@ class sceneMain :public Scene
 private:
 	enum State
 	{
-<<<<<<< HEAD
-		BEGIN,MAIN,PAUSE,CHECK,END
-	}state;
-
-	struct CheckClock
-	{
-		POINT	pos;			//　位置
-		float	ShortAngle;		//　短針角度
-		float	LongAngle;		//	長針角度
-	};
-	iex2DObj*	rCheckClock;
-	
-	StageMNG* stage;
-	FlagMgr* flag;
-	CheckClock	check_obj;	//　判定時計構造体
-	int judgeNum = 0;
-	int judgeTimer = 0;
-	int stageID;// プロット提供用
-	iex2DObj* back;// プロット提供用
-
-	static int timelimit;
-
-
-=======
 		BEGIN, MAIN, PAUSE, CHECK, END
 	}state;
 	StageMNG* stage;
@@ -138,7 +111,6 @@ private:
 	float angleSpeed;
 
 	int stageID;// プロット提供用
->>>>>>> remotes/origin/horita
 
 	//-------- method ---------
 public:
@@ -148,9 +120,6 @@ public:
 	void Update()override;
 	void Render()override;
 
-	int GetTimelimit(){ return timelimit; }
-	static void SetTimelimit(int tl){ timelimit = tl; }
-	static void DecreaseTimit(int minus){ SetTimelimit(timelimit - minus); }
 };
 
 #endif //#ifndef _SCENEMAIN_H_

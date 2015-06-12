@@ -63,7 +63,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Mouse::cursor.x = LOWORD(lParam);
 		//Mouse::cursor.y = HIWORD(lParam);
 		//ScreenToClient(hWnd, &Mouse::cursor);
-<<<<<<< HEAD
 
 		////‘‹ˆÊ’u‚Æ‰‚É‚æ‚é’²®
 		//RECT rc;
@@ -72,16 +71,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Mouse::cursor.x += rc.left - leftWndFrame;
 		//Mouse::cursor.y += rc.top - topWndFrame;
 
-=======
-
-		////‘‹ˆÊ’u‚Æ‰‚É‚æ‚é’²®
-		//RECT rc;
-		//GetWindowRect(iexSystem::Window, &rc);
-
-		//Mouse::cursor.x += rc.left - leftWndFrame;
-		//Mouse::cursor.y += rc.top - topWndFrame;
-
->>>>>>> remotes/origin/horita
 		
 
 		break;
