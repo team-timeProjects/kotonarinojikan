@@ -241,7 +241,7 @@ void iexParticle::Set( LPPARTICLE pd )
 //------------------------------------------------------
 //		データ個別指定
 //------------------------------------------------------
-void iexParticle::Set( int type, int aFrame, COLOR aColor, int eFrame, COLOR eColor, int mFrame, COLOR mColor, 
+void iexParticle::Set( int type, int aFrame, IEXCOLOR aColor, int eFrame, IEXCOLOR eColor, int mFrame, IEXCOLOR mColor, 
 						LPVECTOR3 Pos, LPVECTOR3 Move, LPVECTOR3 Power, float rotate, float stretch, float scale, u8 flag )
 {
 	PARTICLE pd;
@@ -275,7 +275,7 @@ void	iexParticle::Set( int type, int aFrame, float aAlpha, int eFrame, float eAl
 						LPVECTOR3 Pos, LPVECTOR3 Move, LPVECTOR3 Power,
 						float r, float g, float b, float scale, u8 flag )
 {
-	COLOR	color;
+	IEXCOLOR	color;
 	DWORD	aa, ea, ma;
 
 	aa = ((DWORD)(aAlpha*255.0f) << 24);
@@ -383,7 +383,7 @@ void	IEX_ExecuteParticles(){ iexParticle::Update(); }
 void	IEX_DrawParticles(){ iexParticle::Render(); }
 
 
-void	IEX_SetParticle( int type, int aFrame, COLOR aColor, int eFrame, COLOR eColor, int mFrame, COLOR mColor, 
+void	IEX_SetParticle( int type, int aFrame, IEXCOLOR aColor, int eFrame, IEXCOLOR eColor, int mFrame, IEXCOLOR mColor, 
 						LPVECTOR3 Pos, LPVECTOR3 Move, LPVECTOR3 Power, float rotate, float stretch, float scale, u8 flag )
 {
 	iexParticle::Set( type, aFrame, aColor, eFrame, eColor, mFrame, mColor, Pos, Move, Power, rotate, stretch, scale, flag );

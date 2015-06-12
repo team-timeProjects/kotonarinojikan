@@ -11,6 +11,7 @@ POINT SubPoint(POINT p1, POINT p2);
 
 struct RenderObject{
 	iex2DObj* obj;
+	EDX::EDX_2DObj* e_obj;
 	s32 x;
 	s32 y;
 	s32 w;
@@ -23,7 +24,7 @@ struct RenderObject{
 	float angle = 0.0f;
 	float scale = 1.0f;
 	u32 dwFlags = RS_COPY;
-	COLOR color = 0xFFFFFFFF;
+	IEXCOLOR color = 0xFFFFFFFF;
 	float z = 0.0f;
 };
 
@@ -49,7 +50,12 @@ public:
 	void Draw();
 
 	void Add(iex2DObj* obj, s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p = GetPoint(0, 0),
-			 float angle = 0, float scale = 1, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = 0.0f);
+		float angle = 0, float scale = 1, u32 dwFlags = RS_COPY, IEXCOLOR color = 0xFFFFFFFF, float z = 0.0f);
+	void Add(EDX::EDX_2DObj* obj, s32 x, s32 y);
+	void Add(EDX::EDX_2DObj* obj, s32 x, s32 y, POINT p, float angle = 0, float scale = 1, IEXCOLOR color = 0xFFFFFFFF);
+	void Add(EDX::EDX_2DObj* obj, s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh);
+	void Add(EDX::EDX_2DObj* obj, s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh,
+		POINT p,float angle = 0, float scale = 1, IEXCOLOR color = 0xFFFFFFFF);
 
 	void SetPos(POINT pos);
 	void SetNextPos(POINT nextpos);
@@ -61,8 +67,8 @@ public:
 
 	POINT GetPos(){
 	POINT out;
-	RECT WindowSize;
-	iexSystem::GetScreenRect(ScreenMode, WindowSize);
+	//RECT WindowSize;
+	//iexSystem::GetScreenRect(ScreenMode, WindowSize);
 	out.x = cpos.x;// +WindowSize.right;
 	out.y = cpos.y;// +WindowSize.bottom;
 	return out;

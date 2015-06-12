@@ -5,6 +5,7 @@
 #include	"Clock.h"
 #include	"DataOwner.h"
 #include	"TimeObject.h"
+#include	"Gimmick.h"
 
 namespace
 {
@@ -101,6 +102,8 @@ bool StageMNG::LoadStage(const int stageNum)
 	std::string fileName = "DATA/BG/stage" + buf.str() + ".sdt";
 	TextLoader loader;
 	if(!loader.Load((char*)fileName.c_str()))return false;
+	loader.LoadInt();	//バージョン数の空読み
+
 	//情報の破棄
 	objMax = 0;
 	for(TimeObj*& r : objList)
@@ -113,9 +116,9 @@ bool StageMNG::LoadStage(const int stageNum)
 	speedList.clear();
 	//ステージタイプ 強制判定回数 1周速度(frame) 個数
 	stageType = (TYPE)loader.LoadInt();
-
 	judgeNum = loader.LoadInt();
 	judgeTimer = loader.LoadInt();
+	goldenFlagNum = loader.LoadInt();
 
 	//個数
 	objMax = loader.LoadInt();
@@ -139,7 +142,6 @@ bool StageMNG::LoadStage(const int stageNum)
 		else
 			speedList[speed]++;
 
-		//　各ステージの各オブジェクトパラメータ設定
 		TimeObj* obj = MakeObj(i, pos, scale, speed, behavior);
 		if(obj != nullptr)
 		{
@@ -168,13 +170,21 @@ bool StageMNG::LoadStage(const int stageNum)
 		r->SetRelativeSpeed(startSpeed);
 	}
 	nowID = 0;
+	DefaultGoldFlagSum = HaveGoldFlag = goldenFlagNum;
 	return true;
 }
 
 void StageMNG::Update()
 {
+	HaveGoldFlag = DefaultGoldFlagSum;
 	for(TimeObj*& r : objList)
+	{
 		r->Update();
+		if(r->GetGold_Effect())
+		{
+			HaveGoldFlag--;
+		}
+	}
 	for(Gimmick*& r : gimmickList)
 		r->Update();
 }
@@ -208,16 +218,6 @@ POINT StageMNG::GetPos(int objID)const
 int StageMNG::GetNowObj()const
 {
 	return nowID;
-}
-
-int StageMNG::GetJudgeNum()const
-{
-	return judgeNum;
-}
-
-int StageMNG::GetJudgeTimer()const
-{
-	return judgeTimer;
 }
 
 int StageMNG::IsCollision(const POINT& p)const
@@ -269,6 +269,16 @@ TimeObj* StageMNG::GetObj(int objID)
 std::map<int, int> StageMNG::GetSpeedList()
 {
 	return speedList;
+}
+
+int StageMNG::GetjudgeTimer()
+{
+	return judgeTimer;
+}
+
+int StageMNG::GetJudgeNum()
+{
+	return judgeNum;
 }
 
 inline TimeObj* StageMNG::SearchObj(int ID)const

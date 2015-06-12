@@ -183,11 +183,41 @@
     <ClCompile Include="source\Stage.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="source\Number.cpp">
+      <Filter>ソース ファイル\Object\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Gimmick.cpp">
+      <Filter>ソース ファイル\Object\TimeObj</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Pumpkin.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="EDX\EDX_2DObj.cpp">
+      <Filter>E</Filter>
+    </ClCompile>
+    <ClCompile Include="EDX\EDX_Artifact.cpp">
+      <Filter>E</Filter>
+    </ClCompile>
     <ClCompile Include="EDX\EDX_Input.cpp">
       <Filter>E</Filter>
     </ClCompile>
-    <ClCompile Include="source\Number.cpp">
-      <Filter>ソース ファイル\Object\Interface</Filter>
+    <ClCompile Include="EDX\EDX_math.cpp">
+      <Filter>E</Filter>
+    </ClCompile>
+    <ClCompile Include="EDX\EDX_RenderMgr.cpp">
+      <Filter>E</Filter>
+    </ClCompile>
+    <ClCompile Include="EDX\EDX_TextureMgr.cpp">
+      <Filter>E</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sceneSelect.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Bat.cpp">
+      <Filter>ヘッダー ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TransitionBat.cpp">
+      <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,9 +237,6 @@
       <Filter>ヘッダー ファイル\SYSTEM</Filter>
     </ClInclude>
     <ClInclude Include="source\sceneMain.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="source\sceneTitile.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="source\Stage.h">
@@ -254,8 +281,23 @@
     <ClInclude Include="source\Control.h">
       <Filter>ヘッダー ファイル\GameSys</Filter>
     </ClInclude>
+    <ClInclude Include="source\Gimmick.h">
+      <Filter>ヘッダー ファイル\Object\TimeObj</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Pumpkin.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
     <ClInclude Include="EDX\EDXLIB.h">
       <Filter>E</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sceneSelect.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TransitionBat.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sceneTitle.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

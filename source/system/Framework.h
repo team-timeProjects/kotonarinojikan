@@ -72,6 +72,6 @@ public:
 	}
 };
 
-
+extern Framework* MainFrame;
 
 #endif

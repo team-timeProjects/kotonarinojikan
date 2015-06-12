@@ -4,94 +4,12 @@
 //#include "Game.h"
 #include "../IEX/iextreme.h"
 #include <map>
+<<<<<<< HEAD
 #include <list>
 #include <vector>
+=======
+>>>>>>> remotes/origin/horita
 
-// 時計・蝋燭・メトロノームの基底クラス
-//class TimeObject
-//{
-//protected:
-//	iex2DObj*	image = nullptr;		//　画像
-//	const int	SOURCE_W = 0;			//　画像ソースのクリップ幅
-//	const int	SOURCE_H = 0;			//	画像ソースのクリップ高さ
-//	int			width = 0;				//　画像描画幅
-//	int			height = 0;				//　画像描画高さ
-//	POINT		pos = {0, 0};			//	位置
-//	POINT		start = {0, 0};			//	元の位置
-//	POINT		end = {0, 0};			//	移動後の位置
-//	POINT		shift = {0, 0};			//	カメラ用ずれ幅
-//	float		speed = .0f;			//	速度
-//
-//	int			flag = 0;				//　フラグ※Ｅ
-//	int			state = 0;				//　判定状態
-//	int			fallpow = 0;			//　失敗演出用
-//	bool		SuccessFlg = false;		//　成功演出用
-//	int			SuccessCnt = 0;			//　成功演出用
-//
-//	//フラグ種類※Ｅ
-//	enum
-//	{
-//		FLAG_NOT,
-//		FLAG_RED,
-//		FLAG_GREEN,
-//		FLAG_BLUE,
-//	};
-//	//時計判定状態※Ｅ
-//	enum
-//	{
-//		STATE_WAIT,
-//		STATE_SUCCESS,
-//		STATE_BERAK,
-//	};
-//
-//	POINT		length;		//	距離
-//	float		org_speed;	//	元のスピード
-//	float		cul_speed;	//	現在選択中のそもそものスピード
-//	int			selectNum;	//	選択中の番号
-//	bool		clear;		//	クリア
-//	float		t;			//	割合
-//	int			step;		//	ステップ
-//	bool		CheckFlg;	//　チェック開始※Ｅ
-//
-//	//　判定失敗時用
-//	static const int SHAKE_TIME_MAX = 30;
-//	const float SHAKE_POWER = 10.0f;
-//	bool		ShakeFlg;
-//	int			ShakeCnt;
-//	Vector2		ShakeVar;
-//
-//	//　判定成功時用
-//	static const int SUCCESS_TIME_MAX = 30;
-//	const float SUCCESS_SCALE_MAX = 2.0f;
-//
-//	//所持フラッグ
-//	int DefaultHaveFlag[4];
-//	int HaveFlag[4];
-//
-//public:
-//	TimeObject();
-//	TimeObject(int sw, int sh);
-//	virtual ~TimeObject();
-//
-//	virtual void Update() = 0;
-//	virtual void Render() = 0;
-//	virtual bool CheckWithin(const POINT& p) { return false; };
-//	virtual POINT& GetPosCC() = 0;
-//	void SetPosCC(const POINT& pos);
-//	void SetShift(const POINT& shift);
-//	void SetStart(const POINT& pos);
-//
-//	//　ゲーム本編動作関数
-//	bool	CheckWithin(const POINT& p, const int& startX, const int& startY, const int size);	//	範囲内かどうか調べる
-//	void	Lerp(POINT& out, const POINT p1, const POINT p2, float t);	//	POINT補間
-//	void	Control(void);	//	操作
-//	void	CalcPos(void);	//	位置関係計算
-//
-//	void	Check();			//　判定※Ｅ
-//	void	ClearCheck();		//　判定※Ｅ
-//	void	Shake();
-//	void	FlagUpdate();
-//};
 
 // 画像の描画パラメータ
 struct ImageParam
@@ -111,6 +29,7 @@ class Number
 private:
 	enum
 	{
+<<<<<<< HEAD
 		MINUS_10 = 0, MINUS_9, MINUS_8, MINUS_7, MINUS_6, MINUS_5, MINUS_4, MINUS_3, MINUS_2, MINUS_1, NUM_0,
 		PLUS_1, PLUS_2, PLUS_3, PLUS_4, PLUS_5, PLUS_6, PLUS_7, PLUS_8, PLUS_9, PLUS_10
 	};
@@ -122,6 +41,23 @@ public:
 	~Number();
 	void Init();
 	void Render(int num, int x, int y, float scale, bool campus = true);
+=======
+		MINUS=-1
+	};
+	iex2DObj*	image;		//自己管理
+	const int	WIDTH;
+	const int	HEIGHT;
+
+	//---------- method ------------
+public:
+	Number();
+	~Number();
+	void Init();
+	void RenderCC(int num, int x, int y, float scale,float alpha=1.0f, bool campus = true);
+private:
+	void Render(int n, int x, int y, float scale, float alpha,bool campus);
+	inline int idxCalc(int base, int exponent);
+>>>>>>> remotes/origin/horita
 };
 
 // TimeObjの画像管理
@@ -151,10 +87,16 @@ class TimeObj
 public:
 	enum State
 	{
+<<<<<<< HEAD
 		MOVE, STOP, CHECK
 	}state = MOVE;
 	bool IsShuffled = false;
 
+=======
+		MOVE, STOP, CHECK,SUCCESS
+	}state = MOVE;
+	bool IsShuffled = false;
+>>>>>>> remotes/origin/horita
 protected:
 	int id = 0;
 	std::map<int, iex2DObj*> imageList;				// 画像データ(外部管理)
@@ -166,7 +108,18 @@ protected:
 	float orginSpeed = 0.0f;						// 時間経過絶対スピード
 	float speed = 0.0f;								// 時間経過相対スピード
 	int behavior = 0;								// 挙動アルゴリズム
+<<<<<<< HEAD
 	
+=======
+	bool haveFlag = false;							// フラッグ所持状態
+	static const int SUCCESS_EFFECT_TIME = 30;		// 卍成功演出時間定数
+	int SuccessCnt = 0;								// 卍成功演出用変数
+	const float CHAIN_MAX_SCALE = 3.0f;				// 卍連鎖演出用最大拡大率
+	static const int CHAIN_EFFECT_MAX = 5;			// 卍連鎖演出用最大拡大率到達連鎖数
+	static int SuccessChain;						// 卍連鎖カウンタ
+	int Mine_SChain;								// 卍自分の連鎖カウンタ
+	bool Gold_Effect = false;						// 卍金フラッグ効果発動中
+>>>>>>> remotes/origin/horita
 
 	//------------- method ----------------
 public:
@@ -187,6 +140,7 @@ public:
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	void SetState(TimeObj::State s);
+<<<<<<< HEAD
 };
 
 // ギミック基底クラス
@@ -224,6 +178,15 @@ public:
 	void Render()override;
 	void AppendNode(const Vector2& node);
 	void SetLoop(bool IsRingLoop);
+=======
+	__forceinline static void ResetChain(){ SuccessChain = 0; }
+	__forceinline static void AddChain(){ SuccessChain++; }
+	__forceinline static int GetChain(){ return SuccessChain; }
+	__forceinline bool GetGold_Effect(){ return Gold_Effect; }
+	__forceinline void SetGold_Effect(bool IsGoldEffect){ Gold_Effect = IsGoldEffect; }
+	__forceinline int GetSuccessCnt(){ return SuccessCnt; }
+	__forceinline void SetMine_SChain(int Chain){ Mine_SChain = Chain; }
+>>>>>>> remotes/origin/horita
 };
 
 class FlagGmk :public Gimmick

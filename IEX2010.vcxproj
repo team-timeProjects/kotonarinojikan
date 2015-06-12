@@ -48,6 +48,10 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(DXSDK_DIR)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
       <Command>
@@ -99,11 +103,18 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EDX\EDX_2DObj.cpp" />
+    <ClCompile Include="EDX\EDX_Artifact.cpp" />
     <ClCompile Include="EDX\EDX_Input.cpp" />
+    <ClCompile Include="EDX\EDX_math.cpp" />
+    <ClCompile Include="EDX\EDX_RenderMgr.cpp" />
+    <ClCompile Include="EDX\EDX_TextureMgr.cpp" />
     <ClCompile Include="source\BaseObj.cpp" />
+    <ClCompile Include="source\Bat.cpp" />
     <ClCompile Include="source\Campus.cpp" />
     <ClCompile Include="source\Candle.cpp" />
     <ClCompile Include="source\ChoicesMgr.cpp" />
@@ -111,9 +122,12 @@
     <ClCompile Include="source\Control.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\GameSystem.cpp" />
+    <ClCompile Include="source\Gimmick.cpp" />
     <ClCompile Include="source\Metronom.cpp" />
     <ClCompile Include="source\Number.cpp" />
+    <ClCompile Include="source\Pumpkin.cpp" />
     <ClCompile Include="source\sceneMain.cpp" />
+    <ClCompile Include="source\sceneSelect.cpp" />
     <ClCompile Include="source\sceneTitile.cpp" />
     <ClCompile Include="source\Stage.cpp" />
     <ClCompile Include="source\system\Framework.cpp" />
@@ -140,6 +154,7 @@
     <ClCompile Include="source\tomAL\tomAL.cpp" />
     <ClCompile Include="source\tomAL\tomALInmemory.cpp" />
     <ClCompile Include="source\tomAL\tomALStreaming.cpp" />
+    <ClCompile Include="source\TransitionBat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EDX\EDXLIB.h" />
@@ -152,8 +167,11 @@
     <ClInclude Include="source\DataOwner.h" />
     <ClInclude Include="source\Game.h" />
     <ClInclude Include="source\GameSystem.h" />
+    <ClInclude Include="source\Gimmick.h" />
     <ClInclude Include="source\Metronom.h" />
-    <ClInclude Include="source\sceneTitile.h" />
+    <ClInclude Include="source\Pumpkin.h" />
+    <ClInclude Include="source\sceneSelect.h" />
+    <ClInclude Include="source\sceneTitle.h" />
     <ClInclude Include="source\Stage.h" />
     <ClInclude Include="source\system\Framework.h" />
     <ClInclude Include="source\system\Scene.h" />
@@ -163,6 +181,7 @@
     <ClInclude Include="source\TextLoader.h" />
     <ClInclude Include="source\TimeObject.h" />
     <ClInclude Include="source\tomAL\tomAL.h" />
+    <ClInclude Include="source\TransitionBat.h" />
     <ClInclude Include="source\Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -42,7 +42,7 @@
 #define	u16		unsigned short
 #define	u32		unsigned long
 
-#define	COLOR	DWORD
+#define	IEXCOLOR	DWORD
 #define ARGB(a,r,g,b)	((DWORD)( (a<<24) | (r<<16) | (g<<8) | (b) ) )
 
 typedef D3DXVECTOR4		Vector4;
@@ -498,7 +498,7 @@ extern	Texture2D*	lpLastTexture;
 typedef struct tagTLVERTEX {
 	float	sx, sy, sz;
 	float	rhw;
-	COLOR	color;
+	IEXCOLOR	color;
 	float	tu, tv;
 } TLVERTEX, *LPTLVERTEX;
 
@@ -521,7 +521,7 @@ typedef struct tagVERTEX {
 #define D3DFVF_LVERTEX		( D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1 )
 typedef struct tagLVERTEX {
 	float	x, y, z;
-	COLOR	color;
+	IEXCOLOR	color;
 	float	tu, tv;
 } LVERTEX, *LPLVERTEX;
 
@@ -538,7 +538,7 @@ typedef struct tagMESHVERTEX {
 typedef struct tagLNVERTEX {
 	float	x, y, z;
 	float	nx, ny, nz;
-	COLOR	color;
+	IEXCOLOR	color;
 	float	tu, tv;
 } MESHVERTEX2, *LPMESHVERTEX2;
 
@@ -596,16 +596,16 @@ public:
 	//------------------------------------------------------
 	void	Render( void );
 	void	Render( iexShader* shader, char* tech );
-	void	Render(s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = .0f);
-	void	Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, iexShader* shader, char* tech, COLOR color=0xFFFFFFFF, float z=.0f );
+	void	Render(s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags = RS_COPY, IEXCOLOR color = 0xFFFFFFFF, float z = .0f);
+	void	Render( s32 DstX, s32 DstY, s32 DstW, s32 DstH, s32 SrcX, s32 SrcY, s32 width, s32 height, iexShader* shader, char* tech, IEXCOLOR color=0xFFFFFFFF, float z=.0f );
 	
 	//	回転対応
 	void	Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
-		float angle, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = 0.0f);
+		float angle, u32 dwFlags = RS_COPY, IEXCOLOR color = 0xFFFFFFFF, float z = 0.0f);
 
 	//	回転・拡大対応
 	void	Render(s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh, POINT p,
-		float angle, float scale, u32 dwFlags = RS_COPY, COLOR color = 0xFFFFFFFF, float z = 0.0f);
+		float angle, float scale, u32 dwFlags = RS_COPY, IEXCOLOR color = 0xFFFFFFFF, float z = 0.0f);
 
 };
 
@@ -625,8 +625,8 @@ public:
 	static void Render3D( LPLVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, iexShader* shader, char* name );
 	static void Render2D( LPTLVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, u32 dwFlags );
 	static void Render2D( LPTLVERTEX lpVertex, int Num, LPIEX2DOBJ lpObj, iexShader* shader, char* name );
-	static void Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, COLOR color, float z=.0f );
-	static void Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, COLOR color, float z=.0f );
+	static void Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, IEXCOLOR color, float z=.0f );
+	static void Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, IEXCOLOR color, float z=.0f );
 
 };
 
@@ -910,13 +910,13 @@ typedef struct tagPARTICLE	{
 	int		type;			//	形
 
 	int		aFrame;			//	出現フレーム
-	COLOR	aColor;			//	出現カラー
+	IEXCOLOR	aColor;			//	出現カラー
 	
 	int		eFrame;			//	消滅フレーム
-	COLOR	eColor;			//	出現カラー
+	IEXCOLOR	eColor;			//	出現カラー
 
 	int		mFrame;			//	最高フレーム
-	COLOR	mColor;			//	最高カラー
+	IEXCOLOR	mColor;			//	最高カラー
 
 	Vector3		Pos;
 	Vector3		Move;
@@ -969,7 +969,7 @@ public:
 	static void Release();
 	//	出現
 	static void Set( LPPARTICLE pd );
-	static void	Set( int type, int aFrame, COLOR aColor, int eFrame, COLOR eColor, int mFrame, COLOR mColor, 
+	static void	Set( int type, int aFrame, IEXCOLOR aColor, int eFrame, IEXCOLOR eColor, int mFrame, IEXCOLOR mColor, 
 						LPVECTOR3 Pos, LPVECTOR3 Move, LPVECTOR3 Power, float rotate, float stretch, float scale, u8 flag );
 	static void	Set( int type, int aFrame, float aAlpha, int eFrame, float eAlpha, int mFrame, float mAlpha, 
 						LPVECTOR3 Pos, LPVECTOR3 Move, LPVECTOR3 Power, float r, float g, float b, float scale, u8 flag );
@@ -991,7 +991,7 @@ public:
 
 void	IEX_InitText( void );
 void	IEX_ReleaseText( void );
-void	IEX_DrawText( LPSTR str, s32 x, s32 y, s32 width, s32 height, COLOR color, BOOL bMini=FALSE );
+void	IEX_DrawText( LPSTR str, s32 x, s32 y, s32 width, s32 height, IEXCOLOR color, BOOL bMini=FALSE );
 
 //*****************************************************************************************************************************
 //
@@ -1325,11 +1325,11 @@ void	IEX_UseFilter( BOOL bFilter );
 //	ライト関連
 void	IEX_ResetLight( int index );
 
-void	IEX_SetAmbient( COLOR Color );
+void	IEX_SetAmbient( IEXCOLOR Color );
 void	IEX_SetDirLight( s32 index, Vector3* dir, float r, float g, float b );
 void	IEX_SetPointLight( s32 index, Vector3* Pos, float r, float g, float b, float range );
 
-void	IEX_SetFog( u32 Mode, float Param1, float Param2, COLOR Color );
+void	IEX_SetFog( u32 Mode, float Param1, float Param2, IEXCOLOR Color );
 
 
 //*****************************************************************************
@@ -1412,7 +1412,7 @@ inline LPIEX2DOBJ	IEX_Load2DObject( LPSTR filename ){ return new iex2DObj(filena
 inline LPIEX2DOBJ	IEX_Create2DObject( int width, int height, u8 flag ){ return new iex2DObj( width, height, flag ); }
 inline void	IEX_Release2DObject( LPIEX2DOBJ lpObj ){ if( lpObj ) delete lpObj; }
 
-void	IEX_Render2DObject( s32 DstX, s32 DstY, s32 DstW, s32 DstH, LPIEX2DOBJ lpObj, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags=RS_COPY, COLOR color=0xFFFFFFFF );
+void	IEX_Render2DObject( s32 DstX, s32 DstY, s32 DstW, s32 DstH, LPIEX2DOBJ lpObj, s32 SrcX, s32 SrcY, s32 width, s32 height, u32 dwFlags=RS_COPY, IEXCOLOR color=0xFFFFFFFF );
 
 //*****************************************************************************
 //
@@ -1428,7 +1428,7 @@ void	IEX_ExecuteParticles( void );
 void	IEX_SetParticle( LPPARTICLE p );
 
 //
-void	IEX_SetParticle( int type, int aFrame, COLOR aColor, int eFrame, COLOR eColor, int mFrame, COLOR mColor, 
+void	IEX_SetParticle( int type, int aFrame, IEXCOLOR aColor, int eFrame, IEXCOLOR eColor, int mFrame, IEXCOLOR mColor, 
 						Vector3* Pos, Vector3* Move, Vector3* Power, float rotate, float stretch, float scale, u8 flag );
 
 //	色変化、スケール変化なし
@@ -1443,8 +1443,8 @@ void	IEX_SetParticle( int type, int aFrame, float aAlpha, int eFrame, float eAlp
 //*****************************************************************************
 
 //	４頂点ポリゴン描画
-void	IEX_Render3DPolygon( LPVERTEX v, LPIEX2DOBJ lpObj, u32 dwFlags, COLOR color );
-void	IEX_Render3DPolygon( Vector3 p[4], float tu[4], float tv[4], LPIEX2DOBJ lpObj, u32 dwFlags, COLOR color );
+void	IEX_Render3DPolygon( LPVERTEX v, LPIEX2DOBJ lpObj, u32 dwFlags, IEXCOLOR color );
+void	IEX_Render3DPolygon( Vector3 p[4], float tu[4], float tv[4], LPIEX2DOBJ lpObj, u32 dwFlags, IEXCOLOR color );
 
 //	ストリップポリゴン描画
 void	IEX_RenderStripPolygon( LPLVERTEX lpVertex, s32 StripNum, LPIEX2DOBJ lpObj, u32 dwFlags );
@@ -1455,11 +1455,11 @@ void	IEX_RenderStripPolygon( LPLVERTEX lpVertex, s32 StripNum, LPIEX2DOBJ lpObj,
 //
 //*****************************************************************************
 
-void	IEX_DrawRect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, COLOR color );
-void	IEX_DrawRectZ( s32 DstX, s32 DstY, s32 DstW, s32 DstH, float z, u32 dwFlags, COLOR color );
+void	IEX_DrawRect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, IEXCOLOR color );
+void	IEX_DrawRectZ( s32 DstX, s32 DstY, s32 DstW, s32 DstH, float z, u32 dwFlags, IEXCOLOR color );
 
 void	IEX_Render2DPolygon( LPTLVERTEX v, int NumPoly, LPIEX2DOBJ lpObj, u32 dwFlags );
-void	IEX_Render2DPolygon( float* vx, float* vy, float* tu, float* tv, int NumPoly, LPIEX2DOBJ lpObj, u32 dwFlags, COLOR color );
+void	IEX_Render2DPolygon( float* vx, float* vy, float* tu, float* tv, int NumPoly, LPIEX2DOBJ lpObj, u32 dwFlags, IEXCOLOR color );
 
 
 //*****************************************************************************

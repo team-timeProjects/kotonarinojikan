@@ -106,7 +106,7 @@ void	iexPolygon::Render2D( LPTLVERTEX v, int Num, LPIEX2DOBJ lpObj, iexShader* s
 //------------------------------------------------------
 //		固定機能版	
 //------------------------------------------------------
-void	iexPolygon::Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, COLOR color, float z )
+void	iexPolygon::Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, IEXCOLOR color, float z )
 {
 	TLVERTEX	v[4];
 
@@ -126,7 +126,7 @@ void	iexPolygon::Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, COLO
 //------------------------------------------------------
 //		シェーダー版
 //------------------------------------------------------
-void	iexPolygon::Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, COLOR color, float z )
+void	iexPolygon::Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader, char* name, IEXCOLOR color, float z )
 {
 	TLVERTEX	v[4];
 
@@ -158,7 +158,7 @@ void	iexPolygon::Rect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, iexShader* shader
 //
 //		３Ｄポリゴンレンダリング
 //
-void	IEX_Render3DPolygon( LPVERTEX v, LPIEX2DOBJ lpObj, u32 dwFlags, COLOR color )
+void	IEX_Render3DPolygon( LPVERTEX v, LPIEX2DOBJ lpObj, u32 dwFlags, IEXCOLOR color )
 {
 	LVERTEX	workV[4];
 	
@@ -174,7 +174,7 @@ void	IEX_Render3DPolygon( LPVERTEX v, LPIEX2DOBJ lpObj, u32 dwFlags, COLOR color
 	iexPolygon::Render3D( workV, 2, lpObj, dwFlags );
 }
 
-void	IEX_Render3DPolygon( Vector3 p[4], float tu[4], float tv[4], LPIEX2DOBJ lpObj, u32 dwFlags, COLOR color )
+void	IEX_Render3DPolygon( Vector3 p[4], float tu[4], float tv[4], LPIEX2DOBJ lpObj, u32 dwFlags, IEXCOLOR color )
 {
 	LVERTEX	workV[4];
 
@@ -208,7 +208,7 @@ void	IEX_Render2DPolygon( LPTLVERTEX v, int NumPoly, LPIEX2DOBJ lpObj, u32 dwFla
 	iexPolygon::Render2D( v, NumPoly, lpObj, dwFlags );
 }
 
-void	IEX_Render2DPolygon( float* vx, float* vy, float* tu, float* tv, int NumPoly, LPIEX2DOBJ lpObj, u32 dwFlags, COLOR* color )
+void	IEX_Render2DPolygon( float* vx, float* vy, float* tu, float* tv, int NumPoly, LPIEX2DOBJ lpObj, u32 dwFlags, IEXCOLOR* color )
 {
 	int		i;
 	TLVERTEX	v[34];
@@ -252,12 +252,12 @@ void	IEX_Render2DPolygon( float* vx, float* vy, float* tu, float* tv, int NumPol
 //		矩形描画
 //
 
-void	IEX_DrawRectZ( s32 DstX, s32 DstY, s32 DstW, s32 DstH, float z, u32 dwFlags, COLOR color )
+void	IEX_DrawRectZ( s32 DstX, s32 DstY, s32 DstW, s32 DstH, float z, u32 dwFlags, IEXCOLOR color )
 {
 	iexPolygon::Rect( DstX, DstY, DstW, DstH, dwFlags, color, z );
 } 
 
-void	IEX_DrawRect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, COLOR color )
+void	IEX_DrawRect( s32 DstX, s32 DstY, s32 DstW, s32 DstH, u32 dwFlags, IEXCOLOR color )
 {
 	iexPolygon::Rect( DstX, DstY, DstW, DstH, dwFlags, color, .0f );
 }

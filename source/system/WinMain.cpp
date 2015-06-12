@@ -1,7 +1,9 @@
 #include	"iextreme.h"
 #include	"Framework.h"
-#include	"sceneMain.h"
+#include	"../sceneMain.h"
 #include	"Control.h"
+#include	"../sceneTitle.h"
+#include	"../DataOwner.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -36,8 +38,9 @@ BOOL	InitApp(HWND hWnd)
 	//	メインフレームワーク生成
 	MainFrame = new Framework();
 	//	初期シーン登録
-	MainFrame->ChangeScene(new sceneMain());
-
+	DataOwner::GetInst()->Init();
+	DataOwner::GetInst()->stageNo = 1;
+	MainFrame->ChangeScene(new sceneTitle());
 	return TRUE;
 }
 
@@ -60,6 +63,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Mouse::cursor.x = LOWORD(lParam);
 		//Mouse::cursor.y = HIWORD(lParam);
 		//ScreenToClient(hWnd, &Mouse::cursor);
+<<<<<<< HEAD
 
 		////窓位置と縁による調整
 		//RECT rc;
@@ -68,6 +72,16 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		//Mouse::cursor.x += rc.left - leftWndFrame;
 		//Mouse::cursor.y += rc.top - topWndFrame;
 
+=======
+
+		////窓位置と縁による調整
+		//RECT rc;
+		//GetWindowRect(iexSystem::Window, &rc);
+
+		//Mouse::cursor.x += rc.left - leftWndFrame;
+		//Mouse::cursor.y += rc.top - topWndFrame;
+
+>>>>>>> remotes/origin/horita
 		
 
 		break;

@@ -116,6 +116,7 @@ void iexView::Activate()
 {
 	//	ƒrƒ…[s—ñİ’è
 	Vector p, t;
+
 	p = Pos;
 	t = Target;
 	LookAtLH( matView, p, t, Vector3( .0f, 1.0f, .0f ) );
