@@ -5,6 +5,7 @@
 #include	"../IEX/iextreme.h"
 #include	"../EDX/EDXLIB.h"
 #include	"Utility.h"
+#include	<list>
 
 class StageMNG;
 class FlagMgr;
@@ -100,7 +101,7 @@ class sceneMain :public Scene
 private:
 	enum State
 	{
-		BEGIN, MAIN, PAUSE, CHECK, END
+		BEGIN, START_EFFECT, MAIN, PAUSE, CHECK, END
 	}state;
 	StageMNG* stage;
 	FlagMgr* flag;
@@ -109,8 +110,40 @@ private:
 	EDX::EDX_2DObj* back2;
 	float back2angle;
 	float angleSpeed;
+	int stageID;
 
-	int stageID;// プロット提供用
+	class StartEffect
+	{
+	private:
+		enum StartStep
+		{
+			BEGIN,ESCAPE, STORES, SET, END
+		}step;
+		int effectTimer;
+		iex2DObj* batImage;
+		ImageParam batParam;
+		struct BatEffect
+		{
+			Vector2 pos;
+			Vector2 target;
+			int speedLabel;
+			float scale;
+			float alpha;
+			float time;
+		};
+		std::list<BatEffect> batList;
+		int idx;
+		sceneMain* scene;
+
+	public:
+		StartEffect();
+		void Init(sceneMain* ref);
+		void Update();
+		void Render();
+		bool IsFinish();
+	private:
+		void BatUpdate(BatEffect* bat);
+	}*startEffect;
 
 	//-------- method ---------
 public:

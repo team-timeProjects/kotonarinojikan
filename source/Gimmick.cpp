@@ -169,6 +169,7 @@ void FlagGmk::Render()
 						   pos.y + offset.y - backParam.h * 2 + 30,
 						   backParam.w*0.7f, backParam.h*0.7f,
 						   backParam.x, backParam.y, backParam.w, backParam.h, GetPoint(0, 0), 0.0f, 1.0f, 0UL, ARGB((int)(0xFF * alpha), 0xFF, 0xFF, 0xFF));
+	if(number == nullptr)return;
 	number->RenderCC(num, pos.x + offset.x - 10, pos.y + offset.y - backParam.h * 2 + 70, 0.5f, alpha);
 }
 
@@ -363,6 +364,12 @@ void FlagMgr::SetSpeedList(const std::map<int, int>& list)
 	speedList = list;
 }
 
+void FlagMgr::AddSpeedCount(int speed)
+{
+	if(speedList.find(speed) != speedList.end())
+		speedList[speed]++;
+}
+
 void FlagMgr::AppendFlag(TimeObj* obj, bool next)
 {
 	if(obj->state == TimeObj::SUCCESS)return;
@@ -394,11 +401,22 @@ void FlagMgr::AppendFlag(TimeObj* obj, bool next)
 	blackFlag.push_back(flg);
 }
 
+void FlagMgr::AppendPlainFlag(TimeObj* obj)
+{
+	FlagGmk* flg = new FlagGmk(obj);
+	flg->Init(DataOwner::GetInst()->imageFactory->GetImage(ImageFactory::FRAG_BLACK),
+			  DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_BLACK),
+			  nullptr);
+	flg->SetType(FlagGmk::BLACK);
+	blackFlag.push_back(flg);
+}
+
 void FlagMgr::AppendGoldFlag(TimeObj* obj)
 {
-	if(obj->state != TimeObj::SUCCESS || obj->GetSuccessCnt() > 0)return;
+	if(obj->GetID()!=0&&(obj->state != TimeObj::SUCCESS || obj->GetSuccessCnt() > 0))return;
 	if(obj->GetGold_Effect())
 	{
+		if(obj->GetID() == 0)return;//äÓèÄÇÕÇÕÇ∏Ç≥Ç»Ç¢
 		obj->SetGold_Effect(false);
 		//âèú
 		for(auto it = goldFlag.begin(); it != goldFlag.end(); it++)
@@ -430,6 +448,18 @@ void FlagMgr::AppendGoldFlag(TimeObj* obj)
 		flg->SetType(FlagGmk::GOLD);
 		goldFlag.push_back(flg);
 
+	}
+}
+
+void FlagMgr::ReleaseFlag(TimeObj* obj)
+{
+	for(auto it = blackFlag.begin(); it != blackFlag.end(); it++)
+	{
+		if((*it)->GetObj() != obj)continue;
+		(*it)->SetState(FlagGmk::State::FADE_OUT);
+		releaseFlag.push_back(*it);
+		blackFlag.erase(it);
+		break;
 	}
 }
 
@@ -481,33 +511,6 @@ void FlagMgr::CheckFlag()
 		(*nowFlag)->GetObj()->SetState(TimeObj::State::SUCCESS);
 		(*nowFlag)->SetState(FlagGmk::State::FADE_OUT);
 		releaseFlag.push_back(*nowFlag);
-
-		//(*nowFlag)->SetBack(DataOwner::GetInst()->imageFactory->GetImage(ImageFactory::FRAG_GOLD),
-		//					DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_GOLD));
-		//(*nowFlag)->SetType(FlagGmk::TYPE::GOLD);
-		//(*nowFlag)->SetState(FlagGmk::State::STAY);
-		//(*nowFlag)->GetObj()->SetState(TimeObj::State::STOP);
-		//goldFlag.push_back(*nowFlag);
-		//if(speedList[(*nowFlag)->GetNum()] <= 0)// égÇ¢êÿÇ¡ÇΩÉtÉâÉOÇâï˙
-		//{
-		//	for(auto it = blackFlag.begin(); it != blackFlag.end();)
-		//	{
-		//		if((*it) == (*nowFlag))
-		//		{
-		//			it++;
-		//			continue;
-		//		}
-		//		if((*it)->GetNum() == (*nowFlag)->GetNum())
-		//		{
-		//			(*it)->GetObj()->SetState(TimeObj::MOVE);
-		//			(*it)->SetState(FlagGmk::State::FADE_OUT);
-		//			releaseFlag.push_back(*it);
-		//			it = blackFlag.erase(it);
-		//		}
-		//		else
-		//			it++;
-		//	}
-		//}
 		nowFlag = blackFlag.erase(nowFlag);
 	}
 	else
@@ -551,6 +554,17 @@ void FlagMgr::SetHaveGoldFlag(int num)
 	haveGold = num;
 }
 
+Vector2 FlagMgr::GetSpeedBlockPos(int speed)
+{
+	int idx = 0;// è„Ç©ÇÁâΩî‘ñ⁄Ç©
+	for(auto r : speedList)
+	{
+		if(r.first == speed)
+			break;
+		idx++;
+	}
+	return Vector2(1210, 100 + 72 * idx);
+}
 
 inline int FlagMgr::NextSpeed(int nowSpeed)
 {

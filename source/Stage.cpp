@@ -137,11 +137,13 @@ bool StageMNG::LoadStage(const int stageNum)
 		int gimmick = loader.LoadInt();
 		bool shuffle = (bool)loader.LoadInt();
 		childNum = loader.LoadInt();
-		if(speedList.find(speed) == speedList.end())
-			speedList[speed] = 1;
-		else
-			speedList[speed]++;
-
+		if(i != 0)// 基準のスピードは管理外
+		{
+			if(speedList.find(speed) == speedList.end())
+				speedList[speed] = 1;
+			else
+				speedList[speed]++;
+		}
 		TimeObj* obj = MakeObj(i, pos, scale, speed, behavior);
 		if(obj != nullptr)
 		{
@@ -170,7 +172,7 @@ bool StageMNG::LoadStage(const int stageNum)
 		r->SetRelativeSpeed(startSpeed);
 	}
 	nowID = 0;
-	DefaultGoldFlagSum = HaveGoldFlag = goldenFlagNum;
+	DefaultGoldFlagSum = HaveGoldFlag = goldenFlagNum+1;//基準用に1つ追加
 	return true;
 }
 

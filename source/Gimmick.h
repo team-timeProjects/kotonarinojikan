@@ -117,8 +117,11 @@ public:
 	void Update();
 	void Render();
 	void SetSpeedList(const std::map<int, int>& list);
+	void AddSpeedCount(int speed);
 	void AppendFlag(TimeObj* obj, bool next = true);
+	void AppendPlainFlag(TimeObj* obj);
 	void AppendGoldFlag(TimeObj* obj);
+	void ReleaseFlag(TimeObj* obj);
 	void StartCheck();// チェックフェーズ開始
 	bool CheckNext();// 移動開始、なければfalse
 	void CheckFlag();
@@ -127,6 +130,7 @@ public:
 	bool IsCheckEnd();
 	bool IsClear();
 	void SetHaveGoldFlag(int num);
+	Vector2 GetSpeedBlockPos(int speed);
 private:
 	inline int NextSpeed(int nowSpeed);
 	inline int BeforeSpeed(int nowSpeed);
