@@ -115,7 +115,7 @@ void sceneMain::Update()
 	switch(state)
 	{
 		case sceneMain::BEGIN:
-			stage->Update();
+			//stage->Update();
 			flag->Update();
 			if(Pumpkin::GetInst()->IsMoveEnd())
 				state = START_EFFECT;
@@ -130,7 +130,7 @@ void sceneMain::Update()
 			}
 			else
 				startEffect->Update();
-			stage->Update();
+			//stage->Update();
 			flag->Update();
 			break;
 		case sceneMain::MAIN:
@@ -263,7 +263,7 @@ void sceneMain::StartEffect::Update()
 					id++;
 				}
 				step = StartStep::ESCAPE;
-				effectTimer = 60;
+				effectTimer = 1;
 			}
 			else
 				effectTimer--;
@@ -292,7 +292,7 @@ void sceneMain::StartEffect::Update()
 			if(batList.empty())
 			{
 				step = StartStep::SET;
-				effectTimer = 120;
+				effectTimer = 1;
 				break;
 			}
 			for(auto it = batList.begin(); it != batList.end();)
@@ -312,6 +312,7 @@ void sceneMain::StartEffect::Update()
 		case StartStep::SET:
 			if(effectTimer <= 0)
 			{
+				scene->stage->GetObj(0)->SetState(TimeObj::State::SUCCESS);
 				scene->flag->AppendGoldFlag(scene->stage->GetObj(0));//Šî€‚É‹àƒtƒ‰ƒbƒO
 				step = StartStep::END;
 			}

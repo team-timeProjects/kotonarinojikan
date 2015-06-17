@@ -408,6 +408,7 @@ void FlagMgr::AppendPlainFlag(TimeObj* obj)
 			  DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_BLACK),
 			  nullptr);
 	flg->SetType(FlagGmk::BLACK);
+	flg->SetState(FlagGmk::State::STAY);
 	blackFlag.push_back(flg);
 }
 
@@ -557,7 +558,7 @@ void FlagMgr::SetHaveGoldFlag(int num)
 Vector2 FlagMgr::GetSpeedBlockPos(int speed)
 {
 	int idx = 0;// è„Ç©ÇÁâΩî‘ñ⁄Ç©
-	for(auto r : speedList)
+	for(auto& r : speedList)
 	{
 		if(r.first == speed)
 			break;
