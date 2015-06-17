@@ -11,6 +11,7 @@ ImageFactory::~ImageFactory()
 
 void ImageFactory::Init()
 {
+	//	時計
 	imageList[CLOCK_BACK] = new iex2DObj("DATA/物関連/時計.png");
 	paramList[CLOCK_BACK] = ImageParam(0, 0, 512, 512);
 	imageList[CLOCK_HOUR] = new iex2DObj("DATA/物関連/時計(針）.png");
@@ -21,6 +22,38 @@ void ImageFactory::Init()
 	paramList[FRAG_BLACK] = ImageParam(0, 0, 256, 128);
 	imageList[FRAG_GOLD] = new iex2DObj("DATA/ゲーム画面/-10～10のコウモリたち/koumori_kin.png");
 	paramList[FRAG_GOLD] = ImageParam(0, 0, 256, 128);
+
+	//	ろうそく
+	imageList[CANDLE_BACK] = new iex2DObj("DATA/和紙.png");
+	paramList[CANDLE_BACK] = ImageParam(0, 0, 2048, 720);
+	imageList[CANDLE_BIG] = new iex2DObj("DATA/ろうそく(大).png");
+	paramList[CANDLE_BIG] = ImageParam(0, 120, 512, 402);
+	imageList[CANDLE_SMALL] = new iex2DObj("DATA/ろうそく.png");
+	paramList[CANDLE_SMALL] = ImageParam(0, 110, 512, 402);
+	imageList[CANDLE_SMALL_FIRE] = new iex2DObj("DATA/ろうそく(火).png");
+	paramList[CANDLE_SMALL_FIRE] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_SMALL_MELT] = new iex2DObj("DATA/ろうそく(溶け).png");
+	paramList[CANDLE_SMALL_MELT] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_SMALL_LIGHT] = new iex2DObj("DATA/ろうそく（明かり）.png");
+	paramList[CANDLE_SMALL_LIGHT] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_BIG_FIRE] = new iex2DObj("DATA/ろうそく(火大).png");
+	paramList[CANDLE_BIG_FIRE] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_BIG_LIGHT] = new iex2DObj("DATA/ろうそく（明かり色違い）.png");
+	paramList[CANDLE_BIG_LIGHT] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_BIG_MELT] = new iex2DObj("DATA/ろうそく(溶け大).png");
+	paramList[CANDLE_BIG_MELT] = ImageParam(0, 0, 512, 512);
+
+	//	メトロノーム
+	imageList[METRONOM] = new iex2DObj("DATA/物関連/メトロノーム.png");
+	paramList[METRONOM] = ImageParam(0, 0, 512, 512);
+	imageList[METRONOM_FACE] = new iex2DObj("DATA/物関連/メトロノーム　顔面.png");
+	paramList[METRONOM_FACE] = ImageParam(0, 0, 512, 512);
+	imageList[METRONOM_NEEDLE] = new iex2DObj("DATA/物関連/メトロノーム（針）.png");
+	paramList[METRONOM_NEEDLE] = ImageParam(0, 0, 512, 512);
+	imageList[METRONOM_SPINDLE1] = new iex2DObj("DATA/物関連/メトロノーム（錘）speed1.png");
+	paramList[METRONOM_SPINDLE1] = ImageParam(0, 0, 512, 512);
+	imageList[METRONOM_SPINDLE2] = new iex2DObj("DATA/物関連/メトロノーム（錘）speed2.png");
+	paramList[METRONOM_SPINDLE2] = ImageParam(0, 0, 512, 512);
 }
 
 iex2DObj* ImageFactory::GetImage(ImageID id)

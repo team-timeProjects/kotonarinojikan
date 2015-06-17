@@ -48,7 +48,7 @@ class FlagGmk :public Gimmick
 public:
 	enum TYPE
 	{
-		FREE,BLACK, GOLD
+		FREE, BLACK, GOLD
 	};
 	enum State
 	{
@@ -96,7 +96,7 @@ class FlagMgr
 private:
 	enum State
 	{
-		MAIN,MOVE_NEXT,CHECK,EFFECT
+		MAIN, MOVE_NEXT, CHECK, EFFECT
 	}state;
 	iex2DObj* listBack;
 	iex2DObj* blockBack;

@@ -48,7 +48,15 @@ class ImageFactory
 public:
 	enum ImageID
 	{
-		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE, FRAG_BLACK,FRAG_GOLD
+		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE, FRAG_BLACK, FRAG_GOLD,
+
+		//	ろうそく関連
+		CANDLE_BACK, CANDLE_SMALL, CANDLE_BIG,
+		CANDLE_SMALL_FIRE, CANDLE_SMALL_MELT, CANDLE_SMALL_LIGHT,
+		CANDLE_BIG_MELT, CANDLE_BIG_FIRE, CANDLE_BIG_LIGHT,
+
+		//	メトロノーム関連
+		METRONOM_NEEDLE, METRONOM_SPINDLE1, METRONOM_SPINDLE2, METRONOM, METRONOM_FACE
 	};
 private:
 	std::map<int, iex2DObj*> imageList;				// 画像データ
@@ -118,27 +126,5 @@ public:
 	__forceinline int GetSuccessCnt(){ return SuccessCnt; }
 	__forceinline void SetMine_SChain(int Chain){ Mine_SChain = Chain; }
 };
-
-//class TimeObjMgr
-//{
-//protected:
-//	const static int OBJ_MAX = 64;
-//	const static int IMAGE_MAX = 8;
-//	TimeObject* objList[OBJ_MAX] = {nullptr};
-//	iex2DObj* imageList[IMAGE_MAX] = {nullptr};
-//	int selectNum = 0;
-//	CAMERA camera;
-//
-//public:
-//	TimeObjMgr();
-//	~TimeObjMgr();
-//	void Init();
-//	void Update();
-//	void Render();
-//protected:
-//	void CalcPos();
-//	void Control();
-//
-//};
 
 #endif

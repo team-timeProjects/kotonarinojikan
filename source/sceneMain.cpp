@@ -2,6 +2,7 @@
 #include	"system/system.h"
 #include	"system/Framework.h"
 
+#include	"tomAL\tomAL.h"
 #include	"sceneMain.h"
 #include	"DataOwner.h"
 #include	"Stage.h"
@@ -42,14 +43,21 @@ bool sceneMain::Initialize()
 	stage->LoadStage(stageID);
 	flag = new FlagMgr;
 	flag->Init();
+	flag->SetSpeedList(stage->GetSpeedList());
 	judgeClock = new JudgeClock;
 	judgeClock->Init(stage->GetJudgeNum(), stage->GetjudgeTimer());
 	state = BEGIN;
 	Pumpkin::GetInst()->Init();
 	Pumpkin::GetInst()->SetOpen(true);
 	Pumpkin::GetInst()->SetMaxY(1000);
+	armgr = new tomALManager();
+	armgr->Init();
+
+	armgr->SetInmemory(0, "DATA\\sound\\basabasa.wav");
+
 	startEffect = new StartEffect;
 	startEffect->Init(this);
+
 	return true;
 }
 
@@ -81,6 +89,20 @@ void sceneMain::Update()
 			Campus::GetInst()->TimeReset();
 		}
 	}
+
+	//　ホイール
+	if(state == MAIN && (EDX::MouseGet(EDX::EDX_WHEEL) > 0 || EDX::MouseGet(EDX::EDX_WHEEL) < 0))
+	{
+		int objID = -1;
+		POINT p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
+		if((objID = stage->IsCollision(p)) != -1)
+		{
+			flag->AppendFlag(stage->GetObj(objID), (EDX::MouseGet(EDX::EDX_WHEEL) > 0));
+			Campus::GetInst()->TimeReset();
+		}
+	}
+
+	//　強制判定時計の長押し
 	if(MouseGet(EDX_CLICK_L) && state == MAIN)
 	{
 		POINT p;
@@ -88,11 +110,14 @@ void sceneMain::Update()
 		if(judgeClock->IsCollision(p))
 		{
 			judgeClock->TimerClockUp();
+
 		}
 	}
-	//金フラッグ
+
+	//　金フラッグ
 	if(state == MAIN &&MouseGet(EDX_CLICK_R) == 1)
 	{
+		armgr->PlayInmemory(0);
 		int objID = -1;
 		TimeObj::ResetChain();
 		TimeObj::AddChain();
@@ -102,20 +127,21 @@ void sceneMain::Update()
 			flag->AppendGoldFlag(stage->GetObj(objID));
 		}
 	}
-	if(state == MAIN && (KEY_Get(KEY_UP) == 3 || KEY_Get(KEY_DOWN) == 3))
-	{
-		int objID = -1;
-		POINT p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
-		if((objID = stage->IsCollision(p)) != -1)
-		{
-			flag->AppendFlag(stage->GetObj(objID), KEY_Get(KEY_UP) == 3);
-			Campus::GetInst()->TimeReset();
-		}
-	}
+	//if(state == MAIN && (KEY_Get(KEY_UP) == 3 || KEY_Get(KEY_DOWN) == 3))
+	//{
+	//	int objID = -1;
+	//	POINT p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
+	//	if((objID = stage->IsCollision(p)) != -1)
+	//	{
+	//		flag->AppendFlag(stage->GetObj(objID), KEY_Get(KEY_UP) == 3);
+	//		Campus::GetInst()->TimeReset();
+	//	}
+	//}
+
+
 	switch(state)
 	{
 		case sceneMain::BEGIN:
-			//stage->Update();
 			flag->Update();
 			if(Pumpkin::GetInst()->IsMoveEnd())
 				state = START_EFFECT;
@@ -130,9 +156,9 @@ void sceneMain::Update()
 			}
 			else
 				startEffect->Update();
-			//stage->Update();
 			flag->Update();
 			break;
+
 		case sceneMain::MAIN:
 			stage->Update();
 			flag->Update();
@@ -189,6 +215,10 @@ void sceneMain::Update()
 	//	state = CHECK;
 	//}
 	flag->SetHaveGoldFlag(stage->GetHaveGoldFlag());
+	//卍
+	TimeObj::ResetChain();
+	//state = CHECK;
+
 }
 
 void sceneMain::Render()
@@ -206,17 +236,21 @@ void sceneMain::Render()
 	judgeClock->Render();
 	if(state == State::START_EFFECT)
 		startEffect->Render();
+
 	Pumpkin::GetInst()->Render();
 
 #ifdef _DEBUG
 	char	str[64];
 	wsprintf(str, "Stage: %d\n", stageID);
 	IEX_DrawText(str, 10, 30, 200, 20, 0xFF7070FF);
+	wsprintf(str, "state = %d", state);
+	IEX_DrawText(str, 10, 50, 200, 20, 0xFF7070FF);
 	wsprintf(str, "timelimit = %d", judgeClock->GetTime() / 60);
 	IEX_DrawText(str, 10, 70, 200, 20, 0xFF7070FF);
 #endif
 
 }
+
 
 sceneMain::StartEffect::StartEffect()
 {
@@ -279,7 +313,7 @@ void sceneMain::StartEffect::Update()
 				effectTimer--;
 			break;
 		case StartStep::STORES:
-			
+
 			if(effectTimer <= 0 && (obj = scene->stage->GetObj(idx)) != nullptr)
 			{
 				batList.push_back({Vector2(600 + rand() % 1000 - 500, 350 + rand() % 600 - 300), scene->flag->GetSpeedBlockPos(obj->GetOrginSpeed()),
@@ -346,7 +380,7 @@ bool sceneMain::StartEffect::IsFinish()
 
 void sceneMain::StartEffect::BatUpdate(sceneMain::StartEffect::BatEffect* bat)
 {
-	if(bat->time < 1.0f) 
+	if(bat->time < 1.0f)
 	{
 		bat->time += 0.01f;
 		if(bat->time > 1.0f)

@@ -7,6 +7,8 @@
 #include	"Utility.h"
 #include	<list>
 
+class tomALManager;
+
 class StageMNG;
 class FlagMgr;
 
@@ -17,9 +19,9 @@ private:
 	POINT	pos;			//@ˆÊ’u
 	float	ShortAngle;		//@’ZjŠp“x
 	float	LongAngle;		//	’·jŠp“x
-	int		timer;
-	int		judgeCycle;
-	int		judgeCount;
+	int		timer;			//@§ŒÀŽžŠÔ
+	int		judgeCycle;		//@ˆêŽü‚Å‰ñ‚éŽžŠÔiframej
+	int		judgeCount;		//@”»’è‰ñ”
 	bool	clockUp;
 	bool	checkPalse;
 public:
@@ -42,7 +44,7 @@ public:
 	}
 	void Init(int judgeCount, int judgeCycle)
 	{
-		image = new iex2DObj("DATA/timer.png");
+		image = new iex2DObj("DATA/ƒQ[ƒ€‰æ–Ê/hanteitokei.png");
 		pos.x = 1220;
 		pos.y = 650;
 		this->judgeCount = judgeCount;
@@ -54,12 +56,15 @@ public:
 
 	void Update()
 	{
-		timer -= clockUp ? 6 : 1;
-		checkPalse = timer%judgeCycle == 0 || (clockUp&&timer%judgeCycle > judgeCycle - 6);
-		clockUp = false;
+		if (judgeCycle != 0)
+		{
+			timer -= clockUp ? 6 : 1;
+			checkPalse = timer%judgeCycle == 0 || (clockUp&&timer%judgeCycle > judgeCycle - 6);
+			clockUp = false;
 
-		LongAngle = (timer%judgeCycle)*(2 * PI / judgeCycle);
-		ShortAngle = (timer / judgeCycle)*(2 * PI / 12) + (timer%judgeCycle)*(2 * PI / (12 * judgeCycle));
+			LongAngle = -(timer%judgeCycle)*(2 * PI / judgeCycle);
+			ShortAngle = -(timer / judgeCycle)*(2 * PI / 12) - (timer%judgeCycle)*(2 * PI / (12 * judgeCycle));
+		}
 	}
 
 	void Render()
@@ -112,12 +117,15 @@ private:
 	float angleSpeed;
 	int stageID;
 
+
+	tomALManager* armgr;
+
 	class StartEffect
 	{
 	private:
 		enum StartStep
 		{
-			BEGIN,ESCAPE, STORES, SET, END
+			BEGIN, ESCAPE, STORES, SET, END
 		}step;
 		int effectTimer;
 		iex2DObj* batImage;

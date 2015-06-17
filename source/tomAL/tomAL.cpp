@@ -1,19 +1,36 @@
 #include "tomAL.h"
 
+
+tomALBase::~tomALBase()
+{
+	SAFE_DELETE( delayParam );
+
+	alDeleteSources( 1, &source );
+	alDeleteBuffers( 1, &buffer );
+}
+
 void tomALBase::setEffect( int type, void* param )
 {
 	switch( type )
 	{
+	case SOUND_EFFECT::NONE:
+		effect = type;
+		break;
 	case SOUND_EFFECT::DISTORTION:
 	{
-									 effect = type;
-									 DISTORTION* distortion = (DISTORTION*)param;
-									 distortionParam = 1 - distortion->level;
-									 break;
+		effect = type;
+		DISTORTION* distortion = (DISTORTION*)param;
+		distortionParam = 1 - distortion->level;
+		break;
 	}
 	case SOUND_EFFECT::DELAY:
 		effect = type;
-		delayParam = (DELAY*)param;
+		SAFE_DELETE( delayParam );
+		delayParam = new DELAY;
+		DELAY work = *(DELAY*)param;
+		delayParam->attenuation = work.attenuation;
+		delayParam->delayTime = work.delayTime;
+		delayParam->time = work.time;
 		break;
 	}
 }
@@ -78,6 +95,10 @@ void tomALBase::Delay( char* data, int dataSize )
 		alGenSources( 1, &delayParam->delaySource[i] );
 		alSourcef( delayParam->delaySource[i], AL_GAIN, vol * workAttenuation );
 		alSourcei( delayParam->delaySource[i], AL_BUFFER, workBuffer );
+		if( is3D )
+		{
+			alSource3f( source, AL_POSITION, pos.x, pos.y, pos.z );
+		}
 
 		alDeleteBuffers( 1, &workBuffer );
 
@@ -91,6 +112,14 @@ void tomALBase::Delay( char* data, int dataSize )
 
 void tomALBase::Update()
 {
+	if( is3D )
+	{
+		alSource3f( source, AL_POSITION, pos.x, pos.y, pos.z );
+	}
+	alListener3f( AL_POSITION, lisner.pos.x, lisner.pos.y, lisner.pos.z );
+	alListener3f( AL_VELOCITY, lisner.vel.x, lisner.vel.y, lisner.vel.z );
+	alListener3f( AL_ORIENTATION, lisner.ori.x, lisner.ori.y, lisner.ori.z );
+
 	switch( effect )
 	{
 	case SOUND_EFFECT::DELAY:
@@ -101,6 +130,10 @@ void tomALBase::Update()
 		delayParam->timer++;
 		if( delayParam->delayTime <= delayParam->timer )
 		{
+			if( is3D )
+			{
+				alSource3f( delayParam->delaySource[delayParam->playCount], AL_POSITION, pos.x, pos.y, pos.z );
+			}
 			alSourcePlay( delayParam->delaySource[delayParam->playCount] );
 			delayParam->playCount++;
 			delayParam->timer = 0; 
@@ -113,6 +146,21 @@ void tomALBase::Update()
 		break;
 	}
 }
+
+void tomALBase::setLisner( Vector3& pos, Vector3& vel, Vector3& ori )
+{
+	lisner.pos = pos;
+	lisner.vel = vel;
+	lisner.ori = ori;
+}
+
+void tomALBase::setLisner( Lisner& lisner )
+{
+	tomALBase::lisner.pos = lisner.pos;
+	tomALBase::lisner.vel = lisner.vel;
+	tomALBase::lisner.ori = lisner.ori;
+}
+
 
 //=====================================================================================================================
 //
@@ -142,6 +190,8 @@ void tomALManager::Init( int inmemorySound, int streamingSound )
 
 tomALManager::~tomALManager()
 {
+	tomALStreaming::isEndThread = false;
+
 	alcDestroyContext( context );
 	alcCaptureCloseDevice( device );
 
@@ -174,10 +224,10 @@ tomALManager::~tomALManager()
 	}
 }
 
-void tomALManager::SetInmemory( int No, char* filename )
+void tomALManager::SetInmemory( int No, char* filename, bool _3D )
 {
 	inmemory[No] = new tomALInmemory();
-	inmemory[No]->Set( filename );
+	inmemory[No]->Set( filename, _3D );
 }
 
 void tomALManager::CreateStreamingPlayer( int No )
@@ -262,3 +312,4 @@ void tomALManager::Update()
 		}
 	}
 }
+Lisner tomALBase::lisner;

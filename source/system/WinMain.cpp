@@ -59,20 +59,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		PostQuitMessage(0);
 		return 0;
 	case WM_LBUTTONUP:
-		//Mouse::lbClick = true;
-		//Mouse::cursor.x = LOWORD(lParam);
-		//Mouse::cursor.y = HIWORD(lParam);
-		//ScreenToClient(hWnd, &Mouse::cursor);
-
-		////ëãà íuÇ∆âèÇ…ÇÊÇÈí≤êÆ
-		//RECT rc;
-		//GetWindowRect(iexSystem::Window, &rc);
-
-		//Mouse::cursor.x += rc.left - leftWndFrame;
-		//Mouse::cursor.y += rc.top - topWndFrame;
-
-		
-
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)
