@@ -36,6 +36,10 @@ bool sceneMain::Initialize()
 	//DataOwner::GetInst()->Init();
 	back = new EDX::EDX_2DObj("DATA/ƒQ[ƒ€‰æ–Ê/”wŒi‚P.png");
 	back2 = new EDX::EDX_2DObj("DATA/ƒQ[ƒ€‰æ–Ê/”wŒi2.png");
+	//ƒ¢
+	menubutton = DataOwner::GetInst()->imageFactory->GetImage(ImageFactory::ImageID::BUTTON_MENU);
+	menuParam = DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::ImageID::BUTTON_MENU);
+	///ƒ¢
 	back2angle = 0.0f;
 	angleSpeed = 0.01f;
 	stage = new StageMNG;
@@ -127,16 +131,16 @@ void sceneMain::Update()
 			flag->AppendGoldFlag(stage->GetObj(objID));
 		}
 	}
-	//if(state == MAIN && (KEY_Get(KEY_UP) == 3 || KEY_Get(KEY_DOWN) == 3))
-	//{
-	//	int objID = -1;
-	//	POINT p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
-	//	if((objID = stage->IsCollision(p)) != -1)
-	//	{
-	//		flag->AppendFlag(stage->GetObj(objID), KEY_Get(KEY_UP) == 3);
-	//		Campus::GetInst()->TimeReset();
-	//	}
-	//}
+	if(state == MAIN && (KEY_Get(KEY_UP) == 3 || KEY_Get(KEY_DOWN) == 3))
+	{
+		int objID = -1;
+		POINT p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
+		if((objID = stage->IsCollision(p)) != -1)
+		{
+			flag->AppendFlag(stage->GetObj(objID), KEY_Get(KEY_UP) == 3);
+			Campus::GetInst()->TimeReset();
+		}
+	}
 
 
 	switch(state)
@@ -216,6 +220,7 @@ void sceneMain::Update()
 	//}
 	flag->SetHaveGoldFlag(stage->GetHaveGoldFlag());
 	//™Â
+
 	TimeObj::ResetChain();
 	//state = CHECK;
 
@@ -236,7 +241,9 @@ void sceneMain::Render()
 	judgeClock->Render();
 	if(state == State::START_EFFECT)
 		startEffect->Render();
-
+	//ƒ¢
+	menubutton->Render(1155, 530, menuParam.w, menuParam.h, menuParam.x, menuParam.y, menuParam.w, menuParam.h);
+	///ƒ¢
 	Pumpkin::GetInst()->Render();
 
 #ifdef _DEBUG
@@ -264,8 +271,10 @@ void sceneMain::StartEffect::Init(sceneMain* ref)
 	step = BEGIN;
 	effectTimer = 60;
 	scene = ref;
-	batImage = DataOwner::GetInst()->imageFactory->GetImage(ImageFactory::FRAG_BLACK);
-	batParam = DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_BLACK);
+	//ƒ¢
+	batImage = DataOwner::GetInst()->imageFactory->GetImage(ImageFactory::FRAG_BLACK_OPEN);
+	batParam = DataOwner::GetInst()->imageFactory->GetParam(ImageFactory::FRAG_BLACK_OPEN);
+	///ƒ¢
 	std::map<int, int> speed = scene->stage->GetSpeedList();
 	for(auto& r : speed)
 		r.second = 0;

@@ -113,6 +113,10 @@ private:
 	JudgeClock* judgeClock;
 	EDX::EDX_2DObj* back;
 	EDX::EDX_2DObj* back2;
+	//ƒ¢
+	iex2DObj* menubutton;
+	ImageParam menuParam;
+	///ƒ¢
 	float back2angle;
 	float angleSpeed;
 	int stageID;

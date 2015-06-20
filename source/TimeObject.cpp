@@ -18,10 +18,22 @@ void ImageFactory::Init()
 	paramList[CLOCK_HOUR] = ImageParam(0, 0, 512, 512);
 	imageList[CLOCK_MINUTE] = new iex2DObj("DATA/物関連/時計(針）.png");
 	paramList[CLOCK_MINUTE] = ImageParam(0, 0, 512, 512);
-	imageList[FRAG_BLACK] = new iex2DObj("DATA/ゲーム画面/-10～10のコウモリたち/koumori.png");
-	paramList[FRAG_BLACK] = ImageParam(0, 0, 256, 128);
-	imageList[FRAG_GOLD] = new iex2DObj("DATA/ゲーム画面/-10～10のコウモリたち/koumori_kin.png");
+	//Δ
+	imageList[FRAG_BLACK_CLOSE] = new iex2DObj("DATA/ゲーム画面/jikan-koumori(close).png");
+	paramList[FRAG_BLACK_CLOSE] = ImageParam(0, 0, 256, 128);
+	imageList[FRAG_BLACK_OPEN] = new iex2DObj("DATA/ゲーム画面/jikan-koumori(Black).png");
+	paramList[FRAG_BLACK_OPEN] = ImageParam(0, 0, 256, 128);
+	imageList[FRAG_GOLD] = new iex2DObj("DATA/ゲーム画面/jikan-koumori(gold).png");
 	paramList[FRAG_GOLD] = ImageParam(0, 0, 256, 128);
+	imageList[BUTTON_MENU] = new iex2DObj("DATA/ゲーム画面/メニュー.png");
+	paramList[BUTTON_MENU] = ImageParam(0, 0, 128, 64);
+	imageList[SPEED_LIST] = new iex2DObj("DATA/ゲーム画面/UI枠.png");
+	paramList[SPEED_LIST] = ImageParam(0, 0, 512, 1024);
+	imageList[SPEED_BLOCK] = new iex2DObj("DATA/ゲーム画面/スピードボード.png");
+	paramList[SPEED_BLOCK] = ImageParam(0, 0, 100, 80);
+	imageList[GOLD_STOCK] = new iex2DObj("DATA/ゲーム画面/コウモリ残数.png");
+	paramList[GOLD_STOCK] = ImageParam(0, 0, 64, 64);
+	///Δ
 
 	//	ろうそく
 	imageList[CANDLE_BACK] = new iex2DObj("DATA/和紙.png");
@@ -131,6 +143,6 @@ void TimeObj::Init(int id, const Vector2& centerPos, int colW, int colH, float s
 
 void TimeObj::SetState(TimeObj::State s)
 {
-	if (s == SUCCESS)SuccessCnt = SUCCESS_EFFECT_TIME;
+	if(s == SUCCESS)SuccessCnt = SUCCESS_EFFECT_TIME;
 	state = s;
 }

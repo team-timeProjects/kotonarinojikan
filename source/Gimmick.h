@@ -101,6 +101,9 @@ private:
 	iex2DObj* listBack;
 	iex2DObj* blockBack;
 	iex2DObj* goldBack;
+	ImageParam listParam;
+	ImageParam blackParam;
+	ImageParam goldParam;
 	std::list<FlagGmk*> blackFlag;
 	std::list<FlagGmk*> goldFlag;
 	std::list<FlagGmk*> releaseFlag;
@@ -134,7 +137,9 @@ public:
 private:
 	inline int NextSpeed(int nowSpeed);
 	inline int BeforeSpeed(int nowSpeed);
+	//ƒ¢
 	inline void ReleaseImage();
+	///ƒ¢
 	inline void ReleaseList();
 };
 
