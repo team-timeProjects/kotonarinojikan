@@ -5,6 +5,9 @@
 #include	"../IEX/iextreme.h"
 #include	"../EDX/EDXLIB.h"
 #include	"Utility.h"
+#include	"GameDirection.h"
+
+#include	<list>
 
 class StageMNG;
 class FlagMgr;
@@ -16,9 +19,9 @@ private:
 	POINT	pos;			//　位置
 	float	ShortAngle;		//　短針角度
 	float	LongAngle;		//	長針角度
-	int		timer;
-	int		judgeCycle;
-	int		judgeCount;
+	int		timer;			//　制限時間
+	int		judgeCycle;		//　一周で回る時間（frame）
+	int		judgeCount;		//　判定回数
 	bool	clockUp;
 	bool	checkPalse;
 public:
@@ -41,7 +44,7 @@ public:
 	}
 	void Init(int judgeCount, int judgeCycle)
 	{
-		image = new iex2DObj("DATA/timer.png");
+		image = new iex2DObj("DATA/ゲーム画面/hanteitokei.png");
 		pos.x = 1220;
 		pos.y = 650;
 		this->judgeCount = judgeCount;
@@ -53,12 +56,15 @@ public:
 
 	void Update()
 	{
-		timer -= clockUp ? 6 : 1;
-		checkPalse = timer%judgeCycle == 0 || (clockUp&&timer%judgeCycle > judgeCycle - 6);
-		clockUp = false;
+		if (judgeCycle != 0)
+		{
+			timer -= clockUp ? 6 : 1;
+			checkPalse = timer%judgeCycle == 0 || (clockUp&&timer%judgeCycle > judgeCycle - 6);
+			clockUp = false;
 
-		LongAngle = (timer%judgeCycle)*(2 * PI / judgeCycle);
-		ShortAngle = (timer / judgeCycle)*(2 * PI / 12) + (timer%judgeCycle)*(2 * PI / (12 * judgeCycle));
+			LongAngle = -(timer%judgeCycle)*(2 * PI / judgeCycle);
+			ShortAngle = -(timer / judgeCycle)*(2 * PI / 12) - (timer%judgeCycle)*(2 * PI / (12 * judgeCycle));
+		}
 	}
 
 	void Render()
@@ -92,6 +98,14 @@ public:
 	{
 		return timer;
 	}
+
+	void DecreaseTimer(int second)
+	{
+		timer -= second * 60;
+		LongAngle = -(timer%judgeCycle)*(2 * PI / judgeCycle);
+		ShortAngle = -(timer / judgeCycle)*(2 * PI / 12) - (timer%judgeCycle)*(2 * PI / (12 * judgeCycle));
+	}
+
 };
 
 class sceneMain :public Scene
@@ -100,17 +114,67 @@ class sceneMain :public Scene
 private:
 	enum State
 	{
-		BEGIN, MAIN, PAUSE, CHECK, END
+		BEGIN, START_EFFECT, MAIN, PAUSE, CHECK, CLEAR, OVER
 	}state;
 	StageMNG* stage;
 	FlagMgr* flag;
+	GameDirection direction;
 	JudgeClock* judgeClock;
 	EDX::EDX_2DObj* back;
 	EDX::EDX_2DObj* back2;
+
+	//　Δ
+	iex2DObj* menubutton;
+	ImageParam menuParam;
+	
+	//　卍
+	EDX::EDX_2DObj* menu;
+
+	EDX::EDX_2DObj* MenuButton[3];
+
 	float back2angle;
 	float angleSpeed;
+	int NextSceneTime = 0;
 
 	int stageID;// プロット提供用
+
+	int PauseBlack;
+	DWORD PauseCol;
+	float PauseZoom;
+	Scene* OverScene;
+
+	class StartEffect
+	{
+	private:
+		enum StartStep
+		{
+			BEGIN, ESCAPE, STORES, SET, END
+		}step;
+		int effectTimer;
+		iex2DObj* batImage;
+		ImageParam batParam;
+		struct BatEffect
+		{
+			Vector2 pos;
+			Vector2 target;
+			int speedLabel;
+			float scale;
+			float alpha;
+			float time;
+		};
+		std::list<BatEffect> batList;
+		int idx;
+		sceneMain* scene;
+
+	public:
+		StartEffect();
+		void Init(sceneMain* ref);
+		void Update();
+		void Render();
+		bool IsFinish();
+	private:
+		void BatUpdate(BatEffect* bat);
+	}*startEffect;
 
 	//-------- method ---------
 public:

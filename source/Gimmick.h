@@ -48,7 +48,7 @@ class FlagGmk :public Gimmick
 public:
 	enum TYPE
 	{
-		FREE,BLACK, GOLD
+		FREE, BLACK, GOLD
 	};
 	enum State
 	{
@@ -96,11 +96,14 @@ class FlagMgr
 private:
 	enum State
 	{
-		MAIN,MOVE_NEXT,CHECK,EFFECT
+		MAIN, MOVE_NEXT, CHECK, EFFECT
 	}state;
 	iex2DObj* listBack;
 	iex2DObj* blockBack;
 	iex2DObj* goldBack;
+	ImageParam listParam;
+	ImageParam blackParam;
+	ImageParam goldParam;
 	std::list<FlagGmk*> blackFlag;
 	std::list<FlagGmk*> goldFlag;
 	std::list<FlagGmk*> releaseFlag;
@@ -108,6 +111,7 @@ private:
 	std::list<FlagGmk*>::iterator nowFlag;
 	int haveGold;
 	int effectTimer;
+	int	missCount;
 
 	//------------ method --------------
 public:
@@ -117,8 +121,11 @@ public:
 	void Update();
 	void Render();
 	void SetSpeedList(const std::map<int, int>& list);
+	void AddSpeedCount(int speed);
 	void AppendFlag(TimeObj* obj, bool next = true);
+	void AppendPlainFlag(TimeObj* obj);
 	void AppendGoldFlag(TimeObj* obj);
+	void ReleaseFlag(TimeObj* obj);
 	void StartCheck();// チェックフェーズ開始
 	bool CheckNext();// 移動開始、なければfalse
 	void CheckFlag();
@@ -127,10 +134,16 @@ public:
 	bool IsCheckEnd();
 	bool IsClear();
 	void SetHaveGoldFlag(int num);
+	Vector2 GetSpeedBlockPos(int speed);
+	int	GetMissCount();
+	void SetMissCount(int mc);
+
 private:
 	inline int NextSpeed(int nowSpeed);
 	inline int BeforeSpeed(int nowSpeed);
+	//Δ
 	inline void ReleaseImage();
+	///Δ
 	inline void ReleaseList();
 };
 

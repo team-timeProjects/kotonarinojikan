@@ -34,8 +34,6 @@ void	Mouse::Update()
 	GetCursorPos(&cursor);
 	ScreenToClient(iexSystem::Window, &cursor);
 	
-	//cursor.x -= leftWndFrame;
-	//cursor.y -= topWndFrame;
 }
 
 void	Mouse::Render()

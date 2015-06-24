@@ -25,9 +25,6 @@
     <Filter Include="ソース ファイル\Scene">
       <UniqueIdentifier>{c0bcf179-515c-4d85-9fb1-b0713b723623}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\tom">
-      <UniqueIdentifier>{180dee44-5ef9-404d-84e9-18b5ec41c394}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Utility">
       <UniqueIdentifier>{103c7c5e-6a1c-4eee-ad8a-27c0d7758041}</UniqueIdentifier>
     </Filter>
@@ -45,9 +42,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Utility">
       <UniqueIdentifier>{0c9d157b-d385-4118-8150-5661438c50a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\tom">
-      <UniqueIdentifier>{6535d8fa-038e-4e3b-a0b7-78af8f3702aa}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Scene">
       <UniqueIdentifier>{064fdafa-97e3-4156-8891-31271888ba14}</UniqueIdentifier>
@@ -73,15 +67,15 @@
     <Filter Include="ヘッダー ファイル\Object\Interface">
       <UniqueIdentifier>{9d1566f3-f2a4-465c-b6fe-f5e11e85acdc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\sound">
+      <UniqueIdentifier>{6cbdb20d-77d0-4d19-bdb5-be0f072278c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\system\Framework.cpp">
       <Filter>ソース ファイル\SYSTEM</Filter>
     </ClCompile>
     <ClCompile Include="source\system\System.cpp">
-      <Filter>ソース ファイル\SYSTEM</Filter>
-    </ClCompile>
-    <ClCompile Include="source\system\WinMain.cpp">
       <Filter>ソース ファイル\SYSTEM</Filter>
     </ClCompile>
     <ClCompile Include="IEX\IEX_2DObject.cpp">
@@ -137,15 +131,6 @@
     </ClCompile>
     <ClCompile Include="source\sceneTitile.cpp">
       <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="source\tomAL\tomAL.cpp">
-      <Filter>ソース ファイル\tom</Filter>
-    </ClCompile>
-    <ClCompile Include="source\tomAL\tomALInmemory.cpp">
-      <Filter>ソース ファイル\tom</Filter>
-    </ClCompile>
-    <ClCompile Include="source\tomAL\tomALStreaming.cpp">
-      <Filter>ソース ファイル\tom</Filter>
     </ClCompile>
     <ClCompile Include="source\TextLoader.cpp">
       <Filter>ソース ファイル\Utility</Filter>
@@ -219,6 +204,15 @@
     <ClCompile Include="source\TransitionBat.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="source\system\WinMain.cpp">
+      <Filter>ソース ファイル\SYSTEM</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GameDirection.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Sound.cpp">
+      <Filter>ソース ファイル\sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEX\iextreme.h">
@@ -241,9 +235,6 @@
     </ClInclude>
     <ClInclude Include="source\Stage.h">
       <Filter>ヘッダー ファイル\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="source\tomAL\tomAL.h">
-      <Filter>ヘッダー ファイル\tom</Filter>
     </ClInclude>
     <ClInclude Include="source\Utility.h">
       <Filter>ヘッダー ファイル\Utility</Filter>
@@ -298,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="source\sceneTitle.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound.h">
+      <Filter>ソース ファイル\sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

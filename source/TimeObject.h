@@ -48,7 +48,22 @@ class ImageFactory
 public:
 	enum ImageID
 	{
-		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE, FRAG_BLACK,FRAG_GOLD
+		FRAG_BLACK_CLOSE, FRAG_BLACK_OPEN, FRAG_GOLD,
+		BUTTON_MENU,
+		SPEED_LIST, SPEED_BLOCK, GOLD_STOCK,
+
+		//　時計関連
+		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE, 
+
+		//	ろうそく関連
+		CANDLESTICK,
+		CANDLE_BACK, CANDLE_SMALL, CANDLE_BIG,
+		CANDLE_FIRE, CANDLE_FIRE_ANIMATION, CANDLE_SMALL_MELT,
+		CANDLE_BIG_MELT,
+
+		//	メトロノーム関連
+		METRONOM_BACK,
+		METRONOM_NEEDLE, METRONOM_SPINDLE1, METRONOM_SPINDLE2, METRONOM, METRONOM_FACE
 	};
 private:
 	std::map<int, iex2DObj*> imageList;				// 画像データ
@@ -85,7 +100,7 @@ protected:
 	bool haveFlag = false;							// フラッグ所持状態
 	static const int SUCCESS_EFFECT_TIME = 30;		// 卍成功演出時間定数
 	int SuccessCnt = 0;								// 卍成功演出用変数
-	const float CHAIN_MAX_SCALE = 3.0f;				// 卍連鎖演出用最大拡大率
+	const float CHAIN_MAX_SCALE = 3.5f;				// 卍連鎖演出用最大拡大率
 	static const int CHAIN_EFFECT_MAX = 5;			// 卍連鎖演出用最大拡大率到達連鎖数
 	static int SuccessChain;						// 卍連鎖カウンタ
 	int Mine_SChain;								// 卍自分の連鎖カウンタ
@@ -107,8 +122,8 @@ public:
 	bool IsCollision(const POINT& p);
 	//					描画の中心座標、当たり判定の幅高さ、拡大率、　　　元のスピード、　　挙動ID
 	void Init(int id, const Vector2& centerPos, int colW, int colH, float scale, float orginSpeed, int behavior);
-	virtual void Update() = 0;
-	virtual void Render() = 0;
+	virtual void Update(void) = 0;
+	virtual void Render(void) = 0;
 	void SetState(TimeObj::State s);
 	__forceinline static void ResetChain(){ SuccessChain = 0; }
 	__forceinline static void AddChain(){ SuccessChain++; }

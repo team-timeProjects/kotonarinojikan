@@ -1,6 +1,7 @@
 
 #ifndef		_SCENESELECT_H_
 #define		_SCENESELECT_H_
+#include	"Sound.h"
 
 //*****************************************************************************
 //
@@ -12,10 +13,8 @@ bool PushCheck(int px, int py, int x, int y, int w, int h);
 class Bat{
 private:
 	const float BAT_SCALE = 0.75;
-	static const int BAT_CHECK_X = 50;
-	static const int BAT_CHECK_Y = 130;
-	static const int BAT_CHECK_W = 410;
-	static const int BAT_CHECK_H = 250;
+	static const int BAT_CHECK_W = 421;
+	static const int BAT_CHECK_H = 282;
 
 	static const int MOVE_INTER = 40;
 	const float MOVE_POW = 0.01f;
@@ -31,7 +30,7 @@ public:
 	void Update();
 	void Render();
 	EDX::Vector GetPos(){ return EDX::GetV(pos.x, pos.y + offset_Y, 0); }
-	bool ClickCheck( int mx, int my);
+	bool ClickCheck(int mx, int my);
 	void Release();
 };
 
@@ -39,29 +38,28 @@ public:
 class sceneSelect :public Scene
 {
 private:
-	static const int STAGEPIC_MAX = 30;
+	static const int STAGEPIC_MAX = 60;
 	static const int WAIT_TIME = 60;
 
-	static const int OPEN_STAGE = 30;
-
 	static const int BAT_X_SPACE = 350;
-	static const int BAT_PIC_WH = 512;
-	static const int CAM_OFFSET_Y = -130;
+	static const int BAT_PIC_W = 421;
+	static const int BAT_PIC_H = 282;
+	static const int CAM_OFFSET_Y = -100;
 
-	static const int SWITCH_TITLE_WIDTH = 200;
-	static const int SWITCH_GAME_WIDTH = 230;
-	static const int SWITCH_HEIGHT = 140;
-	static const int SWITCH_TITLE_X = 115;
-	static const int SWITCH_GAME_X = 985;
-	static const int SWITCH_Y = 610;
-	EDX::EDX_2DObj* Back1;
+	static const int SWITCH_TITLE_WIDTH = 215;
+	static const int SWITCH_GAME_WIDTH = 215;
+	static const int SWITCH_HEIGHT = 55;
+	static const int SWITCH_TITLE_X = 375;
+	static const int SWITCH_GAME_X = 710;
+	static const int SWITCH_Y = 645;
+	//EDX::EDX_2DObj* Back1;
 	EDX::EDX_2DObj* Back2;
 	Bat bat[STAGEPIC_MAX];
 
 	static const int SKIP_BAT_Y = 580;
-	static const int SKIP_BAT_X0 = 640;
-	static const int SKIP_BAT_X1 = 340;
-	EDX::EDX_2DObj* Skip_bat[2];
+	static const int SKIP_BAT_X0 = 1010;
+	static const int SKIP_BAT_X1 = 40;
+	EDX::EDX_2DObj* Skip_bat;
 
 	int Next_Alpha = 0;
 	EDX::EDX_2DObj* Next_Title;
@@ -80,7 +78,9 @@ private:
 	int WaitTime = 0;
 public:
 	//	èâä˙âªÅEâï˙
-	sceneSelect(void){}
+	sceneSelect(int stage){
+		save_SelectStage = stage;
+	}
 	~sceneSelect(void);
 	bool	Initialize(void);
 

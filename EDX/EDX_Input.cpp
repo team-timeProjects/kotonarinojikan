@@ -1,7 +1,7 @@
 #include "../IEX/iextreme.h"
 #include "EDXLIB.h"
 
-int EDX::EDX_Input::Click[2];
+int EDX::EDX_Input::Click[3];
 
 int EDX::MouseGet(int butontype){
 	return  EDX::EDX_Input::GetClickModule(butontype);

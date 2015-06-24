@@ -7,6 +7,8 @@
 //	sceneTitleクラス
 //
 //*****************************************************************************
+
+
 class sceneTitle :public Scene
 {
 	//----------- field -----------
@@ -21,6 +23,7 @@ private:
 	iex2DObj*		m_End;
 
 	//	画像パラメータ
+	const int	ButtonSize = 250;
 	ImageParam	logoparam;
 	ImageParam	startparam;
 	ImageParam	endparam;
@@ -41,20 +44,20 @@ private:
 public:
 	//	初期化・解放
 	static bool IsReturnTitle;
-	sceneTitle(void) ;
-	~sceneTitle( void );
-	bool	Initialize( void )override;
+	sceneTitle(void);
+	~sceneTitle(void);
+	bool	Initialize(void)override;
 
 	//	更新・描画
-	void	Update( void )override;
-	void	Render( void )override;
-	void	RenderObject( iex2DObj* obj, ImageParam param, int sx, int sy, int sw, int sh, float angle );
+	void	Update(void)override;
+	void	Render(void)override;
+	void	RenderObject(iex2DObj* obj, ImageParam param, int sx, int sy, int sw, int sh, float angle);
 
 	//	動作関数
-	void	ModeSelect( void );
-	void	ModeMoveMenu( void );
-	void	ModeChangeScene( void );
-	bool	OnCursorCheck( POINT p, ImageParam i_param );
+	void	ModeSelect(void);
+	void	ModeMoveMenu(void);
+	void	ModeChangeScene(void);
+	bool	OnCursorCheck(POINT p, ImageParam i_param);
 };
 
 //*****************************************************************************

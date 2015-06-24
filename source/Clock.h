@@ -5,70 +5,13 @@
 #include "TimeObject.h"
 #include "Campus.h"
 
-//****************************************************************************************
-//
-//	Clockクラス
-//
-//****************************************************************************************
-//class Clock :public TimeObject
-//{
-//private:
-//	//static	const	int		CLOCK_MAX = 4;
-//	//Clock*			obj[CLOCK_MAX];
-//
-//	float		minuteAngle;	//	分針の向き
-//	float		hourAngle;		//	時針の向き
-//
-//
-//public:
-//	//	初期化・解放
-//	Clock(void);
-//	~Clock(void);
-//
-//	//　初期化・読み込み
-//	bool	Initialize(void);
-//	void	InitObj(void);		//	オブジェクト初期化
-//	void	SetObj(int n, int x, int y, float hAngle, float mAngle, float s);
-//
-//	//　更新
-//	void	Update(void);
-//
-//	//	描画
-//	void	Render(void);
-//
-//	void	Move(void);		//	動作
-//
-//	//-------------------------------------------------------
-//	//----------------- develop:堀田 ------------------------
-//	//-------------------------------------------------------
-//
-//	///<summary>引数pとの当たり判定</summary>
-//	///<param name="p">オブジェクトのスクリーン座標</param>
-//	bool CheckWithin(const POINT& p)
-//	{
-//		return CheckWithin(Campus::Inst()->TransCampusPos(p), obj[0]->pos.x - 150, obj[0]->pos.y - 150, 300);
-//	}
-//
-//	///<summary>時計の座標取得</summary>
-//	///<return>時計の中心座標</return>
-//	POINT& GetPosCC()
-//	{
-//		return obj[0]->pos;
-//	}
-//
-//	//-------------------------------------------------------
-//	//----------------ここまで　develop:堀田-----------------
-//	//-------------------------------------------------------
-//
-//};
-
 class Clock :public TimeObj
 {
 	//----------- field --------------
 public:
 	enum Behavior
 	{
-		SMOOTH=0, STEPING
+		SMOOTH = 0, STEPING, GO3_BACK2_SMOOTH, GO3_BACK2_STEPING, STANDSTILL
 	};
 	enum Image
 	{
@@ -82,24 +25,35 @@ private:
 	static const int HOUR_CYCLE = 12;	// 一周の時間数
 	static const float ANGLE_1MINUTE;	// 一分の角度
 	static const float ANGLE_1HOUR;		// 一時間の角度
-	int timeCount = 0;					// 秒カウント
-	int frameCount = 0;					// フレームカウント
+	int timeCount = 0;					// アングル用秒カウント
+	int frameCount = 0;					// アングル用フレームカウント
+	int frameTotal = 0;					// フレームカウント
+	int timeTotal = 0;
+	int timeOffset = rand() % (MPH*HOUR_CYCLE);
 	float hourAngle = 0;				// 短針の角度
 	float minuteAngle = 0;				// 長針の角度
+	bool	vecflag = true;
+	int		stepTimer = 0;
+	int		stepCount = 0;
+
 
 	//---------- method -------------
 public:
 	Clock();
-	void Init(int id,const Vector2& centerPos, int colW, int colH, float scale, float speed, Behavior behavior);
+	void Init(int id, const Vector2& centerPos, int colW, int colH, float scale, float speed, Behavior behavior);
 	void AppendImage(int idx, iex2DObj* image, const ImageParam& param)override;
 	void Update()override;
 	void Render()override;
 private:
-	void Update_Time(float speed=1.0f);
+	void Update_Time(float speed = 1.0f);
 	void Update_Check();
 	void Update_Smooth();
 	void Update_Steping();
+	void Update_Time_Go3Back2_Steping(float speed = 1.0f);
+	void Update_Time_Go3Back2_Smooth(float speed = 1.0f);
+	void Update_Time_Standstill(float speed = 1.0f);
 };
+
 
 //****************************************************************************************
 #endif // !__CLOCK_H__

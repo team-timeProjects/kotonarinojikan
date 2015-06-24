@@ -10,7 +10,7 @@ private:
 	EDX::EDX_2DObj* Bat;
 	bool IsLoad;
 	float time = 0;
-	const float TIME_POWER = 0.015f;
+	const float TIME_POWER = 0.01f;
 public:
 	enum class TBAT_STATE{
 		DOWN, CENTER, UP
@@ -19,19 +19,20 @@ private:
 	TBAT_STATE step;
 	TBAT_STATE nextstep;
 	bool IsMoveEnd_Var;
+	bool Sound_Played;
 	EDX::Vector pos;
-	EDX::Vector down = EDX::GetV(430, 880, 0);
-	EDX::Vector center = EDX::GetV(-430, -880, 0);
-	EDX::Vector up = EDX::GetV(-430*4, -880*4, 0);
-public:	
+	EDX::Vector down = EDX::GetV(800, 1100, 0);
+	EDX::Vector center = EDX::GetV(-1900, -1900, 0);
+	EDX::Vector up = EDX::GetV(-800 * 4, -1100 * 4, 0);
+public:
 	void Init();
 	void Release();
 	void Update();
 	void Render();
 
 
-	void SetNextStep(TBAT_STATE next){ nextstep = next; }
-	void SetStep(TBAT_STATE step){ 
+	void SetNextStep(TBAT_STATE next);
+	void SetStep(TBAT_STATE step){
 		IsMoveEnd_Var = true;
 		time = 1.0f;
 		this->step = nextstep = step;
@@ -47,7 +48,7 @@ public:
 			break;
 		}
 	}
-	void TimeReset(){ time = 0.0f; }
+	void TimeReset();
 	bool IsMoveEnd(){ return IsMoveEnd_Var; }
 
 	__forceinline static TransitionBat* GetInst(){

@@ -2,6 +2,8 @@
 #include	"TextLoader.h"
 #include	<string>
 #include	<sstream>
+#include	"Candle.h"
+#include	"Metronom.h"
 #include	"Clock.h"
 #include	"DataOwner.h"
 #include	"TimeObject.h"
@@ -29,7 +31,7 @@ void Object::Setting(int x, int y, float scale, float speed, int behaviorId, int
 	this->gimmickId = gimmickId;
 	this->canShuffle = shuffle;
 	this->childNum = childNum + 1;
-	if(childNum > 1)
+	if (childNum > 1)
 	{
 		type = TYPE::MOVE;
 		childX = new int[childNum];
@@ -48,10 +50,10 @@ void Object::SetChild(int id, int x, int y)
 
 void Object::Update()
 {
-	if(childNum <= 1) return;
+	if (childNum <= 1) return;
 
 	int nextPosId = nowPosId + 1;
-	if(nextPosId > childNum)
+	if (nextPosId > childNum)
 	{
 		nextPosId = 0;
 	}
@@ -71,7 +73,7 @@ void Object::Update()
 	float diffX = childX[nextPosId];
 	float diffY = childY[nextPosId];
 	length = diffX*diffX + diffY*diffY;
-	if(length < OK_LEN*OK_LEN)
+	if (length < OK_LEN*OK_LEN)
 	{
 		nowPosId++;
 	}
@@ -86,9 +88,9 @@ StageMNG::StageMNG()
 
 StageMNG::~StageMNG()
 {
-	for(TimeObj*& r : objList)
+	for (TimeObj*& r : objList)
 		SafeDelete(r);
-	for(Gimmick*& r : gimmickList)
+	for (Gimmick*& r : gimmickList)
 		SafeDelete(r);
 }
 
@@ -101,14 +103,14 @@ bool StageMNG::LoadStage(const int stageNum)
 	//ファイル名共通部分の設定
 	std::string fileName = "DATA/BG/stage" + buf.str() + ".sdt";
 	TextLoader loader;
-	if(!loader.Load((char*)fileName.c_str()))return false;
-	loader.LoadInt();	//バージョン数の空読み
+	if (!loader.Load((char*)fileName.c_str()))return false;
+	if (loader.LoadInt()<5)return false;	//バージョン数の空読み
 
 	//情報の破棄
 	objMax = 0;
-	for(TimeObj*& r : objList)
+	for (TimeObj*& r : objList)
 		SafeDelete(r);
-	for(Gimmick*& r : gimmickList)
+	for (Gimmick*& r : gimmickList)
 		SafeDelete(r);
 	objList.clear();
 	gimmickList.clear();
@@ -127,7 +129,7 @@ bool StageMNG::LoadStage(const int stageNum)
 	float scale, speed;
 	int childNum;
 	//設定
-	for(int i = 0; i < objMax; i++)
+	for (int i = 0; i < objMax; i++)
 	{//x y scale speed その他 子数 ループ 座標...
 		pos.x = loader.LoadInt();
 		pos.y = loader.LoadInt();
@@ -137,24 +139,24 @@ bool StageMNG::LoadStage(const int stageNum)
 		int gimmick = loader.LoadInt();
 		bool shuffle = (bool)loader.LoadInt();
 		childNum = loader.LoadInt();
-		if(speedList.find(speed) == speedList.end())
+		if (speedList.find(speed) == speedList.end())
 			speedList[speed] = 1;
 		else
 			speedList[speed]++;
 
 		TimeObj* obj = MakeObj(i, pos, scale, speed, behavior);
-		if(obj != nullptr)
+		if (obj != nullptr)
 		{
 			objList.push_back(obj);
-			if(shuffle)
+			if (shuffle)
 				shuffleList.push_back(obj);
 		}
-		if(childNum > 0)
+		if (childNum > 0)
 		{
 			MoveGmk* gmk = new MoveGmk(obj);
 			gmk->SetLoop(loader.LoadInt() != 0);
 			gmk->AppendNode(pos);
-			for(int j = 0; j < childNum; j++)
+			for (int j = 0; j < childNum; j++)
 			{
 				pos.x = loader.LoadInt();
 				pos.y = loader.LoadInt();
@@ -165,7 +167,7 @@ bool StageMNG::LoadStage(const int stageNum)
 	}
 	SpeedShuffle();
 	float startSpeed = objList.front()->GetOrginSpeed();
-	for(TimeObj*& r : objList)
+	for (TimeObj*& r : objList)
 	{
 		r->SetRelativeSpeed(startSpeed);
 	}
@@ -177,23 +179,24 @@ bool StageMNG::LoadStage(const int stageNum)
 void StageMNG::Update()
 {
 	HaveGoldFlag = DefaultGoldFlagSum;
-	for(TimeObj*& r : objList)
+	for (TimeObj*& r : objList)
 	{
 		r->Update();
-		if(r->GetGold_Effect())
+		if (r->GetID() != 0 && r->GetGold_Effect())
 		{
 			HaveGoldFlag--;
 		}
 	}
-	for(Gimmick*& r : gimmickList)
+	if (IsChecking)return;
+	for (Gimmick*& r : gimmickList)
 		r->Update();
 }
 
 void StageMNG::Render()
 {
-	for(TimeObj*& r : objList)
+	for (TimeObj*& r : objList)
 		r->Render();
-	for(Gimmick*& r : gimmickList)
+	for (Gimmick*& r : gimmickList)
 		r->Render();
 	Campus::GetInst()->Draw();
 }
@@ -202,7 +205,7 @@ POINT StageMNG::GetPos(int objID)const
 {
 	POINT ret;
 	TimeObj* r = SearchObj(objID);
-	if(r != nullptr)
+	if (r != nullptr)
 	{
 		ret.x = (LONG)r->GetPos().x;
 		ret.y = (LONG)r->GetPos().y;
@@ -222,9 +225,9 @@ int StageMNG::GetNowObj()const
 
 int StageMNG::IsCollision(const POINT& p)const
 {
-	for(TimeObj* r : objList)
+	for (TimeObj* r : objList)
 	{
-		if(r->IsCollision(p))
+		if (r->IsCollision(p))
 			return r->GetID();
 	}
 	return -1;
@@ -234,10 +237,10 @@ void StageMNG::Activate(int objID)
 {
 	nowID = objID;
 	TimeObj* r = SearchObj(objID);
-	if(r == nullptr)return;
+	if (r == nullptr)return;
 
 	float current = r->GetOrginSpeed();
-	for(TimeObj*& i : objList)
+	for (TimeObj*& i : objList)
 	{
 		i->SetRelativeSpeed(current);
 	}
@@ -246,15 +249,15 @@ void StageMNG::Activate(int objID)
 void StageMNG::SpeedShuffle()
 {
 	std::vector<float> work;
-	for(TimeObj*& r : shuffleList)
+	for (TimeObj*& r : shuffleList)
 	{
 		work.push_back(r->GetOrginSpeed());
 		r->IsShuffled = false;
 	}
-	for(float r : work)
+	for (float r : work)
 	{
 		int n = rand() % shuffleList.size();
-		while(shuffleList.at(n)->IsShuffled)
+		while (shuffleList.at(n)->IsShuffled)
 			n = rand() % shuffleList.size();
 		shuffleList.at(n)->SetOrginSpeed(r);
 		shuffleList.at(n)->IsShuffled = true;
@@ -283,9 +286,9 @@ int StageMNG::GetJudgeNum()
 
 inline TimeObj* StageMNG::SearchObj(int ID)const
 {
-	for(TimeObj* r : objList)
+	for (TimeObj* r : objList)
 	{
-		if(r->GetID() == ID)
+		if (r->GetID() == ID)
 			return r;
 	}
 	return nullptr;
@@ -297,25 +300,43 @@ inline TimeObj* StageMNG::MakeObj(int ID, const Vector2& pos, float scale, float
 	auto Append = [&ret](int idx, ImageFactory::ImageID id)
 	{
 		ret->AppendImage(idx,
-						 DataOwner::GetInst()->imageFactory->GetImage(id),
-						 DataOwner::GetInst()->imageFactory->GetParam(id));
+			DataOwner::GetInst()->imageFactory->GetImage(id),
+			DataOwner::GetInst()->imageFactory->GetParam(id));
 	};
 
-	switch(stageType)
+	switch (stageType)
 	{
-		case StageMNG::CLOCK:
-			ret = new Clock;
-			Append(Clock::BACK, ImageFactory::CLOCK_BACK);
-			Append(Clock::HOUR, ImageFactory::CLOCK_HOUR);
-			Append(Clock::MINUTE, ImageFactory::CLOCK_MINUTE);
-			ret->Init(ID, pos, 300, 300, scale, speed, behavior);
-			break;
-		case StageMNG::CANDOL:
-			break;
-		case StageMNG::METRO:
-			break;
-		default:
-			break;
+	case StageMNG::CLOCK:
+		ret = new Clock;
+		Append(Clock::BACK, ImageFactory::CLOCK_BACK);
+		Append(Clock::HOUR, ImageFactory::CLOCK_HOUR);
+		Append(Clock::MINUTE, ImageFactory::CLOCK_MINUTE);
+		ret->Init(ID, pos, 300, 300, scale, speed, behavior);
+		break;
+	case StageMNG::CANDOL:
+		ret = new Candle;
+		Append(Clock::BACK, ImageFactory::CLOCK_BACK);
+		Append(Candle::CANDLESTICK, ImageFactory::CANDLESTICK);
+		Append(Candle::BIG_CANDLE, ImageFactory::CANDLE_BIG);
+		Append(Candle::FIRE, ImageFactory::CANDLE_FIRE);
+		Append(Candle::ANIMATION_FIRE, ImageFactory::CANDLE_FIRE_ANIMATION);
+		Append(Candle::BIG_MELT, ImageFactory::CANDLE_BIG_MELT);
+		Append(Candle::SMALL_CANDLE, ImageFactory::CANDLE_SMALL);
+		Append(Candle::SMALL_MELT, ImageFactory::CANDLE_SMALL_MELT);
+		ret->Init(ID, pos, 300, 300, scale, speed, behavior);
+		break;
+	case StageMNG::METRO:
+		ret = new Metronom;
+		Append(Metronom::BACK, ImageFactory::METRONOM_BACK);
+		Append(Metronom::NEEDLE, ImageFactory::METRONOM_NEEDLE);
+		Append(Metronom::SPINDLE1, ImageFactory::METRONOM_SPINDLE1);
+		Append(Metronom::SPINDLE2, ImageFactory::METRONOM_SPINDLE2);
+		Append(Metronom::METRONOM, ImageFactory::METRONOM);
+		Append(Metronom::FACE, ImageFactory::METRONOM_FACE);
+		ret->Init(ID, pos, 300, 300, scale, speed, behavior);
+		break;
+	default:
+		break;
 	}
 	return ret;
 }

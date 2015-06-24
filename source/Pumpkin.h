@@ -7,21 +7,34 @@ private:
 	Pumpkin(Pumpkin&) {}
 	Pumpkin& operator = (const Pumpkin&) {}
 
-	EDX::EDX_2DObj* Pumpkinup, *Pumpkindown;
+	EDX::EDX_2DObj* Pumpkinup, *Pumpkindown, *flash;
+
 
 	bool IsMoveEndflg;
+
 	bool IsInit;
 	bool IsOpen;
 
 	const float POWER_Y = 0.15f;
-	int MAX_MOVE_Y = 200;
-	int OFFSET_X = -20;
-	int OFFSET_Y = 50;
-	float P_SCALE = 1.5;
+	int MAX_MOVE_Y = 300;
+	int OFFSET_X = -256;
+	int OFFSET_Y = -250;
+	float P_SCALE = 1;
+
+	bool Flashflg;
+	int FlashAlpha;
+	DWORD FlashCol;
+
 
 	float MoveY;
 	float PowY;
 	float PosY;
+
+	static const int SHAKE_TIME_MAX = 50;
+	const float SHAKE_POWER = 20.0f;
+	EDX::Vector ShakeVar;
+	int ShakeTime;
+	void Shake();
 public:
 	void Init();
 	void Release();
@@ -34,6 +47,7 @@ public:
 
 	bool IsMoveEnd();
 	void SetOpen(bool IsOpen);
+	void ShakeStart(){ if (ShakeTime <= 0) ShakeTime = SHAKE_TIME_MAX; }
 
 	__forceinline static Pumpkin* GetInst(){
 		static Pumpkin c;

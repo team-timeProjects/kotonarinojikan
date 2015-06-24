@@ -1,8 +1,11 @@
 #ifndef _tomAL_h_
 #define _tomAL_h_
 
+
 #include "OpenAL\include\al.h"
 #include "OpenAL\include\alc.h"
+
+#pragma once
 
 //#include"ogg\include\ogg\ogg.h"
 //#include"ogg\include\vorbis\vorbisfile.h"
@@ -10,6 +13,7 @@
 #include <math.h>
 #include <memory>
 #include <windows.h>
+#include "iextreme.h"
 
 class tomALBase;
 
@@ -32,6 +36,13 @@ namespace SOUND_EFFECT
 		DELAY,
 	};
 }
+
+typedef struct Lisner
+{
+	Vector3 pos;//ˆÊ’u
+	Vector3 vel;//Ž‹ü
+	Vector3 ori;//Žp¨
+}Lisner;
 
 typedef struct DISTORTION
 {
@@ -67,7 +78,7 @@ protected:
 	float distortionParam = 0;
 
 	DELAY* delayParam = nullptr;
-	
+
 
 	struct PlayData
 	{
@@ -76,43 +87,58 @@ protected:
 		ALenum format = 0;
 	}playData;
 
-	void Distortion( char* data, int dataSize );
+	void Distortion(char* data, int dataSize);
 
-	void Delay( char* data, int dataSize );
+	void Delay(char* data, int dataSize);
 
 	void DelayPlay()
 	{
 		delayParam->isPlay = true;
 	}
+
+	static Lisner lisner;
+
+	bool is3D = false;
+
+	Vector3 pos;
 public:
 	tomALBase(){};
-	virtual ~tomALBase()
+	virtual ~tomALBase();
+
+	virtual bool Load(char* filename) = 0;
+
+	void setEffect(int type, void* param);
+
+	void setPos(Vector3& pos)
 	{
-		alDeleteSources( 1, &source );
-		alDeleteBuffers( 1, &buffer );
+		this->pos = pos;
 	}
 
-	virtual bool Load( char* filename ) = 0;
-
-	void setEffect( int type, void* param );
+	void setVolume(float vol)
+	{
+		this->vol = vol;
+	}
 
 	virtual void Update();
+
+	static void setLisner(Vector3& pos, Vector3& vel, Vector3& ori);
+	static void setLisner(Lisner& lisner);
 };
 
 class tomALInmemory : public tomALBase
 {
 private:
-	bool LoadWav( char* filename );
+	bool LoadWav(char* filename);
 	//bool LoadOgg( char* filename );
 
-	bool Load( char* filename );
+	bool Load(char* filename);
 
 	char* data = nullptr;
 public:
 	tomALInmemory(){};
 	~tomALInmemory();
 
-	void Set( char* filename );
+	void Set(char* filename, bool _3D = false);
 
 	void Play();
 	void Pause();
@@ -126,10 +152,10 @@ class tomALStreaming : public tomALBase
 private:
 	ALuint bgmbuffer[2];
 
-	bool LoadWav( char* data );
+	bool LoadWav(char* data);
 	//bool LoadOgg( char* filename );
 
-	bool Load( char* filename ){ return true; }
+	bool Load(char* filename){ return true; }
 
 	HANDLE	hStrThread;
 	unsigned int dwThreadId;
@@ -148,10 +174,10 @@ private:
 	int mode = 0;
 	float fadePalam = 0;
 public:
-	tomALStreaming( ){};
-	~tomALStreaming( );
+	tomALStreaming(){};
+	~tomALStreaming();
 
-	void Set( char* filename, int mode = STREAMING_MODE::NORMAL, int param = 60 );
+	void Set(char* filename, int mode = STREAMING_MODE::NORMAL, int param = 60);
 
 	void Play();
 	void Pause();
@@ -161,9 +187,11 @@ public:
 
 	void Update();
 
-	bool IsPlay( );
+	bool IsPlay();
 
-	void setMode( int m, int param = 60 );
+	void setMode(int m, int param = 60);
+
+	static bool isEndThread;
 };
 
 class tomALManager
@@ -181,27 +209,55 @@ public:
 	tomALManager(){};
 	~tomALManager();
 
-	void Init( int inmemorySound = 32, int streamingSound = 5 );
+	void Init(int inmemorySound = 32, int streamingSound = 5);
 
-	void CreateStreamingPlayer( int No );
+	static void setLisner(Vector3& pos, Vector3& vel, Vector3& ori)
+	{
+		tomALBase::setLisner(pos, vel, ori);
+	}
 
-	void SetInmemory( int No, char* filename );
-	void SetStreaming( int No, char* filename, int mode = STREAMING_MODE::NORMAL, int param = 60 );
+	static void setLisner(Lisner& lisner)
+	{
+		tomALBase::setLisner(lisner);
+	}
 
-	void PlayInmemory( int No );
-	void PauseInmemory( int No );
-	void StopInmemory( int No );
-	bool IsPlayInmemory( int No );
-	void SetEffectInmemory( int No, int type, void* param );
+	void CreateStreamingPlayer(int No);
 
-	void PlayStreaming( int No );
-	void PauseStreaming( int No );
-	void StopStreaming( int No );
-	bool IsPlayStreaming( int No );
-	void SetModeStreaming( int No, int m, int param = 60 );
-	void SetEffectStreaming( int No, int type, void* param );
+	void SetInmemory(int No, char* filename, bool _3D = false);
+	void SetStreaming(int No, char* filename, int mode = STREAMING_MODE::NORMAL, int param = 60);
+
+	void PlayInmemory(int No);
+	void PauseInmemory(int No);
+	void StopInmemory(int No);
+	bool IsPlayInmemory(int No);
+	void SetEffectInmemory(int No, int type, void* param);
+	void SetPos(int No, Vector3& pos)
+	{
+		inmemory[No]->setPos(pos);
+	}
+	void setVolumeInmemory(int No, float vol)
+	{
+		inmemory[No]->setVolume(vol);
+	}
+
+	void PlayStreaming(int No);
+	void PauseStreaming(int No);
+	void StopStreaming(int No);
+	bool IsPlayStreaming(int No);
+	void SetModeStreaming(int No, int m, int param = 60);
+	void SetEffectStreaming(int No, int type, void* param);
+	void setVolumeStreaming(int No, float vol)
+	{
+		streaming[No]->setVolume(vol);
+	}
 
 	void Update();
+
+	static tomALManager* GetInst(){
+		static tomALManager armgr;
+		return &armgr;
+	}
+
 };
 
 #endif

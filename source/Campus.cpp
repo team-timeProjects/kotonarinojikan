@@ -1,5 +1,7 @@
 #include "../IEX/iextreme.h"
 #include "Campus.h"
+#include	<random>
+
 POINT GetPoint(int x, int y){
 	POINT p;
 	p.x = x;
@@ -40,7 +42,7 @@ void Campus::Init(){
 }
 
 void Campus::Update(){
-
+	Shake();
 	time += MoveSpeed;
 	if (time <= 1.0f){
 		float rate = time * time * (3.0f - 2.0f * time);
@@ -53,8 +55,8 @@ void Campus::Update(){
 
 void Campus::Draw(){
 	for (auto it : rolist){
-		int x = it.x - cpos.x;
-		int y = it.y - cpos.y;
+		int x = it.x - cpos.x + ShakeVar.x;
+		int y = it.y - cpos.y + ShakeVar.y;
 		float w = it.w;
 		float h = it.h;
 		if (Zoom != 1.0f){
@@ -160,7 +162,7 @@ void Campus::Add(EDX::EDX_2DObj* obj, s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy
 	ro.sy = sy;
 	ro.sw = sw;
 	ro.sh = sh;
-	ro.p = GetPoint(0,0);
+	ro.p = GetPoint(0, 0);
 	ro.angle = 0;
 	ro.scale = 1;
 	ro.dwFlags = RS_COPY;
@@ -205,6 +207,7 @@ void Campus::TimeReset()
 {
 	time = 0.0f;
 }
+
 void Campus::SetNextPos(POINT next){
 	RECT WindowSize;
 	iexSystem::GetScreenRect(ScreenMode, WindowSize);
@@ -229,4 +232,21 @@ bool Campus::IsMoveEnd(){
 		return true;
 	}
 	return false;
+}
+
+void Campus::Shake(){
+	if (ShakeTime > 0){
+		ShakeTime--;
+		std::uniform_real_distribution<float> rad(0.0f, 1.0f);
+
+		std::mt19937 mtRand{ std::random_device()() };
+
+		ShakeVar.x = rad(mtRand)*SHAKE_POWER - SHAKE_POWER / 2;
+		ShakeVar.y = rad(mtRand)*SHAKE_POWER - SHAKE_POWER / 2;
+	}
+	else{
+		ShakeVar.x = 0;
+		ShakeVar.y = 0;
+		ShakeTime = 0;
+	}
 }

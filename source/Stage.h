@@ -35,7 +35,7 @@ private:
 public:
 	void SetLoop(int flg)
 	{
-		if(flg == 0)
+		if (flg == 0)
 		{
 			isLoop = false;
 		}
@@ -63,6 +63,7 @@ private:
 	int DefaultGoldFlagSum;
 	int HaveGoldFlag;
 	int nowID = 0;
+	bool IsChecking = false;
 
 public:
 	StageMNG();
@@ -81,7 +82,7 @@ public:
 	int GetjudgeTimer();
 	int GetJudgeNum();
 	int GetHaveGoldFlag() { return HaveGoldFlag; }
-
+	void SetChecking(bool check) { IsChecking = check; }
 
 private:
 	inline TimeObj* SearchObj(int ID)const;

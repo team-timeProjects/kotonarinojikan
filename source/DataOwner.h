@@ -6,17 +6,24 @@
 #include "Stage.h"
 #include "ChoicesMgr.h"
 #include "TimeObject.h"
+#include <fstream>
+#include <iostream>
 
 // 全シーンでデータ共有
 class DataOwner // singleton
 {
 	//---------- field ------------
 public:
+	static const int STAGE_MAX = 30;
 	int				stageNo=0;
 	iexView*		view;
 	ImageFactory*   imageFactory;
 	Number*			number;
 
+	int		OpenStage;		//　解放されてるステージ数
+	std::ofstream	ofs;	//　ファイルデータ書き込み用
+	std::ifstream	ifs;	//　ファイルデータ読み込み用
+		
 	//---------- method -----------
 public:
 	~DataOwner()
@@ -24,6 +31,8 @@ public:
 		SafeDelete(view);
 		SafeDelete(imageFactory);
 		SafeDelete(number);
+		if (ofs) ofs.close();
+		if (ifs) ifs.close();
 	}
 
 	static DataOwner* GetInst()
@@ -39,13 +48,16 @@ public:
 		SafeDelete(imageFactory);
 		SafeDelete(number);
 
-		stageNo = 0;
+		stageNo = 1;
 		view = new iexView();
 		imageFactory = new ImageFactory();
 		number = new Number();
 
 		imageFactory->Init();
 		number->Init();
+
+		//OpenStage = 1;
+
 		return true;
 	}
 
