@@ -48,19 +48,21 @@ class ImageFactory
 public:
 	enum ImageID
 	{
-		//Δ
-		FRAG_BLACK_CLOSE,FRAG_BLACK_OPEN, FRAG_GOLD,
+		FRAG_BLACK_CLOSE, FRAG_BLACK_OPEN, FRAG_GOLD,
 		BUTTON_MENU,
-		SPEED_LIST,SPEED_BLOCK,GOLD_STOCK,
-		///Δ
-		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE,
+		SPEED_LIST, SPEED_BLOCK, GOLD_STOCK,
+
+		//　時計関連
+		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE, 
 
 		//	ろうそく関連
+		CANDLESTICK,
 		CANDLE_BACK, CANDLE_SMALL, CANDLE_BIG,
-		CANDLE_SMALL_FIRE, CANDLE_SMALL_MELT, CANDLE_SMALL_LIGHT,
-		CANDLE_BIG_MELT, CANDLE_BIG_FIRE, CANDLE_BIG_LIGHT,
+		CANDLE_FIRE, CANDLE_FIRE_ANIMATION, CANDLE_SMALL_MELT,
+		CANDLE_BIG_MELT,
 
 		//	メトロノーム関連
+		METRONOM_BACK,
 		METRONOM_NEEDLE, METRONOM_SPINDLE1, METRONOM_SPINDLE2, METRONOM, METRONOM_FACE
 	};
 private:
@@ -120,8 +122,8 @@ public:
 	bool IsCollision(const POINT& p);
 	//					描画の中心座標、当たり判定の幅高さ、拡大率、　　　元のスピード、　　挙動ID
 	void Init(int id, const Vector2& centerPos, int colW, int colH, float scale, float orginSpeed, int behavior);
-	virtual void Update() = 0;
-	virtual void Render() = 0;
+	virtual void Update(void) = 0;
+	virtual void Render(void) = 0;
 	void SetState(TimeObj::State s);
 	__forceinline static void ResetChain(){ SuccessChain = 0; }
 	__forceinline static void AddChain(){ SuccessChain++; }

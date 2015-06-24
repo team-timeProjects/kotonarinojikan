@@ -2,7 +2,6 @@
 #include	"iextreme.h"
 #include	"Control.h"
 #include	"Game.h"
-
 #include	"Metronom.h"
 
 //****************************************************************************************
@@ -46,9 +45,14 @@ void Metronom::Update(void)
 	{
 	case TimeObj::SUCCESS:
 		SuccessCnt--;
-
+		if (!Gold_Effect){
+			Update_Time();
+			angle = 0.0f;
+			break;
+		}
 
 	case TimeObj::MOVE:
+		shakeflag = false;
 		switch (behavior)
 		{
 		case ORIGIN:
@@ -76,7 +80,7 @@ void Metronom::Render(void)
 {
 	POINT p;
 	p.x = 0;
-	p.y = 0;
+	p.y = 25;
 	float x, y, w, h, sx, sy, sw, sh;
 
 	//	メトロノーム
@@ -91,41 +95,41 @@ void Metronom::Render(void)
 	Campus::GetInst()->Add(imageList[METRONOM], x, y, w, h, sx, sy, sw, sh);
 
 	//	針描画
-	x = pos.x - dst[METRONOM].w*scale / 2 + dst[METRONOM].x*scale;
-	y = pos.y - dst[METRONOM].h*scale / 2 + dst[METRONOM].y*scale + 40;
-	w = dst[METRONOM].w*scale;
-	h = dst[METRONOM].h*scale;
-	sx = src[METRONOM].x;
-	sy = src[METRONOM].y;
-	sw = src[METRONOM].w;
-	sh = src[METRONOM].h;
+	x = pos.x - dst[NEEDLE].w*scale / 2 + dst[NEEDLE].x*scale;
+	y = pos.y - dst[NEEDLE].h*scale / 2 + dst[NEEDLE].y*scale + 8;
+	w = dst[NEEDLE].w*scale;
+	h = dst[NEEDLE].h*scale;
+	sx = src[NEEDLE].x;
+	sy = src[NEEDLE].y;
+	sw = src[NEEDLE].w;
+	sh = src[NEEDLE].h;
 	Campus::GetInst()->Add(imageList[NEEDLE], x, y, w, h, sx, sy, sw, sh, p, angle);
 
 	if (behavior == ORIGIN)
 	{
 		//	錘1描画
-		x = pos.x - dst[METRONOM].w*scale / 2 + dst[METRONOM].x*scale;
-		y = pos.y - dst[METRONOM].h*scale / 2 + dst[METRONOM].y*scale + 40;
-		w = dst[METRONOM].w*scale;
-		h = dst[METRONOM].h*scale;
-		sx = src[METRONOM].x;
-		sy = src[METRONOM].y;
-		sw = src[METRONOM].w;
-		sh = src[METRONOM].h;
+		x = pos.x - dst[SPINDLE1].w*scale / 2 + dst[SPINDLE1].x*scale;
+		y = pos.y - dst[SPINDLE1].h*scale / 2 + dst[SPINDLE1].y*scale + 8;
+		w = dst[SPINDLE1].w*scale;
+		h = dst[SPINDLE1].h*scale;
+		sx = src[SPINDLE1].x;
+		sy = src[SPINDLE1].y;
+		sw = src[SPINDLE1].w;
+		sh = src[SPINDLE1].h;
 		Campus::GetInst()->Add(imageList[SPINDLE1], x, y, w, h, sx, sy, sw, sh, p, angle);
 	}
 
 	if (behavior == DOUBLE)
 	{
 		//	錘2描画
-		x = pos.x - dst[METRONOM].w*scale / 2 + dst[METRONOM].x*scale;
-		y = pos.y - dst[METRONOM].h*scale / 2 + dst[METRONOM].y*scale + 40;
-		w = dst[METRONOM].w*scale;
-		h = dst[METRONOM].h*scale;
-		sx = src[METRONOM].x;
-		sy = src[METRONOM].y;
-		sw = src[METRONOM].w;
-		sh = src[METRONOM].h;
+		x = pos.x - dst[SPINDLE2].w*scale / 2 + dst[SPINDLE2].x*scale;
+		y = pos.y - dst[SPINDLE2].h*scale / 2 + dst[SPINDLE2].y*scale + 8;
+		w = dst[SPINDLE2].w*scale;
+		h = dst[SPINDLE2].h*scale;
+		sx = src[SPINDLE2].x;
+		sy = src[SPINDLE2].y;
+		sw = src[SPINDLE2].w;
+		sh = src[SPINDLE2].h;
 		Campus::GetInst()->Add(imageList[SPINDLE2], x, y, w, h, sx, sy, sw, sh, p, angle);
 	}
 
@@ -139,26 +143,51 @@ void Metronom::Render(void)
 	sw = src[FACE].w;
 	sh = src[FACE].h;
 	Campus::GetInst()->Add(imageList[FACE], x, y, w, h, sx, sy, sw, sh);
+
+	//卍成功演出用時計
+	if (state == State::SUCCESS&&SuccessCnt > 0){
+		DWORD S_Alpha = ARGB((int)((float)SuccessCnt / (float)SUCCESS_EFFECT_TIME*127.0f), 255, 255, 255);
+		float AddScale = (float)Mine_SChain / (float)CHAIN_EFFECT_MAX*CHAIN_MAX_SCALE;
+		AddScale *= 1.0f - (float)SuccessCnt / (float)SUCCESS_EFFECT_TIME;
+		Campus::GetInst()->Add(imageList[BACK],
+			pos.x - dst[BACK].w*(AddScale + scale) / 2 + dst[BACK].x*(AddScale + scale),
+			pos.y - dst[BACK].h*(AddScale + scale) / 2 + dst[BACK].y*(AddScale + scale),
+			dst[BACK].w*(AddScale + scale), dst[BACK].h*(AddScale + scale),
+			src[BACK].x, src[BACK].y, src[BACK].w, src[BACK].h, GetPoint(0, 0), 0, 1, RS_COPY, (DWORD)S_Alpha, 0.0f);
+	}
 }
 
 //	時間更新
 inline void Metronom::Update_Time(float speed)
 {
 	//時間経過のベクトルに応じて逆転
-	float v = this->speed > 0 ? speed : -speed;
-	timeCount = org_speed * v;
+	float v = this->speed * speed;
+	timeCount += org_speed * v;
 }
 
 //	チェック中の動作
 inline void Metronom::Update_Check(void)
 {
+	shakeParam = rand() % 5;
+	if (angle > D3DX_PI / 180 * -40.0f)
+	{
+		angle -= D3DX_PI / 180 * 10.0f;
+	}
+	else
+	{
+		shakeflag = true;
+	}
 
+	if (shakeflag)
+	{
+		param = D3DX_PI / 180 * -40.0f;
+		angle = (D3DX_PI / 180 * -40.0f) + (D3DX_PI / 180 * shakeParam);
+	}
 }
 
 //	動作かちかち
-void	Metronom::Move(float speed)
+void	Metronom::Move( float speed )
 {
-	Update_Time();
-	param += timeCount * speed;
-	angle = (D3DX_PI / 180 * 45) * sinf(param);
+	Update_Time(speed);
+	angle = (D3DX_PI / 180 * 45) * sinf(timeCount);
 }

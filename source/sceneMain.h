@@ -5,9 +5,9 @@
 #include	"../IEX/iextreme.h"
 #include	"../EDX/EDXLIB.h"
 #include	"Utility.h"
-#include	<list>
+#include	"GameDirection.h"
 
-class tomALManager;
+#include	<list>
 
 class StageMNG;
 class FlagMgr;
@@ -98,6 +98,14 @@ public:
 	{
 		return timer;
 	}
+
+	void DecreaseTimer(int second)
+	{
+		timer -= second * 60;
+		LongAngle = -(timer%judgeCycle)*(2 * PI / judgeCycle);
+		ShortAngle = -(timer / judgeCycle)*(2 * PI / 12) - (timer%judgeCycle)*(2 * PI / (12 * judgeCycle));
+	}
+
 };
 
 class sceneMain :public Scene
@@ -106,23 +114,34 @@ class sceneMain :public Scene
 private:
 	enum State
 	{
-		BEGIN, START_EFFECT, MAIN, PAUSE, CHECK, END
+		BEGIN, START_EFFECT, MAIN, PAUSE, CHECK, CLEAR, OVER
 	}state;
 	StageMNG* stage;
 	FlagMgr* flag;
+	GameDirection direction;
 	JudgeClock* judgeClock;
 	EDX::EDX_2DObj* back;
 	EDX::EDX_2DObj* back2;
-	//Δ
+
+	//　Δ
 	iex2DObj* menubutton;
 	ImageParam menuParam;
-	///Δ
+	
+	//　卍
+	EDX::EDX_2DObj* menu;
+
+	EDX::EDX_2DObj* MenuButton[3];
+
 	float back2angle;
 	float angleSpeed;
-	int stageID;
+	int NextSceneTime = 0;
 
+	int stageID;// プロット提供用
 
-	tomALManager* armgr;
+	int PauseBlack;
+	DWORD PauseCol;
+	float PauseZoom;
+	Scene* OverScene;
 
 	class StartEffect
 	{

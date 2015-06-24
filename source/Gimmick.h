@@ -111,6 +111,7 @@ private:
 	std::list<FlagGmk*>::iterator nowFlag;
 	int haveGold;
 	int effectTimer;
+	int	missCount;
 
 	//------------ method --------------
 public:
@@ -134,6 +135,9 @@ public:
 	bool IsClear();
 	void SetHaveGoldFlag(int num);
 	Vector2 GetSpeedBlockPos(int speed);
+	int	GetMissCount();
+	void SetMissCount(int mc);
+
 private:
 	inline int NextSpeed(int nowSpeed);
 	inline int BeforeSpeed(int nowSpeed);

@@ -121,6 +121,7 @@
     <ClCompile Include="source\Clock.cpp" />
     <ClCompile Include="source\Control.cpp" />
     <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\GameDirection.cpp" />
     <ClCompile Include="source\GameSystem.cpp" />
     <ClCompile Include="source\Gimmick.cpp" />
     <ClCompile Include="source\Metronom.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="source\sceneMain.cpp" />
     <ClCompile Include="source\sceneSelect.cpp" />
     <ClCompile Include="source\sceneTitile.cpp" />
+    <ClCompile Include="source\Sound.cpp" />
     <ClCompile Include="source\Stage.cpp" />
     <ClCompile Include="source\system\Framework.cpp" />
     <ClCompile Include="source\system\System.cpp" />
@@ -151,9 +153,6 @@
     <ClCompile Include="IEX\IEX_View.cpp" />
     <ClCompile Include="source\TextLoader.cpp" />
     <ClCompile Include="source\TimeObject.cpp" />
-    <ClCompile Include="source\tomAL\tomAL.cpp" />
-    <ClCompile Include="source\tomAL\tomALInmemory.cpp" />
-    <ClCompile Include="source\tomAL\tomALStreaming.cpp" />
     <ClCompile Include="source\TransitionBat.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +171,7 @@
     <ClInclude Include="source\Pumpkin.h" />
     <ClInclude Include="source\sceneSelect.h" />
     <ClInclude Include="source\sceneTitle.h" />
+    <ClInclude Include="source\Sound.h" />
     <ClInclude Include="source\Stage.h" />
     <ClInclude Include="source\system\Framework.h" />
     <ClInclude Include="source\system\Scene.h" />
@@ -180,7 +180,6 @@
     <ClInclude Include="IEX\iextreme.h" />
     <ClInclude Include="source\TextLoader.h" />
     <ClInclude Include="source\TimeObject.h" />
-    <ClInclude Include="source\tomAL\tomAL.h" />
     <ClInclude Include="source\TransitionBat.h" />
     <ClInclude Include="source\Utility.h" />
   </ItemGroup>

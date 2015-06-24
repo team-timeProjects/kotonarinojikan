@@ -1,9 +1,13 @@
 #include	"iextreme.h"
 #include	"Framework.h"
-#include	"../sceneMain.h"
+#include	"sceneMain.h"
 #include	"Control.h"
+#include	"../../EDX/EDXLIB.h"
 #include	"../sceneTitle.h"
 #include	"../DataOwner.h"
+#include	"../TransitionBat.h"
+#include	"../Pumpkin.h"
+#include	"../Sound.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -11,6 +15,7 @@
 //*****************************************************************************************************************************
 //
 //
+
 //
 //*****************************************************************************************************************************
 
@@ -35,12 +40,14 @@ BOOL	InitApp(HWND hWnd)
 
 	//	システムの初期化
 	SYSTEM_Initialize();
+
+	Sound::Initialize();
 	//	メインフレームワーク生成
-	MainFrame = new Framework(FPS_60);
+	MainFrame = new Framework();
 	//	初期シーン登録
-	DataOwner::GetInst()->Init();
-	DataOwner::GetInst()->stageNo = 1;
 	MainFrame->ChangeScene(new sceneTitle());
+	//MainFrame->ChangeScene(new sceneMain());
+
 	return TRUE;
 }
 
@@ -49,16 +56,30 @@ BOOL	InitApp(HWND hWnd)
 //*****************************************************************************************************************************
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-
-	const float leftWndFrame = 8.0f;
-	const float topWndFrame = 29;
-
+	static int nWheelFraction = 0;
+	int zDelta = 0;
+	int Notch = 0;
 	switch (message)
 	{
+	case WM_ACTIVATE:
+		nWheelFraction = 0;
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
 	case WM_LBUTTONUP:
+		Mouse::lbClick = true;
+		break;
+	case WM_RBUTTONUP:
+		Mouse::rbClick = true;
+		break;
+	case WM_MOUSEWHEEL:
+		zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+		zDelta += nWheelFraction;
+		Notch = zDelta / WHEEL_DELTA;
+		nWheelFraction = zDelta%WHEEL_DELTA;
+
+		EDX::EDX_Input::Click[EDX::EDX_WHEEL] = Notch;
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)
@@ -121,15 +142,20 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-//	_CrtSetBreakAlloc(543);
+	//	_CrtSetBreakAlloc(543);
 
 	MSG		msg;
 	HWND	hWnd;
 
 	if (GetAsyncKeyState(VK_CONTROL) & 0x8000) bFullScreen = TRUE;
 
+
 	hWnd = InitWindow(hInstance, nCmdShow);
 	InitApp(hWnd);
+
+	DataOwner::GetInst()->Init();
+	TransitionBat::GetInst()->Init();
+	Pumpkin::GetInst()->Init();
 
 	//	メインループ
 	for (;;){
@@ -143,6 +169,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 	}
 
+	TransitionBat::GetInst()->Release();
+	Pumpkin::GetInst()->Release();
 	//	全解放	
 	delete	MainFrame;
 	SYSTEM_Release();

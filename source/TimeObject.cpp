@@ -5,7 +5,7 @@
 
 ImageFactory::~ImageFactory()
 {
-	for(std::pair<const int, iex2DObj*>& r : imageList)
+	for (std::pair<const int, iex2DObj*>& r : imageList)
 		SafeDelete(r.second);
 }
 
@@ -20,42 +20,40 @@ void ImageFactory::Init()
 	paramList[CLOCK_MINUTE] = ImageParam(0, 0, 512, 512);
 	//Δ
 	imageList[FRAG_BLACK_CLOSE] = new iex2DObj("DATA/ゲーム画面/jikan-koumori(close).png");
-	paramList[FRAG_BLACK_CLOSE] = ImageParam(0, 0, 256, 128);
+	paramList[FRAG_BLACK_CLOSE] = ImageParam(0, 0, 201, 148);
 	imageList[FRAG_BLACK_OPEN] = new iex2DObj("DATA/ゲーム画面/jikan-koumori(Black).png");
-	paramList[FRAG_BLACK_OPEN] = ImageParam(0, 0, 256, 128);
+	paramList[FRAG_BLACK_OPEN] = ImageParam(0, 0, 230, 144);
 	imageList[FRAG_GOLD] = new iex2DObj("DATA/ゲーム画面/jikan-koumori(gold).png");
-	paramList[FRAG_GOLD] = ImageParam(0, 0, 256, 128);
+	paramList[FRAG_GOLD] = ImageParam(0, 0, 230, 144);
 	imageList[BUTTON_MENU] = new iex2DObj("DATA/ゲーム画面/メニュー.png");
-	paramList[BUTTON_MENU] = ImageParam(0, 0, 128, 64);
+	paramList[BUTTON_MENU] = ImageParam(0, 0, 123, 58);
 	imageList[SPEED_LIST] = new iex2DObj("DATA/ゲーム画面/UI枠.png");
-	paramList[SPEED_LIST] = ImageParam(0, 0, 512, 1024);
+	paramList[SPEED_LIST] = ImageParam(0, 0, 128, 594);
 	imageList[SPEED_BLOCK] = new iex2DObj("DATA/ゲーム画面/スピードボード.png");
-	paramList[SPEED_BLOCK] = ImageParam(0, 0, 100, 80);
+	paramList[SPEED_BLOCK] = ImageParam(0, 0, 102, 80);
 	imageList[GOLD_STOCK] = new iex2DObj("DATA/ゲーム画面/コウモリ残数.png");
 	paramList[GOLD_STOCK] = ImageParam(0, 0, 64, 64);
 	///Δ
 
 	//	ろうそく
-	imageList[CANDLE_BACK] = new iex2DObj("DATA/和紙.png");
-	paramList[CANDLE_BACK] = ImageParam(0, 0, 2048, 720);
-	imageList[CANDLE_BIG] = new iex2DObj("DATA/ろうそく(大).png");
-	paramList[CANDLE_BIG] = ImageParam(0, 120, 512, 402);
-	imageList[CANDLE_SMALL] = new iex2DObj("DATA/ろうそく.png");
-	paramList[CANDLE_SMALL] = ImageParam(0, 110, 512, 402);
-	imageList[CANDLE_SMALL_FIRE] = new iex2DObj("DATA/ろうそく(火).png");
-	paramList[CANDLE_SMALL_FIRE] = ImageParam(0, 0, 512, 512);
-	imageList[CANDLE_SMALL_MELT] = new iex2DObj("DATA/ろうそく(溶け).png");
+	imageList[CANDLESTICK] = new iex2DObj("DATA/物関連/ランタン02.png");
+	paramList[CANDLESTICK] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_BIG] = new iex2DObj("DATA/物関連/rousokuhutoi.png");
+	paramList[CANDLE_BIG] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_SMALL] = new iex2DObj("DATA/物関連/rousoku.png");
+	paramList[CANDLE_SMALL] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_FIRE] = new iex2DObj("DATA/物関連/honoopsd.png");
+	paramList[CANDLE_FIRE] = ImageParam(0, 0, 512, 512);
+	imageList[CANDLE_FIRE_ANIMATION] = new iex2DObj("DATA/物関連/honoo.png");
+	paramList[CANDLE_FIRE_ANIMATION] = ImageParam(0, 0, 256, 256);
+	imageList[CANDLE_SMALL_MELT] = new iex2DObj("DATA/物関連/とける部分.png");
 	paramList[CANDLE_SMALL_MELT] = ImageParam(0, 0, 512, 512);
-	imageList[CANDLE_SMALL_LIGHT] = new iex2DObj("DATA/ろうそく（明かり）.png");
-	paramList[CANDLE_SMALL_LIGHT] = ImageParam(0, 0, 512, 512);
-	imageList[CANDLE_BIG_FIRE] = new iex2DObj("DATA/ろうそく(火大).png");
-	paramList[CANDLE_BIG_FIRE] = ImageParam(0, 0, 512, 512);
-	imageList[CANDLE_BIG_LIGHT] = new iex2DObj("DATA/ろうそく（明かり色違い）.png");
-	paramList[CANDLE_BIG_LIGHT] = ImageParam(0, 0, 512, 512);
-	imageList[CANDLE_BIG_MELT] = new iex2DObj("DATA/ろうそく(溶け大).png");
+	imageList[CANDLE_BIG_MELT] = new iex2DObj("DATA/物関連/とける部分×2.png");
 	paramList[CANDLE_BIG_MELT] = ImageParam(0, 0, 512, 512);
 
 	//	メトロノーム
+	imageList[METRONOM_BACK] = new iex2DObj("DATA/物関連/メトロノーム見本.png");
+	paramList[METRONOM_BACK] = ImageParam(0, 0, 512, 512);
 	imageList[METRONOM] = new iex2DObj("DATA/物関連/メトロノーム.png");
 	paramList[METRONOM] = ImageParam(0, 0, 512, 512);
 	imageList[METRONOM_FACE] = new iex2DObj("DATA/物関連/メトロノーム　顔面.png");
@@ -143,6 +141,6 @@ void TimeObj::Init(int id, const Vector2& centerPos, int colW, int colH, float s
 
 void TimeObj::SetState(TimeObj::State s)
 {
-	if(s == SUCCESS)SuccessCnt = SUCCESS_EFFECT_TIME;
+	if (s == SUCCESS)SuccessCnt = SUCCESS_EFFECT_TIME;
 	state = s;
 }

@@ -41,7 +41,7 @@ void Bat::Render(){
 
 bool Bat::ClickCheck(int mx, int my){
 	if (PushCheck(mx, my,
-		pos.x + BAT_CHECK_X*(BAT_SCALE + 1), pos.y + offset_Y + BAT_CHECK_Y*(BAT_SCALE + 0.5f),
+		pos.x, pos.y + offset_Y,
 		BAT_CHECK_W*(BAT_SCALE + 1), BAT_CHECK_H * (BAT_SCALE)))return true;
 	return false;
 }

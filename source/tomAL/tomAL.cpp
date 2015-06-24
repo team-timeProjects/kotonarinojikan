@@ -1,6 +1,5 @@
 #include "tomAL.h"
 
-
 tomALBase::~tomALBase()
 {
 	SAFE_DELETE( delayParam );

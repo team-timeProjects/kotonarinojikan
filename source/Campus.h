@@ -44,6 +44,12 @@ private:
 	Campus& operator = (const Campus&) {}
 
 	std::list<RenderObject> rolist;
+
+	static const int SHAKE_TIME_MAX = 30;
+	const float SHAKE_POWER = 20.0f;
+	EDX::Vector ShakeVar;
+	int ShakeTime;
+	void Shake();
 public:
 	void Init();
 	void Update();
@@ -55,7 +61,7 @@ public:
 	void Add(EDX::EDX_2DObj* obj, s32 x, s32 y, POINT p, float angle = 0, float scale = 1, IEXCOLOR color = 0xFFFFFFFF);
 	void Add(EDX::EDX_2DObj* obj, s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh);
 	void Add(EDX::EDX_2DObj* obj, s32 x, s32 y, s32 w, s32 h, s32 sx, s32 sy, s32 sw, s32 sh,
-		POINT p,float angle = 0, float scale = 1, IEXCOLOR color = 0xFFFFFFFF);
+		POINT p, float angle = 0, float scale = 1, IEXCOLOR color = 0xFFFFFFFF);
 
 	void SetPos(POINT pos);
 	void SetNextPos(POINT nextpos);
@@ -64,14 +70,14 @@ public:
 
 	void SetZoom(float Zoom);
 	void TimeReset();
+	void ShakeStart(){ if (ShakeTime <= 0) ShakeTime = SHAKE_TIME_MAX; }
 
 	POINT GetPos(){
-	POINT out;
-	//RECT WindowSize;
-	//iexSystem::GetScreenRect(ScreenMode, WindowSize);
-	out.x = cpos.x;// +WindowSize.right;
-	out.y = cpos.y;// +WindowSize.bottom;
-	return out;
+		POINT out;
+		
+		out.x = cpos.x;
+		out.y = cpos.y;
+		return out;
 	}
 
 	static Campus* GetInst(){

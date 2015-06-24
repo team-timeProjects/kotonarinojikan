@@ -44,7 +44,16 @@ void Candle::Update(void)
 {
 	switch (state)
 	{
+	case TimeObj::SUCCESS:
+		SuccessCnt--;
+		if (SuccessCnt < 0)SuccessCnt = 0;
+		if (!Gold_Effect){
+			Update_Time();
+			fire_state = false;
+			break;
+		}
 	case TimeObj::MOVE:
+		fire_state = true;
 		switch (behavior)
 		{
 		case Behavior::SMALL:
@@ -54,11 +63,13 @@ void Candle::Update(void)
 			Update_Melt_Big();
 			break;
 		default:
+
 			break;
 		}
 		break;
 	case TimeObj::STOP:
 		timeCount = frameCount = 0;
+		melt = 0.0f;
 		break;
 	case TimeObj::CHECK:
 		Update_Check();
@@ -95,187 +106,209 @@ void	Candle::RenderSmallCandle(void)
 
 	//	普通サイズのろうそく
 	x = pos.x - dst[SMALL_CANDLE].w*scale / 2 + dst[SMALL_CANDLE].x*scale;
-	y = pos.y - dst[SMALL_CANDLE].h*scale / 2 + dst[SMALL_CANDLE].y*scale + (110 * 0.6f) + (200 * 0.6f) * melt;
+	y = pos.y - dst[SMALL_CANDLE].h*scale / 2 + dst[SMALL_CANDLE].y*scale + ADJUST_SCALE + (MELT_ADJUST_SCALE * melt);
 	w = dst[SMALL_CANDLE].w*scale;
-	h = dst[SMALL_CANDLE].h*scale - (110 * 0.6f) - (200 * 0.6f) * melt;
+	h = dst[SMALL_CANDLE].h*scale - (ADJUST_SCALE + (MELT_ADJUST_SCALE * melt));
 	sx = src[SMALL_CANDLE].x;
-	sy = src[SMALL_CANDLE].y + (200 * melt);
+	sy = src[SMALL_CANDLE].y + (PICTURE_SPACE + (MELT_PICTURE_SPACE * melt));
 	sw = src[SMALL_CANDLE].w;
-	sh = src[SMALL_CANDLE].h - (200 * melt);
+	sh = src[SMALL_CANDLE].h - (PICTURE_SPACE + (MELT_PICTURE_SPACE * melt));
 	Campus::GetInst()->Add(imageList[SMALL_CANDLE], x, y, w, h, sx, sy, sw, sh);
 
-	//	普通サイズのロウソク用明かり
-	x = pos.x - dst[SMALL_LIGHT].w*scale / 2 + dst[SMALL_LIGHT].x*scale;
-	y = pos.y - dst[SMALL_LIGHT].h*scale / 2 + dst[SMALL_LIGHT].x*scale + (110 * 0.6f) + (200 * 0.6f) * melt;
-	h = dst[SMALL_LIGHT].h*scale;
-	sx = src[SMALL_LIGHT].x;
-	sy = src[SMALL_LIGHT].y;
-	sw = src[SMALL_LIGHT].w;
-	sh = src[SMALL_LIGHT].h;
-	Campus::GetInst()->Add(imageList[SMALL_LIGHT], x, y - 175, w, h, sx, sy, sw, sh);
+	//	ろうそく溶け
+	x = pos.x - dst[SMALL_MELT].w*scale / 2 + dst[SMALL_MELT].x*scale;
+	y = pos.y - dst[SMALL_MELT].h*scale / 2 + dst[SMALL_MELT].y*scale + (MELT_ADJUST_SCALE * melt);
+	w = dst[SMALL_MELT].w*scale;
+	h = dst[SMALL_MELT].h*scale;
+	sx = src[SMALL_MELT].x;
+	sy = src[SMALL_MELT].y;
+	sw = src[SMALL_MELT].w;
+	sh = src[SMALL_MELT].h;
+	if (melt <= 0.9f)
+		Campus::GetInst()->Add(imageList[SMALL_MELT], x, y, w, h, sx, sy, sw, sh);
 
 	//	普通サイズのろうそく用炎
-	x = pos.x - dst[SMALL_FIRE].w*scale / 2 + dst[SMALL_FIRE].x*scale;
-	y = pos.y - dst[SMALL_FIRE].h*scale / 2 + dst[SMALL_FIRE].y*scale + (110 * 0.6f) + (200 * 0.6f) * melt;
-	h = dst[SMALL_FIRE].h*scale;
-	sx = src[SMALL_FIRE].x;
-	sy = src[SMALL_FIRE].y;
-	sw = src[SMALL_FIRE].w;
-	sh = src[SMALL_FIRE].h;
-	if (melt <= 0.9f)
-		Campus::GetInst()->Add(imageList[SMALL_FIRE], x, y - 195, w, h, sx, sy, sw, sh);
+	int fire_scale = FIRE_SCALE;
+	int fire_adjust = 0;
+	if (state == CHECK)
+	{
+		fire_scale = FIRE_SCALE + PLUS_SCALE;
+		fire_adjust = ADJUST_CHECK_POS;
+	}
+	x = pos.x - fire_scale*scale / 2 + dst[ANIMATION_FIRE].x*scale;
+	y = pos.y - fire_scale*scale / 2 + dst[ANIMATION_FIRE].y*scale + (ADJUST_FIRE_POS + fire_adjust + (MELT_ADJUST_SCALE * melt));
+	w = fire_scale*scale;
+	h = fire_scale*scale;
+	sx = src[ANIMATION_FIRE].x + LOAD_WIDTH * animationCounter;
+	sy = src[ANIMATION_FIRE].y + (firevec * LOAD_HEIGHT);
+	sw = src[ANIMATION_FIRE].w;
+	sh = src[ANIMATION_FIRE].h;
+	if (melt <= 0.9f && fire_state)
+		Campus::GetInst()->Add(imageList[ANIMATION_FIRE], x, y, w, h, sx, sy, sw, sh);
+
+	//	燭台
+	x = pos.x - dst[CANDLESTICK].w*scale / 2 + dst[CANDLESTICK].x*scale;
+	y = pos.y - dst[CANDLESTICK].h*scale / 2 + dst[CANDLESTICK].y*scale;
+	w = dst[CANDLESTICK].w*scale;
+	h = dst[CANDLESTICK].h*scale;
+	sx = src[CANDLESTICK].x;
+	sy = src[CANDLESTICK].y;
+	sw = src[CANDLESTICK].w;
+	sh = src[CANDLESTICK].h;
+	Campus::GetInst()->Add(imageList[CANDLESTICK], x, y, w, h, sx, sy, sw, sh);
+
+	//卍成功演出用時計
+	if (state == State::SUCCESS&&SuccessCnt > 0){
+		DWORD S_Alpha = ARGB((int)((float)SuccessCnt / (float)SUCCESS_EFFECT_TIME*127.0f), 255, 255, 255);
+		float AddScale = (float)Mine_SChain / (float)CHAIN_EFFECT_MAX*CHAIN_MAX_SCALE;
+		AddScale *= 1.0f - (float)SuccessCnt / (float)SUCCESS_EFFECT_TIME;
+		int w = dst[ANIMATION_FIRE].w*(AddScale + scale);
+		int h = dst[ANIMATION_FIRE].h*(AddScale + scale);
+		Campus::GetInst()->Add(imageList[ANIMATION_FIRE],
+			pos.x - dst[ANIMATION_FIRE].w*(AddScale + scale) / 2 + dst[ANIMATION_FIRE].x*(AddScale + scale),
+			pos.y - h / 1.5f + dst[ANIMATION_FIRE].y*scale + (ADJUST_FIRE_POS + fire_adjust + (MELT_ADJUST_SCALE * melt)),
+			dst[ANIMATION_FIRE].w*(AddScale + scale), dst[ANIMATION_FIRE].h*(AddScale + scale),
+			src[ANIMATION_FIRE].x, src[ANIMATION_FIRE].y, src[ANIMATION_FIRE].w, src[ANIMATION_FIRE].h, GetPoint(0, 0), 0, 1, RS_COPY, (DWORD)S_Alpha, 0.0f);
+	}
 }
 
 //	大きいサイズのロウソク描画
 void	Candle::RenderBigCandle(void)
 {
 	float x, y, w, h, sx, sy, sw, sh;
-	//	大きいサイズのろうそく
+	//	普通サイズのろうそく
 	x = pos.x - dst[BIG_CANDLE].w*scale / 2 + dst[BIG_CANDLE].x*scale;
-	y = pos.y - dst[BIG_CANDLE].h*scale / 2 + dst[BIG_CANDLE].x*scale + (120 * 0.6f) + (190 * 0.6f) * melt;
+	y = pos.y - dst[BIG_CANDLE].h*scale / 2 + dst[BIG_CANDLE].y*scale + ADJUST_SCALE + (MELT_ADJUST_SCALE * melt);
 	w = dst[BIG_CANDLE].w*scale;
-	h = dst[BIG_CANDLE].h*scale - (120 * 0.6f) - (190 * 0.6f) * melt;
-	sx = 0;
-	sy = 120 + (190 * melt);
-	sw = 512;
-	sh = 402 - (190 * melt);
+	h = dst[BIG_CANDLE].h*scale - (ADJUST_SCALE + (MELT_ADJUST_SCALE * melt));
+	sx = src[BIG_CANDLE].x;
+	sy = src[BIG_CANDLE].y + (PICTURE_SPACE + (MELT_PICTURE_SPACE * melt));
+	sw = src[BIG_CANDLE].w;
+	sh = src[BIG_CANDLE].h - (PICTURE_SPACE + (MELT_PICTURE_SPACE * melt));
 	Campus::GetInst()->Add(imageList[BIG_CANDLE], x, y, w, h, sx, sy, sw, sh);
 
-	//	大きいサイズのロウソク用明かり
-	x = pos.x - dst[BIG_LIGHT].w*scale / 2 + dst[BIG_LIGHT].x*scale;
-	y = pos.y - dst[BIG_LIGHT].h*scale / 2 + dst[BIG_LIGHT].x*scale + (120 * 0.6f) + (190 * 0.6f) * melt;
-	w = dst[BIG_CANDLE].w*scale;
-	h = dst[BIG_LIGHT].h*scale;
-	sx = src[BIG_LIGHT].x;
-	sy = src[BIG_LIGHT].y;
-	sw = src[BIG_LIGHT].w;
-	sh = src[BIG_LIGHT].h;
-	Campus::GetInst()->Add(imageList[BIG_LIGHT], x, y - 135, w, h, sx, sy, sw, sh);
-
-	//	大きいサイズのろうそく用炎
-	x = pos.x - dst[BIG_FIRE].w*scale / 2 + dst[BIG_FIRE].x*scale;
-	y = pos.y - dst[BIG_FIRE].h*scale / 2 + dst[BIG_FIRE].x*scale + (120 * 0.6f) + (190 * 0.6f) * melt;
-	w = dst[BIG_FIRE].w*scale;
-	h = dst[BIG_FIRE].h*scale;
-	sx = src[BIG_FIRE].x;
-	sy = src[BIG_FIRE].y;
-	sw = src[BIG_FIRE].w;
-	sh = src[BIG_FIRE].h;
-
+	//	ろうそく溶け
+	x = pos.x - dst[BIG_MELT].w*scale / 2 + dst[BIG_MELT].x*scale;
+	y = pos.y - dst[BIG_MELT].h*scale / 2 + dst[BIG_MELT].y*scale + (MELT_ADJUST_SCALE * melt);
+	w = dst[BIG_MELT].w*scale;
+	h = dst[BIG_MELT].h*scale;
+	sx = src[BIG_MELT].x;
+	sy = src[BIG_MELT].y;
+	sw = src[BIG_MELT].w;
+	sh = src[BIG_MELT].h;
 	if (melt <= 0.9f)
-		Campus::GetInst()->Add(imageList[BIG_FIRE], x + 10, y - 185, w, h, sx, sy, sw, sh);
+		Campus::GetInst()->Add(imageList[BIG_MELT], x, y, w, h, sx, sy, sw, sh);
+
+	//	普通サイズのろうそく用炎
+	int fire_scale = FIRE_SCALE;
+	int fire_adjust = 0;
+	if (state == CHECK)
+	{
+		fire_scale = FIRE_SCALE + PLUS_SCALE;
+		fire_adjust = ADJUST_CHECK_POS;
+	}
+	x = pos.x - fire_scale*scale / 2 + dst[ANIMATION_FIRE].x*scale;
+	y = pos.y - fire_scale*scale / 2 + dst[ANIMATION_FIRE].y*scale + (ADJUST_FIRE_POS + fire_adjust + (MELT_ADJUST_SCALE * melt));
+	w = fire_scale*scale;
+	h = fire_scale*scale;
+	sx = src[ANIMATION_FIRE].x + LOAD_WIDTH * animationCounter;
+	sy = src[ANIMATION_FIRE].y + (firevec * LOAD_HEIGHT);
+	sw = src[ANIMATION_FIRE].w;
+	sh = src[ANIMATION_FIRE].h;
+	if (melt <= 0.9f && fire_state)
+		Campus::GetInst()->Add(imageList[ANIMATION_FIRE], x, y, w, h, sx, sy, sw, sh);
+
+	//卍成功演出用時計
+	if (state == State::SUCCESS&&SuccessCnt > 0){
+		DWORD S_Alpha = ARGB((int)((float)SuccessCnt / (float)SUCCESS_EFFECT_TIME*127.0f), 255, 255, 255);
+		float AddScale = (float)Mine_SChain / (float)CHAIN_EFFECT_MAX*CHAIN_MAX_SCALE;
+		AddScale *= 1.0f - (float)SuccessCnt / (float)SUCCESS_EFFECT_TIME;
+		int w = dst[ANIMATION_FIRE].w*(AddScale + scale);
+		int h = dst[ANIMATION_FIRE].h*(AddScale + scale);
+		Campus::GetInst()->Add(imageList[ANIMATION_FIRE],
+			pos.x - dst[ANIMATION_FIRE].w*(AddScale + scale) / 2 + dst[ANIMATION_FIRE].x*(AddScale + scale),
+			pos.y - h / 1.5f+ dst[ANIMATION_FIRE].y*scale + (ADJUST_FIRE_POS + fire_adjust + (MELT_ADJUST_SCALE * melt)),
+			dst[ANIMATION_FIRE].w*(AddScale + scale), dst[ANIMATION_FIRE].h*(AddScale + scale),
+			src[ANIMATION_FIRE].x, src[ANIMATION_FIRE].y, src[ANIMATION_FIRE].w, src[ANIMATION_FIRE].h, GetPoint(0, 0), 0, 1, RS_COPY, (DWORD)S_Alpha, 0.0f);
+	}
+
+	//	燭台
+	x = pos.x - dst[CANDLESTICK].w*scale / 2 + dst[CANDLESTICK].x*scale;
+	y = pos.y - dst[CANDLESTICK].h*scale / 2 + dst[CANDLESTICK].y*scale;
+	w = dst[CANDLESTICK].w*scale;
+	h = dst[CANDLESTICK].h*scale;
+	sx = src[CANDLESTICK].x;
+	sy = src[CANDLESTICK].y;
+	sw = src[CANDLESTICK].w;
+	sh = src[CANDLESTICK].h;
+	Campus::GetInst()->Add(imageList[CANDLESTICK], x, y, w, h, sx, sy, sw, sh);
 }
 
 //	時間更新
 inline void Candle::Update_Time(float speed)
 {
 	//時間経過のベクトルに応じて逆転
-	float v = this->speed > 0 ? speed : -speed;
-	timeCount = org_speed * v;
+	float v = this->speed;
+	timeCount = org_speed * this->speed;
 }
 
 //	チェック中の動作
 inline void Candle::Update_Check(void)
 {
-
+	UpdateAnimation(4);
 }
 
 //	大きいサイズのロウソク動作
-inline	 void	Candle::Update_Melt_Big(void)
+inline	 void	Candle::Update_Melt_Big( void )
 {
 	Update_Time();
+	UpdateAnimation();
 
-	switch (mode)
-	{
-	case FADE_IN:
-		alpha += timeCount;
-		if (alpha > 1.0f){
-			alpha = 1.0f;
-			mode = MELT;
-		}
-		if (alpha < 0.0f)
-		{
-			alpha = 0.0f;
-			mode = FADE_OUT;
-		}
-		break;
-	case MELT:
-		melt += timeCount * 0.5f;
-		if (melt > 1.0f){
-			melt = 1.0f;
-			mode = FADE_OUT;
-		}
+	melt += timeCount / 2;
 
-		if (melt < 0.0f)
-		{
-			melt = 0.0f;
-			mode = FADE_IN;
-		}
-		break;
-
-	case FADE_OUT:
-		alpha -= timeCount;
-		if (alpha < 0.0f){
-			alpha = 0.0f;
-			melt = 0.0f;
-			mode = FADE_IN;
-		}
-		if (alpha > 1.0f)
-		{
-			alpha = 1.0f;
-			melt = 1.0f;
-			mode = MELT;
-		}
-		break;
-	}
+	if ( melt > 1.0f )	melt = 0.0f;
+	if ( melt < 0.0f )	melt = 1.0f;
 }
 
 //	小さいサイズのロウソク動作
-inline	 void	Candle::Update_Melt_Small(void)
+inline	 void	Candle::Update_Melt_Small( void )
 {
 	Update_Time();
+	UpdateAnimation();
 
-	switch (mode)
+	melt += timeCount;
+
+	if (melt > 1.0f)	melt = 0.0f;
+	if (melt < 0.0f)	melt = 1.0f;
+}
+
+//	炎アニメーション
+inline	 void	Candle::UpdateAnimation( int speed )
+{
+	//時間経過のベクトルに応じて逆転
+	int v = this->speed > 0 ? speed : -speed;
+
+	animationTimer += speed;
+
+	if ( animationTimer >= ANIMATION_SPEED )
 	{
-	case FADE_IN:
-		alpha += timeCount;
-		if (alpha > 1.0f){
-			alpha = 1.0f;
-			mode = MELT;
-		}
-		if (alpha < 0.0f)
+		animationTimer = 0;
+		if ( animationVec )
+			animationCounter++;
+		else
+			animationCounter--;
+
+		if (animationCounter >= ANIMATION_MAX)
 		{
-			alpha = 0.0f;
-			mode = FADE_OUT;
-		}
-		break;
-	case MELT:
-		melt += timeCount;
-		if (melt > 1.0f){
-			melt = 1.0f;
-			mode = FADE_OUT;
+			animationCounter = ANIMATION_MAX - 1;
+			animationVec = !animationVec;
 		}
 
-		if (melt < 0.0f)
+		if ( animationCounter <= 0 )
 		{
-			melt = 0.0f;
-			mode = FADE_IN;
+			animationCounter = 0;
+			animationVec = !animationVec;
+			firevec = !firevec;
 		}
-		break;
-
-	case FADE_OUT:
-		alpha -= timeCount;
-		if (alpha < 0.0f){
-			alpha = 0.0f;
-			melt = 0.0f;
-			mode = FADE_IN;
-		}
-		if (alpha > 1.0f)
-		{
-			alpha = 1.0f;
-			melt = 1.0f;
-			mode = MELT;
-		}
-		break;
 	}
 }

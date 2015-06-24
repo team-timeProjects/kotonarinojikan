@@ -104,7 +104,7 @@ bool StageMNG::LoadStage(const int stageNum)
 	std::string fileName = "DATA/BG/stage" + buf.str() + ".sdt";
 	TextLoader loader;
 	if (!loader.Load((char*)fileName.c_str()))return false;
-	loader.LoadInt();	//バージョン数の空読み
+	if (loader.LoadInt()<5)return false;	//バージョン数の空読み
 
 	//情報の破棄
 	objMax = 0;
@@ -139,13 +139,11 @@ bool StageMNG::LoadStage(const int stageNum)
 		int gimmick = loader.LoadInt();
 		bool shuffle = (bool)loader.LoadInt();
 		childNum = loader.LoadInt();
-		if(i != 0)// 基準のスピードは管理外
-		{
-			if(speedList.find(speed) == speedList.end())
-				speedList[speed] = 1;
-			else
-				speedList[speed]++;
-		}
+		if (speedList.find(speed) == speedList.end())
+			speedList[speed] = 1;
+		else
+			speedList[speed]++;
+
 		TimeObj* obj = MakeObj(i, pos, scale, speed, behavior);
 		if (obj != nullptr)
 		{
@@ -174,7 +172,7 @@ bool StageMNG::LoadStage(const int stageNum)
 		r->SetRelativeSpeed(startSpeed);
 	}
 	nowID = 0;
-	DefaultGoldFlagSum = HaveGoldFlag = goldenFlagNum+1;//基準用に1つ追加
+	DefaultGoldFlagSum = HaveGoldFlag = goldenFlagNum;
 	return true;
 }
 
@@ -184,11 +182,12 @@ void StageMNG::Update()
 	for (TimeObj*& r : objList)
 	{
 		r->Update();
-		if (r->GetGold_Effect())
+		if (r->GetID() != 0 && r->GetGold_Effect())
 		{
 			HaveGoldFlag--;
 		}
 	}
+	if (IsChecking)return;
 	for (Gimmick*& r : gimmickList)
 		r->Update();
 }
@@ -301,35 +300,34 @@ inline TimeObj* StageMNG::MakeObj(int ID, const Vector2& pos, float scale, float
 	auto Append = [&ret](int idx, ImageFactory::ImageID id)
 	{
 		ret->AppendImage(idx,
-						 DataOwner::GetInst()->imageFactory->GetImage(id),
-						 DataOwner::GetInst()->imageFactory->GetParam(id));
+			DataOwner::GetInst()->imageFactory->GetImage(id),
+			DataOwner::GetInst()->imageFactory->GetParam(id));
 	};
 
-	switch(stageType)
+	switch (stageType)
 	{
-		case StageMNG::CLOCK:
-			ret = new Clock;
-			Append(Clock::BACK, ImageFactory::CLOCK_BACK);
-			Append(Clock::HOUR, ImageFactory::CLOCK_HOUR);
-			Append(Clock::MINUTE, ImageFactory::CLOCK_MINUTE);
-			ret->Init(ID, pos, 300, 300, scale, speed, behavior);
-			break;
-		case StageMNG::CANDOL:
+	case StageMNG::CLOCK:
+		ret = new Clock;
+		Append(Clock::BACK, ImageFactory::CLOCK_BACK);
+		Append(Clock::HOUR, ImageFactory::CLOCK_HOUR);
+		Append(Clock::MINUTE, ImageFactory::CLOCK_MINUTE);
+		ret->Init(ID, pos, 300, 300, scale, speed, behavior);
+		break;
+	case StageMNG::CANDOL:
 		ret = new Candle;
 		Append(Clock::BACK, ImageFactory::CLOCK_BACK);
+		Append(Candle::CANDLESTICK, ImageFactory::CANDLESTICK);
 		Append(Candle::BIG_CANDLE, ImageFactory::CANDLE_BIG);
-		Append(Candle::BIG_FIRE, ImageFactory::CANDLE_BIG_FIRE);
-		Append(Candle::BIG_LIGHT, ImageFactory::CANDLE_BIG_LIGHT);
+		Append(Candle::FIRE, ImageFactory::CANDLE_FIRE);
+		Append(Candle::ANIMATION_FIRE, ImageFactory::CANDLE_FIRE_ANIMATION);
 		Append(Candle::BIG_MELT, ImageFactory::CANDLE_BIG_MELT);
 		Append(Candle::SMALL_CANDLE, ImageFactory::CANDLE_SMALL);
-		Append(Candle::SMALL_FIRE, ImageFactory::CANDLE_SMALL_FIRE);
-		Append(Candle::SMALL_LIGHT, ImageFactory::CANDLE_SMALL_LIGHT);
 		Append(Candle::SMALL_MELT, ImageFactory::CANDLE_SMALL_MELT);
 		ret->Init(ID, pos, 300, 300, scale, speed, behavior);
 		break;
 	case StageMNG::METRO:
 		ret = new Metronom;
-		Append(Clock::BACK, ImageFactory::CLOCK_BACK);
+		Append(Metronom::BACK, ImageFactory::METRONOM_BACK);
 		Append(Metronom::NEEDLE, ImageFactory::METRONOM_NEEDLE);
 		Append(Metronom::SPINDLE1, ImageFactory::METRONOM_SPINDLE1);
 		Append(Metronom::SPINDLE2, ImageFactory::METRONOM_SPINDLE2);

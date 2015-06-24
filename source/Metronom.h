@@ -36,6 +36,8 @@ private:
 	float			org_speed = D3DX_PI / 180 * 5;
 	float			param = 0.0f;
 	float			angle = 0.0f;
+	int				shakeParam = 0;
+	bool			shakeflag = false;
 	//---------- method -------------
 public:
 	Metronom(void);
