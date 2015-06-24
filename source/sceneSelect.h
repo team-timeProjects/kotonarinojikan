@@ -59,7 +59,7 @@ private:
 	static const int SKIP_BAT_Y = 580;
 	static const int SKIP_BAT_X0 = 1010;
 	static const int SKIP_BAT_X1 = 40;
-	EDX::EDX_2DObj* Skip_bat[2];
+	EDX::EDX_2DObj* Skip_bat;
 
 	int Next_Alpha = 0;
 	EDX::EDX_2DObj* Next_Title;
@@ -78,7 +78,9 @@ private:
 	int WaitTime = 0;
 public:
 	//	‰Šú‰»E‰ğ•ú
-	sceneSelect(void){}
+	sceneSelect(int stage){
+		save_SelectStage = stage;
+	}
 	~sceneSelect(void);
 	bool	Initialize(void);
 

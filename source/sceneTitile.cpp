@@ -192,7 +192,7 @@ void	sceneTitle::ModeMoveMenu(void)
 //	メニューへ移動
 void	sceneTitle::ModeChangeScene(void)
 {
-	MainFrame->ChangeScene(new sceneSelect());
+	MainFrame->ChangeScene(new sceneSelect(DataOwner::GetInst()->OpenStage - 1));
 }
 
 //	カーソルが乗ってるかチェック

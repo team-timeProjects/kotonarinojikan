@@ -23,9 +23,7 @@ bool sceneSelect::Initialize(){
 
 	//Back1 = new EDX::EDX_2DObj("DATA\\ステージ選択画面\\back1.png");
 	Back2 = new EDX::EDX_2DObj("DATA\\ステージ選択画面\\back2.png");
-	Skip_bat[0] = new EDX::EDX_2DObj("DATA\\ステージ選択画面\\koumori10.png");
-	Skip_bat[1] = new EDX::EDX_2DObj("DATA\\ステージ選択画面\\koumori-10.png");
-
+	Skip_bat = new EDX::EDX_2DObj("DATA\\ステージ選択画面\\jikan-koumori(gold).png");
 	Next_Title = new EDX::EDX_2DObj("DATA\\ステージ選択画面\\title.png");
 	Next_Game = new EDX::EDX_2DObj("DATA\\ステージ選択画面\\決定.png");
 
@@ -33,10 +31,8 @@ bool sceneSelect::Initialize(){
 
 	NextScene = nullptr;
 	SceneState = SCENE_FADEIN;
-	save_SelectStage = SelectStage = DataOwner::GetInst()->OpenStage - 1;
-
 	//カメラ初期位置
-	EDX::Vector pos = bat[SelectStage].GetPos();
+	EDX::Vector pos = bat[0].GetPos();
 	POINT pointpos = AddPoint(GetPoint(pos.x, pos.y), GetPoint(BAT_PIC_W / 2, BAT_PIC_H / 2));
 	pointpos.y += CAM_OFFSET_Y;
 	Campus::GetInst()->SetPos(pointpos);
@@ -56,18 +52,19 @@ bool sceneSelect::Initialize(){
 }
 
 void sceneSelect::Update(){
-	FOR(i, STAGEPIC_MAX){
-		bat[i].Update();
-	}
-	TransitionBat::GetInst()->Update();
-	Campus::GetInst()->Update();
 	Pumpkin::GetInst()->Update();
-	switch (SceneState){
-	case SCENE_FADEIN:S_FADEIN(); break;
-	case SCENE_SELECT:S_SELECT(); break;
-	case SCENE_NEXT:S_NEXT(); break;
+	if (Pumpkin::GetInst()->IsMoveEnd()){
+		FOR(i, STAGEPIC_MAX){
+			bat[i].Update();
+		}
+		TransitionBat::GetInst()->Update();
+		Campus::GetInst()->Update();
+		switch (SceneState){
+		case SCENE_FADEIN:S_FADEIN(); break;
+		case SCENE_SELECT:S_SELECT(); break;
+		case SCENE_NEXT:S_NEXT(); break;
+		}
 	}
-
 }
 
 void sceneSelect::Render(){
@@ -90,13 +87,18 @@ void sceneSelect::Render(){
 		DWORD sw_alpha = _ARGB(Next_Alpha, 255, 255, 255);
 		Next_Title->SetARGB(sw_alpha);
 		Next_Game->SetARGB(sw_alpha);
-		Skip_bat[0]->SetARGB(sw_alpha);
-		Skip_bat[1]->SetARGB(sw_alpha);
+		Skip_bat->SetARGB(sw_alpha);
 
 		Next_Title->Draw(0, 0);
 		Next_Game->Draw(0, 0);
-		Skip_bat[0]->Draw(SKIP_BAT_X0, SKIP_BAT_Y);
-		if (SelectStage != 0)Skip_bat[1]->Draw(SKIP_BAT_X1, SKIP_BAT_Y);
+		if (SelectStage != STAGEPIC_MAX - 1){
+			Skip_bat->Draw(SKIP_BAT_X0, SKIP_BAT_Y);
+			DataOwner::GetInst()->number->RenderCC(10, SKIP_BAT_X0 + Skip_bat->info.Width*0.5f, SKIP_BAT_Y + Skip_bat->info.Height*0.5f, 0.4f, (float)Next_Alpha / 255.0f, false);
+		}
+		if (SelectStage != 0){
+			Skip_bat->Draw(SKIP_BAT_X1, SKIP_BAT_Y);
+			DataOwner::GetInst()->number->RenderCC(-10, SKIP_BAT_X1 + Skip_bat->info.Width*0.5f, SKIP_BAT_Y + Skip_bat->info.Height*0.5f, 0.4f, (float)Next_Alpha / 255.0f, false);
+		}
 	}
 	TransitionBat::GetInst()->Render();
 
@@ -109,8 +111,7 @@ sceneSelect::~sceneSelect(){
 	FOR(i, STAGEPIC_MAX){
 		bat[i].Release();
 	}
-	SAFE_DELETE(Skip_bat[0]);
-	SAFE_DELETE(Skip_bat[1]);
+	SAFE_DELETE(Skip_bat);
 	//SAFE_DELETE(Back1);
 	SAFE_DELETE(Back2);
 

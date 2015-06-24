@@ -141,7 +141,7 @@ void sceneMain::Update()
 		POINT p = AddPoint(Mouse::cursor, Campus::GetInst()->GetPos());
 		if ((objID = stage->IsCollision(p)) != -1)
 		{
-			flag->AppendFlag(stage->GetObj(objID), (EDX::MouseGet(EDX::EDX_WHEEL)>0));
+			flag->AppendFlag(stage->GetObj(objID), (EDX::MouseGet(EDX::EDX_WHEEL)<0));
 			Campus::GetInst()->TimeReset();
 		}
 	}
@@ -250,7 +250,6 @@ void sceneMain::Update()
 					Campus::GetInst()->SetNextPos(GetPoint(0, 0));
 					Campus::GetInst()->TimeReset();
 					state = MAIN;
-					return;
 				}
 				//^‚ñ’†
 				if ((Mouse::cursor.x >= 230 + 256) && (Mouse::cursor.x <= 230 + 256 + 256) &&
@@ -258,15 +257,17 @@ void sceneMain::Update()
 					NextSceneTime = 110;
 					state = OVER;
 					OverScene = new sceneMain;
-					return;
 				}
-				//‰E
+				//‰E(‚â‚ß‚é)
 				if ((Mouse::cursor.x >= 230 + 512) && (Mouse::cursor.x <= 230 + 512 + 256) &&
 					(Mouse::cursor.y >= 500) && (Mouse::cursor.y <= 500 + 256)){
-					NextSceneTime = 110;
+
+					Sound::BGM_Stop(SOUND::MAIN);
+					Sound::SE_Play(SOUND::MISS);
+
 					state = OVER;
-					OverScene = new sceneSelect;
-					return;
+					direction.SetState(GameDirection::State::OVER);
+					OverScene = new sceneSelect(stageID - 1);
 				}
 			}
 
@@ -318,9 +319,9 @@ void sceneMain::Update()
 				TransitionBat::GetInst()->SetNextStep(TransitionBat::TBAT_STATE::CENTER);
 				TransitionBat::GetInst()->TimeReset();
 			}
-			if (NextSceneTime > 240){
+			if (NextSceneTime > 180){
 				if (stageID >= DataOwner::GetInst()->STAGE_MAX - 1){
-					MainFrame->ChangeScene(new sceneSelect);
+					MainFrame->ChangeScene(new sceneMain);
 					return;
 				}
 				else{
@@ -344,7 +345,7 @@ void sceneMain::Update()
 		}
 		if (!isShaked&&Pumpkin::GetInst()->IsMoveEnd()){ Pumpkin::GetInst()->ShakeStart(); isShaked = true; }
 
-		if (NextSceneTime > 240){
+		if (NextSceneTime > 180){
 			MainFrame->ChangeScene(OverScene);
 			return;
 		}

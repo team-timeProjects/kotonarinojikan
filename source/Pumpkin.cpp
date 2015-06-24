@@ -43,6 +43,7 @@ void Pumpkin::Update(){
 				PowY = 0;
 				MoveY = 0;
 				IsMoveEndflg = true;
+				Flashflg = false;
 			}
 		}
 	}
@@ -62,14 +63,13 @@ void Pumpkin::Update(){
 	}
 
 	if (Flashflg){
-		FlashAlpha += 25;
+		FlashAlpha += 50;
 		if (FlashAlpha > 255){
-			Flashflg = false;
 			FlashAlpha = 255;
 		}
 	}
-	else{
-		FlashAlpha -= 25;
+	else {
+		FlashAlpha -= 50;
 		if (FlashAlpha < 0){
 			FlashAlpha = 0;
 		}
@@ -82,7 +82,7 @@ void Pumpkin::Update(){
 void Pumpkin::Render(){
 	Pumpkinup->Draw(OFFSET_X + ShakeVar.x, OFFSET_Y - PosY + ShakeVar.y);
 	Pumpkindown->Draw(OFFSET_X + ShakeVar.x, OFFSET_Y + PosY + ShakeVar.y);
-	flash->Draw(ShakeVar.x, ShakeVar.y);
+	flash->Draw(ShakeVar.x, -PosY +ShakeVar.y);
 }
 
 bool Pumpkin::IsMoveEnd(){

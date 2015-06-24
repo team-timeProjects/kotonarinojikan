@@ -100,7 +100,7 @@ protected:
 	bool haveFlag = false;							// フラッグ所持状態
 	static const int SUCCESS_EFFECT_TIME = 30;		// 卍成功演出時間定数
 	int SuccessCnt = 0;								// 卍成功演出用変数
-	const float CHAIN_MAX_SCALE = 3.0f;				// 卍連鎖演出用最大拡大率
+	const float CHAIN_MAX_SCALE = 3.5f;				// 卍連鎖演出用最大拡大率
 	static const int CHAIN_EFFECT_MAX = 5;			// 卍連鎖演出用最大拡大率到達連鎖数
 	static int SuccessChain;						// 卍連鎖カウンタ
 	int Mine_SChain;								// 卍自分の連鎖カウンタ
