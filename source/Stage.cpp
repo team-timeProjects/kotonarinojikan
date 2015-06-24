@@ -139,11 +139,13 @@ bool StageMNG::LoadStage(const int stageNum)
 		int gimmick = loader.LoadInt();
 		bool shuffle = (bool)loader.LoadInt();
 		childNum = loader.LoadInt();
-		if (speedList.find(speed) == speedList.end())
-			speedList[speed] = 1;
-		else
-			speedList[speed]++;
-
+		if(i != 0)
+		{
+			if(speedList.find(speed) == speedList.end())
+				speedList[speed] = 1;
+			else
+				speedList[speed]++;
+		}
 		TimeObj* obj = MakeObj(i, pos, scale, speed, behavior);
 		if (obj != nullptr)
 		{

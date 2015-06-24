@@ -33,6 +33,8 @@ void ImageFactory::Init()
 	paramList[SPEED_BLOCK] = ImageParam(0, 0, 102, 80);
 	imageList[GOLD_STOCK] = new iex2DObj("DATA/ゲーム画面/コウモリ残数.png");
 	paramList[GOLD_STOCK] = ImageParam(0, 0, 64, 64);
+	imageList[BLOCK_FRAME] = new iex2DObj("DATA/ゲーム画面/blockFrame.png");
+	paramList[BLOCK_FRAME] = ImageParam(0, 0, 108, 88);
 	///Δ
 
 	//	ろうそく

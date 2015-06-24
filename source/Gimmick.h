@@ -101,14 +101,18 @@ private:
 	iex2DObj* listBack;
 	iex2DObj* blockBack;
 	iex2DObj* goldBack;
+	iex2DObj* frame;
 	ImageParam listParam;
 	ImageParam blackParam;
 	ImageParam goldParam;
+	ImageParam frameParam;
 	std::list<FlagGmk*> blackFlag;
 	std::list<FlagGmk*> goldFlag;
 	std::list<FlagGmk*> releaseFlag;
 	std::map<int, int> speedList;		// <スピード,個数>
 	std::list<FlagGmk*>::iterator nowFlag;
+	std::list<FlagGmk*>::iterator nowGoldFlag;
+	std::list<FlagGmk*>::iterator nowReleaseFlag;
 	int haveGold;
 	int effectTimer;
 	int	missCount;
@@ -137,7 +141,7 @@ public:
 	Vector2 GetSpeedBlockPos(int speed);
 	int	GetMissCount();
 	void SetMissCount(int mc);
-
+	void SetNowFlag(TimeObj* obj);
 private:
 	inline int NextSpeed(int nowSpeed);
 	inline int BeforeSpeed(int nowSpeed);

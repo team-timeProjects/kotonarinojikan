@@ -50,7 +50,7 @@ public:
 	{
 		FRAG_BLACK_CLOSE, FRAG_BLACK_OPEN, FRAG_GOLD,
 		BUTTON_MENU,
-		SPEED_LIST, SPEED_BLOCK, GOLD_STOCK,
+		SPEED_LIST, SPEED_BLOCK, GOLD_STOCK,BLOCK_FRAME,
 
 		//Å@éûåvä÷òA
 		CLOCK_BACK, CLOCK_HOUR, CLOCK_MINUTE, 
@@ -125,6 +125,7 @@ public:
 	virtual void Update(void) = 0;
 	virtual void Render(void) = 0;
 	void SetState(TimeObj::State s);
+	TimeObj::State GetState() { return state; }
 	__forceinline static void ResetChain(){ SuccessChain = 0; }
 	__forceinline static void AddChain(){ SuccessChain++; }
 	__forceinline static int GetChain(){ return SuccessChain; }

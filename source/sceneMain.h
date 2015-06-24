@@ -24,6 +24,7 @@ private:
 	int		judgeCount;		//Å@îªíËâÒêî
 	bool	clockUp;
 	bool	checkPalse;
+	float	scale;
 public:
 	JudgeClock()
 	{
@@ -37,6 +38,7 @@ public:
 		judgeCount = 0;
 		clockUp = false;
 		checkPalse = false;
+		scale = 1.0f;
 	}
 	~JudgeClock()
 	{
@@ -52,18 +54,25 @@ public:
 		timer = this->judgeCount*this->judgeCycle;
 		clockUp = false;
 		checkPalse = false;
+		scale = 1.0f;
 	}
 
 	void Update()
 	{
-		if (judgeCycle != 0)
+		if(judgeCycle != 0)
 		{
 			timer -= clockUp ? 6 : 1;
-			checkPalse = timer%judgeCycle == 0 || (clockUp&&timer%judgeCycle > judgeCycle - 6);
+			checkPalse = timer%judgeCycle == 0 || (clockUp&&timer%judgeCycle <= 6);
 			clockUp = false;
 
 			LongAngle = -(timer%judgeCycle)*(2 * PI / judgeCycle);
 			ShortAngle = -(timer / judgeCycle)*(2 * PI / 12) - (timer%judgeCycle)*(2 * PI / (12 * judgeCycle));
+		}
+		if(timer%judgeCycle <= 5*60)
+		{
+			scale =1.0f+(0.2f* (5 - timer%judgeCycle/60));
+			if(checkPalse)
+				scale = 1.0f;
 		}
 	}
 
@@ -73,9 +82,9 @@ public:
 		POINT p;
 		p.x = pos.x;
 		p.y = pos.y;
-		image->Render(pos.x - size / 2, pos.y - size / 2, size, size, 0, 0, 256, 256);
-		image->Render(pos.x - size / 2, pos.y - size / 2, size, size, 0, 256, 256, 256, p, ShortAngle);
-		image->Render(pos.x - size / 2, pos.y - size / 2, size, size, 256, 0, 256, 256, p, LongAngle);
+		image->Render(pos.x - size*scale / 2, pos.y - size*scale / 2, size*scale, size*scale, 0, 0, 256, 256);
+		image->Render(pos.x - size*scale / 2, pos.y - size*scale / 2, size*scale, size*scale, 0, 256, 256, 256, p, ShortAngle);
+		image->Render(pos.x - size*scale / 2, pos.y - size*scale / 2, size*scale, size*scale, 256, 0, 256, 256, p, LongAngle);
 
 	}
 	bool IsCollision(const POINT& p)
@@ -108,7 +117,7 @@ public:
 
 };
 
-class sceneMain :public Scene
+class sceneMain:public Scene
 {
 	//-------- field ---------
 private:
@@ -126,7 +135,7 @@ private:
 	//Å@É¢
 	iex2DObj* menubutton;
 	ImageParam menuParam;
-	
+
 	//Å@ô¬
 	EDX::EDX_2DObj* menu;
 
