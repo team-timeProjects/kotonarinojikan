@@ -101,7 +101,7 @@ protected:
 	static const int SUCCESS_EFFECT_TIME = 30;		// 卍成功演出時間定数
 	int SuccessCnt = 0;								// 卍成功演出用変数
 	const float CHAIN_MAX_SCALE = 3.5f;				// 卍連鎖演出用最大拡大率
-	static const int CHAIN_EFFECT_MAX = 5;			// 卍連鎖演出用最大拡大率到達連鎖数
+	static const int CHAIN_EFFECT_MAX = 4;			// 卍連鎖演出用最大拡大率到達連鎖数
 	static int SuccessChain;						// 卍連鎖カウンタ
 	int Mine_SChain;								// 卍自分の連鎖カウンタ
 	bool Gold_Effect = false;						// 卍金フラッグ効果発動中
@@ -115,6 +115,7 @@ public:
 	const Vector2& GetPos()const;
 	virtual void SetPos(const Vector2& pos);
 	void SetOrginSpeed(float speed);
+
 	float GetOrginSpeed();
 	// 基準となるスピードをもとに相対スピードを決定
 	void SetRelativeSpeed(float orginSpeed);
@@ -126,9 +127,9 @@ public:
 	virtual void Render(void) = 0;
 	void SetState(TimeObj::State s);
 	TimeObj::State GetState() { return state; }
-	__forceinline static void ResetChain(){ SuccessChain = 0; }
-	__forceinline static void AddChain(){ SuccessChain++; }
-	__forceinline static int GetChain(){ return SuccessChain; }
+	static void ResetChain();
+	static void AddChain();
+	static int GetChain();
 	__forceinline bool GetGold_Effect(){ return Gold_Effect; }
 	__forceinline void SetGold_Effect(bool IsGoldEffect){ Gold_Effect = IsGoldEffect; }
 	__forceinline int GetSuccessCnt(){ return SuccessCnt; }

@@ -146,6 +146,7 @@ void	sceneTitle::ModeSelect(void)
 			TransitionBat::GetInst()->SetStep(TransitionBat::TBAT_STATE::DOWN);
 			TransitionBat::GetInst()->TimeReset();
 			TransitionBat::GetInst()->SetNextStep(TransitionBat::TBAT_STATE::CENTER);
+			Sound::SE_Play(SOUND::OK);
 			mode = MODE_MOVE_BAT;
 		}
 
@@ -164,6 +165,7 @@ void	sceneTitle::ModeSelect(void)
 	{
 		//	ƒNƒŠƒbƒN
 		if (EDX::MouseGet(EDX::EDX_CLICK_L)){
+			Sound::SE_Play(SOUND::OK);
 			mode = MODE_EXIT;
 			exit(0);
 		}

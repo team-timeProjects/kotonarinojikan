@@ -53,11 +53,11 @@ bool sceneSelect::Initialize(){
 
 void sceneSelect::Update(){
 	Pumpkin::GetInst()->Update();
+		TransitionBat::GetInst()->Update();
 	if (Pumpkin::GetInst()->IsMoveEnd()){
 		FOR(i, STAGEPIC_MAX){
 			bat[i].Update();
 		}
-		TransitionBat::GetInst()->Update();
 		Campus::GetInst()->Update();
 		switch (SceneState){
 		case SCENE_FADEIN:S_FADEIN(); break;
@@ -134,6 +134,7 @@ bool PushCheck(int px, int py, int x, int y, int w, int h){
 void sceneSelect::S_FADEIN(){
 	WaitTime++;
 	if (WaitTime > WAIT_TIME){
+
 		Pumpkin::GetInst()->SetOpen(true);
 		if (Pumpkin::GetInst()->IsMoveEnd())SceneState++;
 	}

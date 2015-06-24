@@ -120,7 +120,8 @@ void Clock::Render()
 		dst[BACK].w*scale, dst[BACK].h*scale,
 		src[BACK].x, src[BACK].y, src[BACK].w, src[BACK].h);
 
-	p.y = 0;
+	p.x = 2;
+	p.y = 10;
 
 	Campus::GetInst()->Add(imageList[HOUR], pos.x - dst[HOUR].w*scale / 2 + dst[HOUR].x*scale,
 		pos.y - dst[HOUR].h*scale / 2 + dst[HOUR].y*scale,

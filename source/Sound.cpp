@@ -32,8 +32,19 @@ void Sound::Initialize()
 	IEX_SetWAV(16, "DATA\\SOUND\\SE\\ジングル\\good.wav");
 	IEX_SetWAV(17, "DATA\\SOUND\\SE\\ジングル\\miss.wav");
 
+	IEX_SetWAV(18, "DATA\\SOUND\\newSE\\正解音編集\\正解音1.wav");
+	IEX_SetWAV(19, "DATA\\SOUND\\newSE\\正解音編集\\正解音2.wav");
+	IEX_SetWAV(20, "DATA\\SOUND\\newSE\\正解音編集\\正解音3.wav");
+	IEX_SetWAV(21, "DATA\\SOUND\\newSE\\正解音編集\\正解音4.wav");
+	IEX_SetWAV(22, "DATA\\SOUND\\newSE\\正解音編集\\正解音5.wav");
 
-	//for(int i=0; i<SE_MAX; i++){
-	//	IEX_SetSoundVolume(i, -1000);
-	//}
+
+	IEX_SetWAV(23, "DATA\\SOUND\\newSE\\失敗音候補.wav");
+	IEX_SetWAV(24, "DATA\\SOUND\\newSE\\決定音候補.wav");
+	IEX_SetWAV(25, "DATA\\SOUND\\newSE\\口開く.wav");
+
+
+	for(int i=0; i<SE_MAX; i++){
+		IEX_SetSoundVolume(i, -1000);
+	}
 }

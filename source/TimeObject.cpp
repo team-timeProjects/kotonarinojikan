@@ -2,6 +2,7 @@
 #include	"../IEX/iextreme.h"
 #include	"Utility.h"
 #include	"Campus.h"
+#include	"Sound.h"
 
 ImageFactory::~ImageFactory()
 {
@@ -145,4 +146,17 @@ void TimeObj::SetState(TimeObj::State s)
 {
 	if (s == SUCCESS)SuccessCnt = SUCCESS_EFFECT_TIME;
 	state = s;
+}
+
+
+void TimeObj::ResetChain(){
+	SuccessChain = 0;
+}
+void TimeObj::AddChain(){
+	Sound::SE_Play(SOUND::SUCCESS1 + SuccessChain);
+	SuccessChain++;
+	if (SuccessChain >= CHAIN_EFFECT_MAX)SuccessChain = CHAIN_EFFECT_MAX;
+}
+int TimeObj::GetChain(){
+	return SuccessChain;
 }

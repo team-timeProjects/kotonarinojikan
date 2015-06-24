@@ -3,6 +3,7 @@
 #include	"system/Framework.h"
 #include "../EDX/EDXLIB.h"
 #include "Pumpkin.h"
+#include "Sound.h"
 #include	<random>
 
 
@@ -90,6 +91,7 @@ bool Pumpkin::IsMoveEnd(){
 }
 
 void Pumpkin::SetOpen(bool IsOpen){
+	if (IsOpen)Sound::SE_Play(SOUND::PAKA);
 	this->IsOpen = IsOpen;
 }
 
