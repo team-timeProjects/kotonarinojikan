@@ -14,7 +14,7 @@ class DataOwner // singleton
 {
 	//---------- field ------------
 public:
-	static const int STAGE_MAX = 30;
+	static const int STAGE_MAX = 60;
 	int				stageNo=0;
 	iexView*		view;
 	ImageFactory*   imageFactory;
